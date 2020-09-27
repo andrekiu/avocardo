@@ -1,0 +1,15 @@
+{
+  "name": "Avocardo",
+  "version": "0.1",
+  "description": "Avocado cards to test your spanish!",
+  "permissions": ["declarativeContent", "http://127.0.0.1:3000/*"],
+  "web_accessible_resources": ["UI.js.map"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "page_action": {
+    "default_popup": "index.html"
+  },
+  "manifest_version": 2
+}

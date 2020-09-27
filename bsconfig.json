@@ -1,0 +1,35 @@
+{
+  "name": "avocardo",
+  "version": "0.1.0",
+  "sources": [
+    {
+      "dir": "src/chrome_extension",
+      "subdirs": true
+    },
+    {
+      "dir": "src/server",
+      "subdirs": true
+    }
+  ],
+  "package-specs": {
+    "module": "commonjs",
+    "in-source": true
+  },
+  "suffix": ".bs.js",
+  "reason": { "react-jsx": 3 },
+  "bs-dependencies": [
+    "reason-react",
+    "bs-css",
+    "bs-css-dom",
+    "bs-express",
+    "bs-fetch",
+    "@glennsl/bs-json"
+  ],
+  "warnings": {
+    "error": "+101"
+  },
+  "bsc-flags": ["-bs-g"],
+  "ppx-flags": [],
+  "namespace": true,
+  "refmt": 3
+}
