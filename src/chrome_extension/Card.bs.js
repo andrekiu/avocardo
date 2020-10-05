@@ -111,7 +111,7 @@ function Card$Evaluation(Props) {
                   onClick: (function (param) {
                       return Curry._1(onNext, undefined);
                     })
-                }, solved(selection, pronouns, candidates) ? "Beautiful Pepplxr" : "Farty pepper"));
+                }, solved(selection, pronouns, candidates) ? "Beautiful Pepper" : "Farty pepper"));
 }
 
 var Evaluation = {
