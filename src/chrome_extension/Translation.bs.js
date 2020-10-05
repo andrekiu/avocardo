@@ -2,15 +2,9 @@
 'use strict';
 
 var Hashtbl = require("bs-platform/lib/js/hashtbl.js");
-var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
-var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var PronounExercises$Avocardo = require("../server/exercises/PronounExercises.bs.js");
 
 var $$throw = (function throwJSExn(a) { throw a; });
-
-function pickRandom(options) {
-  return Caml_array.caml_array_get(Belt_Array.shuffle(options), 0);
-}
 
 var cache = Hashtbl.create(undefined, 100);
 
@@ -18,8 +12,7 @@ function getExercise(param) {
   return fetch("http://127.0.0.1:3000/pronoun_exercises").then(function (prim) {
                 return prim.json();
               }).then(function (txt) {
-              var options = PronounExercises$Avocardo.decode(txt);
-              return Promise.resolve(Caml_array.caml_array_get(Belt_Array.shuffle(options), 0));
+              return Promise.resolve(PronounExercises$Avocardo.decode(txt));
             });
 }
 
@@ -94,7 +87,6 @@ function next(param) {
 var getExercise$1 = curExercise;
 
 exports.$$throw = $$throw;
-exports.pickRandom = pickRandom;
 exports.ServerBoundary = ServerBoundary;
 exports.getExercise = getExercise$1;
 exports.current = current;

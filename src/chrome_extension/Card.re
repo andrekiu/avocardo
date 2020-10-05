@@ -48,7 +48,7 @@ module Evaluation = {
     <div style=Styles.app>
       <button onClick={_ => onNext()} style=Styles.center>
         {solved(selection, pronouns, candidates)
-           ? React.string("Beautiful Pepplxr") : React.string("Farty pepper")}
+           ? React.string("Beautiful Pepper") : React.string("Farty pepper")}
       </button>
     </div>;
   };

@@ -2,10 +2,6 @@ let throw: Js.Promise.t(PronounExercises.pronoun_exercise) => unit = [%raw
   "function throwJSExn(a) { throw a; }"
 ];
 
-let pickRandom = options => {
-  Belt.Array.shuffle(options)[0];
-};
-
 module ServerBoundary = {
   type connection =
     | Loading(Js.Promise.t(PronounExercises.pronoun_exercise))
@@ -18,7 +14,7 @@ module ServerBoundary = {
     Fetch.fetch("http://127.0.0.1:3000/pronoun_exercises")
     |> Js.Promise.then_(Fetch.Response.json)
     |> Js.Promise.then_(txt =>
-         PronounExercises.decode(txt) |> pickRandom(_) |> Js.Promise.resolve
+         PronounExercises.decode(txt) |> Js.Promise.resolve
        );
   };
 

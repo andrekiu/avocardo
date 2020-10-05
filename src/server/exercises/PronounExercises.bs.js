@@ -4,6 +4,8 @@
 var List = require("bs-platform/lib/js/list.js");
 var $$Array = require("bs-platform/lib/js/array.js");
 var $$String = require("bs-platform/lib/js/string.js");
+var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
+var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Caml_string = require("bs-platform/lib/js/caml_string.js");
 var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 var Json_encode = require("@glennsl/bs-json/src/Json_encode.bs.js");
@@ -151,14 +153,16 @@ var Decode = {
 };
 
 function decode(json) {
-  return Json_decode.field("data", (function (param) {
-                return Json_decode.array(exercise$1, param);
-              }), json);
+  return Json_decode.field("data", exercise$1, json);
+}
+
+function pickRandom(exercises) {
+  return Caml_array.caml_array_get(Belt_Array.shuffle(exercises), 0);
 }
 
 function jsonResponse(param) {
-  var __x = getPronounExercices(undefined);
-  return Json_encode.array(exercise, __x);
+  var exercises = getPronounExercices(undefined);
+  return exercise(Caml_array.caml_array_get(Belt_Array.shuffle(exercises), 0));
 }
 
 exports.csv = csv;
@@ -168,5 +172,6 @@ exports.getPronounExercices = getPronounExercices;
 exports.Encode = Encode;
 exports.Decode = Decode;
 exports.decode = decode;
+exports.pickRandom = pickRandom;
 exports.jsonResponse = jsonResponse;
 /* No side effect */

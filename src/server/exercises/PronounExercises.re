@@ -95,9 +95,13 @@ module Decode = {
 };
 
 let decode = json => {
-  json |> Json.Decode.field("data", Json.Decode.array(Decode.exercise));
+  json |> Json.Decode.field("data", Decode.exercise);
+};
+
+let pickRandom = exercises => {
+  Belt.Array.shuffle(exercises)[0];
 };
 
 let jsonResponse = () => {
-  getPronounExercices() |> Json.Encode.array(Encode.exercise, _);
+  getPronounExercices() |> pickRandom |> Encode.exercise;
 };
