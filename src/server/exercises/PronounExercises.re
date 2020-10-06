@@ -25,39 +25,51 @@ let toString = w =>
   | Wrong(str) => str
   };
 
-let toWord = str =>
-  switch (str) {
-  | "" => Wrong(str)
-  | str when str.[0] == '*' =>
-    Right(String.sub(str, 1, String.length(str) - 1))
-  | word => Wrong(word)
-  };
+let dedupe = (words, index) => {
+  let tokens =
+    Array.map(w => String.split_on_char(' ', w)->List.nth(index), words);
+  let answer = tokens[0];
+  Array.sort(Pervasives.compare, tokens);
+  let rec iterator = (prev, idx, sum) =>
+    switch (idx) {
+    | idx when Array.length(tokens) == idx => sum
+    | idx =>
+      prev == tokens[idx]
+        ? iterator(prev, idx + 1, sum)
+        : iterator(
+            tokens[idx],
+            idx + 1,
+            [
+              answer == tokens[idx] ? Right(tokens[idx]) : Wrong(tokens[idx]),
+              ...sum,
+            ],
+          )
+    };
+  iterator("~", 0, [])->Array.of_list;
+};
 
-let getPronounExercices = () =>
-  String.split_on_char('\n', csv)
-  ->List.fold_left(
-      (sum: list(pronoun_exercise), line) =>
-        switch (String.split_on_char(',', line)) {
-        | [quiz, str_pronouns, str_candidates] => [
-            {
-              quiz,
-              pronouns:
-                String.split_on_char('|', str_pronouns)
-                ->List.map(toWord, _)
-                ->Array.of_list,
-              nouns:
-                String.split_on_char('|', str_candidates)
-                ->List.map(toWord, _)
-                ->Array.of_list,
-            },
-            ...sum,
-          ]
-        | _ => sum
-        },
+let getPronounExercices = () => {
+  let bigrams =
+    Node.Fs.readFileAsUtf8Sync("src/server/db/bigrams.json")
+    |> Js.Json.parseExn
+    |> Json.Decode.dict(Json.Decode.array(Json.Decode.string));
+
+  Js.Dict.entries(bigrams)
+  ->Array.fold_left(
+      (sum: list(pronoun_exercise), (key, opts: array(string))) =>
+        [
+          {
+            quiz: key,
+            pronouns: dedupe(opts, 0) |> Belt.Array.shuffle,
+            nouns: dedupe(opts, 1) |> Belt.Array.shuffle,
+          },
+          ...sum,
+        ],
       [],
       _,
     )
   ->Array.of_list;
+};
 
 module Encode = {
   let word = w =>
