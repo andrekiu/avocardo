@@ -6,6 +6,7 @@ var $$Array = require("bs-platform/lib/js/array.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var $$String = require("bs-platform/lib/js/string.js");
+var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Token$Avocardo = require("./Token.bs.js");
 var Keyboard$Avocardo = require("./hooks/Keyboard.bs.js");
 var Translation$Avocardo = require("./Translation.bs.js");
@@ -58,14 +59,20 @@ var column = Css.style({
     });
 
 var center = Css.style({
-      hd: Css.margin2({
-            NAME: "percent",
-            VAL: 45
-          }, {
-            NAME: "percent",
-            VAL: 25
-          }),
-      tl: /* [] */0
+      hd: Css.display(Css.inlineBlock),
+      tl: {
+        hd: Css.margin2({
+              NAME: "percent",
+              VAL: 45
+            }, {
+              NAME: "percent",
+              VAL: 25
+            }),
+        tl: {
+          hd: Css.textAlign(Css.center),
+          tl: /* [] */0
+        }
+      }
     });
 
 var Styles = {
@@ -86,37 +93,58 @@ function contains(translations, w) {
               }), translations);
 }
 
-function solved(selection, pronouns, candidates) {
+function solved(selection, exercise) {
   var tokens = $$String.split_on_char(/* " " */32, selection);
   if (!tokens) {
     return false;
   }
   var match = tokens.tl;
-  if (match && !(match.tl || !contains(pronouns, tokens.hd))) {
-    return contains(candidates, match.hd);
+  if (match && !(match.tl || !contains(exercise.pronouns, tokens.hd))) {
+    return contains(exercise.nouns, match.hd);
   } else {
     return false;
   }
 }
 
+function solution(exercise) {
+  var findRight = function (opts, _idx) {
+    while(true) {
+      var idx = _idx;
+      var str = Caml_array.caml_array_get(opts, idx);
+      if (!str.TAG) {
+        return str._0;
+      }
+      _idx = idx + 1 | 0;
+      continue ;
+    };
+  };
+  return findRight(exercise.pronouns, 0) + (" " + findRight(exercise.nouns, 0));
+}
+
 function Card$Evaluation(Props) {
   var selection = Props.selection;
-  var pronouns = Props.pronouns;
-  var candidates = Props.candidates;
+  var exercise = Props.exercise;
   var onNext = Props.onNext;
   return React.createElement("div", {
               style: app
-            }, React.createElement("button", {
-                  style: center,
-                  onClick: (function (param) {
-                      return Curry._1(onNext, undefined);
-                    })
-                }, solved(selection, pronouns, candidates) ? "Beautiful Pepper" : "Farty pepper"));
+            }, solved(selection, exercise) ? React.createElement("button", {
+                    style: center,
+                    onClick: (function (param) {
+                        return Curry._1(onNext, undefined);
+                      })
+                  }, "Beautiful Pepper") : React.createElement(React.Fragment, undefined, React.createElement("div", {
+                        style: center
+                      }, React.createElement("div", undefined, exercise.quiz), React.createElement("div", undefined, solution(exercise)), React.createElement("button", {
+                            onClick: (function (param) {
+                                return Curry._1(onNext, undefined);
+                              })
+                          }, "Farty Pepper"))));
 }
 
 var Evaluation = {
   contains: contains,
   solved: solved,
+  solution: solution,
   make: Card$Evaluation
 };
 
@@ -216,8 +244,7 @@ function Card(Props) {
   if (quiz.TAG) {
     return React.createElement(Card$Evaluation, {
                 selection: quiz._0,
-                pronouns: e.pronouns,
-                candidates: e.nouns,
+                exercise: e,
                 onNext: (function (param) {
                     return Curry._1(dispatch, /* Enter */0);
                   })

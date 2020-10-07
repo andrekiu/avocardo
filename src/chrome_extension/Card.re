@@ -21,10 +21,16 @@ module Styles = {
       flexDirection(`column),
       justifyContent(`spaceEvenly),
     ]);
-  let center = style([margin2(~v=`percent(45.), ~h=`percent(25.))]);
+  let center =
+    style([
+      display(inlineBlock),
+      margin2(~v=`percent(45.), ~h=`percent(25.)),
+      textAlign(center),
+    ]);
 };
 
 module Evaluation = {
+  open PronounExercises;
   let contains = (translations, w) =>
     Array.exists(
       t =>
@@ -35,21 +41,40 @@ module Evaluation = {
       translations,
     );
 
-  let solved = (selection, pronouns, candidates) => {
+  let solved = (selection, exercise) => {
     let tokens = String.split_on_char(' ', selection);
     switch (tokens) {
-    | [p, c] => contains(pronouns, p) && contains(candidates, c)
+    | [p, c] =>
+      contains(exercise.pronouns, p) && contains(exercise.nouns, c)
     | _ => false
     };
   };
 
+  let solution = exercise => {
+    let rec findRight = (opts, idx) =>
+      switch (opts[idx]) {
+      | Right(str) => str
+      | Wrong(_) => findRight(opts, idx + 1)
+      };
+    findRight(exercise.pronouns, 0) ++ " " ++ findRight(exercise.nouns, 0);
+  };
+
   [@react.component]
-  let make = (~selection, ~pronouns, ~candidates, ~onNext) => {
+  let make = (~selection, ~exercise, ~onNext) => {
     <div style=Styles.app>
-      <button onClick={_ => onNext()} style=Styles.center>
-        {solved(selection, pronouns, candidates)
-           ? React.string("Beautiful Pepper") : React.string("Farty pepper")}
-      </button>
+      {solved(selection, exercise)
+         ? <button onClick={_ => onNext()} style=Styles.center>
+             {React.string("Beautiful Pepper")}
+           </button>
+         : <>
+             <div style=Styles.center>
+               <div> {React.string(exercise.quiz)} </div>
+               <div> {React.string(solution(exercise))} </div>
+               <button onClick={_ => onNext()}>
+                 {React.string("Farty Pepper")}
+               </button>
+             </div>
+           </>}
     </div>;
   };
 };
@@ -120,11 +145,6 @@ let make = () => {
       </div>
     </div>;
   | Veredict(selection) =>
-    <Evaluation
-      selection
-      pronouns={e.pronouns}
-      candidates={e.nouns}
-      onNext={() => dispatch(Enter)}
-    />
+    <Evaluation selection exercise=e onNext={() => dispatch(Enter)} />
   };
 };
