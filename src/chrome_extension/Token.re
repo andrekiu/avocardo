@@ -45,14 +45,8 @@ module StyledToken = {
 
 module StyledWords = {
   let match = (words: array(PronounExercises.word), prefix) => {
-    let rec max_match = (a, b, idx) =>
-      switch (idx) {
-      | idx when String.length(a) <= idx || String.length(b) <= idx => idx
-      | idx when a.[idx] == b.[idx] => max_match(a, b, idx + 1)
-      | idx => idx
-      };
     Array.map(
-      w => StyledToken.create(w, max_match(w, prefix, 0)),
+      w => StyledToken.create(w, Words.max_prefix(w, prefix)),
       Array.map(PronounExercises.toString, words),
     );
   };

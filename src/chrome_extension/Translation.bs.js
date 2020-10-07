@@ -2,6 +2,7 @@
 'use strict';
 
 var Hashtbl = require("bs-platform/lib/js/hashtbl.js");
+var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 var PronounExercises$Avocardo = require("../server/exercises/PronounExercises.bs.js");
 
 var $$throw = (function throwJSExn(a) { throw a; });
@@ -12,7 +13,7 @@ function getExercise(param) {
   return fetch("http://127.0.0.1:3000/pronoun_exercises").then(function (prim) {
                 return prim.json();
               }).then(function (txt) {
-              return Promise.resolve(PronounExercises$Avocardo.decode(txt));
+              return Promise.resolve(Json_decode.field("data", PronounExercises$Avocardo.Decode.exercise, txt));
             });
 }
 

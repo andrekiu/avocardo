@@ -5,7 +5,7 @@ var Js_exn = require("bs-platform/lib/js/js_exn.js");
 var Express = require("bs-express/src/Express.js");
 var Process = require("process");
 var Caml_js_exceptions = require("bs-platform/lib/js/caml_js_exceptions.js");
-var PronounExercises$Avocardo = require("./exercises/PronounExercises.bs.js");
+var PronounController$Avocardo = require("./exercises/PronounController.bs.js");
 
 var app = Express.express(undefined);
 
@@ -17,7 +17,7 @@ function makeSuccessJson(response) {
 }
 
 Express.App.get(app, "/pronoun_exercises", Express.Middleware.from(function (param, param$1) {
-          var partial_arg = makeSuccessJson(PronounExercises$Avocardo.jsonResponse(undefined));
+          var partial_arg = makeSuccessJson(PronounController$Avocardo.jsonResponse(undefined));
           return function (param) {
             return Express.$$Response.sendJson(partial_arg, param);
           };

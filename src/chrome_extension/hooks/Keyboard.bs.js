@@ -15,6 +15,7 @@ function use(onChar, onEnter, onDelete) {
                 return Curry._1(onEnter, undefined);
             case "Alt" :
             case "Control" :
+            case "Dead" :
             case "Meta" :
             case "Shift" :
             case "Tab" :

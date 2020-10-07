@@ -8,6 +8,7 @@ var React = require("react");
 var $$String = require("bs-platform/lib/js/string.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Token$Avocardo = require("./Token.bs.js");
+var Words$Avocardo = require("./Words.bs.js");
 var Keyboard$Avocardo = require("./hooks/Keyboard.bs.js");
 var Translation$Avocardo = require("./Translation.bs.js");
 
@@ -88,7 +89,7 @@ function contains(translations, w) {
                 if (t.TAG) {
                   return false;
                 } else {
-                  return t._0 === w;
+                  return Words$Avocardo.is_match(t._0, w);
                 }
               }), translations);
 }

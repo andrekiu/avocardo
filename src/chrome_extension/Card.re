@@ -35,7 +35,7 @@ module Evaluation = {
     Array.exists(
       t =>
         switch (t) {
-        | PronounExercises.Right(t) => t == w
+        | PronounExercises.Right(t) => Words.is_match(t, w)
         | _ => false
         },
       translations,

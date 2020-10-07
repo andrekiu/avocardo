@@ -18,6 +18,7 @@ let use = (~onChar, ~onEnter, ~onDelete) => {
       | "Alt" => ignore()
       | "Tab" => ignore()
       | "Control" => ignore()
+      | "Dead" => ignore()
       | "Backspace" => onDelete()
       | "Enter" => onEnter()
       | _ => onChar(key)

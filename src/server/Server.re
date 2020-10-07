@@ -13,7 +13,7 @@ App.get(
   app,
   ~path="/pronoun_exercises",
   Middleware.from((_, _) => {
-    Response.sendJson(makeSuccessJson(PronounExercises.jsonResponse()))
+    Response.sendJson(makeSuccessJson(PronounController.jsonResponse()))
   }),
 );
 

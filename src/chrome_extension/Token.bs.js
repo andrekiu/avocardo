@@ -6,7 +6,7 @@ var $$Array = require("bs-platform/lib/js/array.js");
 var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var $$String = require("bs-platform/lib/js/string.js");
-var Caml_string = require("bs-platform/lib/js/caml_string.js");
+var Words$Avocardo = require("./Words.bs.js");
 var PronounExercises$Avocardo = require("../server/exercises/PronounExercises.bs.js");
 
 var bold = Css.style({
@@ -73,21 +73,8 @@ var StyledToken = {
 };
 
 function match_(words, prefix) {
-  var max_match = function (a, b, _idx) {
-    while(true) {
-      var idx = _idx;
-      if (a.length <= idx || b.length <= idx) {
-        return idx;
-      }
-      if (Caml_string.get(a, idx) !== Caml_string.get(b, idx)) {
-        return idx;
-      }
-      _idx = idx + 1 | 0;
-      continue ;
-    };
-  };
   return $$Array.map((function (w) {
-                return create(w, max_match(w, prefix, 0));
+                return create(w, Words$Avocardo.max_prefix(w, prefix));
               }), $$Array.map(PronounExercises$Avocardo.toString, words));
 }
 
