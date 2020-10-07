@@ -16,7 +16,7 @@ function toString(w) {
   return w._0;
 }
 
-function dedupe(words, index) {
+function scramble(words, index) {
   var tokens = $$Array.map((function (w) {
           return List.nth($$String.split_on_char(/* " " */32, w), index);
         }), words);
@@ -51,7 +51,7 @@ function dedupe(words, index) {
       continue ;
     };
   };
-  return $$Array.of_list(iterator("~", 0, /* [] */0));
+  return Belt_Array.shuffle($$Array.of_list(iterator("~", 0, /* [] */0)));
 }
 
 function getPronounExercices(param) {
@@ -64,8 +64,8 @@ function getPronounExercices(param) {
                     return {
                             hd: {
                               quiz: param[0],
-                              pronouns: Belt_Array.shuffle(dedupe(opts, 0)),
-                              nouns: Belt_Array.shuffle(dedupe(opts, 1))
+                              pronouns: scramble(opts, 0),
+                              nouns: scramble(opts, 1)
                             },
                             tl: sum
                           };
@@ -178,11 +178,8 @@ function jsonResponse(param) {
   return exercise(Caml_array.caml_array_get(Belt_Array.shuffle(exercises), 0));
 }
 
-var csv = "\navocado,el|*la,*palta|palto|pata\npepper,*el|la,ahi|*aji|aha\nwatermelon,el|*la,sandio|*sandia|sandalia\nhealth,el|*la,*salud|saluda|saludo\nhair,*el|la,caballo|*cabello|cabeza\ncat,*el|la,*gato|mato|rato\nnoodles,*los|el|la,*fideos|feos|trineos\nbull,*el|la,ternero|*toro|trofeo\n";
-
-exports.csv = csv;
 exports.toString = toString;
-exports.dedupe = dedupe;
+exports.scramble = scramble;
 exports.getPronounExercices = getPronounExercices;
 exports.Encode = Encode;
 exports.Decode = Decode;

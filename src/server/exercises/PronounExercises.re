@@ -1,14 +1,3 @@
-let csv = {|
-avocado,el|*la,*palta|palto|pata
-pepper,*el|la,ahi|*aji|aha
-watermelon,el|*la,sandio|*sandia|sandalia
-health,el|*la,*salud|saluda|saludo
-hair,*el|la,caballo|*cabello|cabeza
-cat,*el|la,*gato|mato|rato
-noodles,*los|el|la,*fideos|feos|trineos
-bull,*el|la,ternero|*toro|trofeo
-|};
-
 type word =
   | Right(string)
   | Wrong(string);
@@ -25,7 +14,7 @@ let toString = w =>
   | Wrong(str) => str
   };
 
-let dedupe = (words, index) => {
+let scramble = (words, index) => {
   let tokens =
     Array.map(w => String.split_on_char(' ', w)->List.nth(index), words);
   let answer = tokens[0];
@@ -45,7 +34,7 @@ let dedupe = (words, index) => {
             ],
           )
     };
-  iterator("~", 0, [])->Array.of_list;
+  iterator("~", 0, [])->Array.of_list->Belt.Array.shuffle;
 };
 
 let getPronounExercices = () => {
@@ -56,13 +45,9 @@ let getPronounExercices = () => {
 
   Js.Dict.entries(bigrams)
   ->Array.fold_left(
-      (sum: list(pronoun_exercise), (key, opts: array(string))) =>
+      (sum, (quiz, opts)) =>
         [
-          {
-            quiz: key,
-            pronouns: dedupe(opts, 0) |> Belt.Array.shuffle,
-            nouns: dedupe(opts, 1) |> Belt.Array.shuffle,
-          },
+          {quiz, pronouns: scramble(opts, 0), nouns: scramble(opts, 1)},
           ...sum,
         ],
       [],
