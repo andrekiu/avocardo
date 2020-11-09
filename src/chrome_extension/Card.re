@@ -103,7 +103,7 @@ let willRestartQuiz = (cur, next) =>
   | (_, _) => false
   };
 
-let useReducer = (getInitialState, reduce) => {
+let useReducer = (getInitialState, reduce, next) => {
   let (state, setState) = React.useState(getInitialState);
   let dispatch = a => {
     setState(s => reduce(s, a));
@@ -114,7 +114,7 @@ let useReducer = (getInitialState, reduce) => {
       React.useCallback1(
         () => {
           if (willRestartQuiz(state, reduce_quiz(state, Enter))) {
-            Translation.next();
+            next();
           };
           dispatch(Enter);
         },
@@ -122,12 +122,17 @@ let useReducer = (getInitialState, reduce) => {
       ),
     ~onDelete=React.useCallback(() => dispatch(Delete)),
   );
-  (state, Translation.getExercise(), dispatch);
+  (state, dispatch);
 };
 
 [@react.component]
-let make = () => {
-  let (quiz, e, dispatch) = useReducer(() => Solving(""), reduce_quiz);
+let make =
+    (
+      ~exercise: Suspendable.t(Avocardo.PronounExercises.pronoun_exercise),
+      ~next: unit => unit,
+    ) => {
+  let (quiz, dispatch) = useReducer(() => Solving(""), reduce_quiz, next);
+  let e = exercise.read();
   switch (quiz) {
   | Solving(selection) =>
     let (styledPronouns, styledCandidates) =

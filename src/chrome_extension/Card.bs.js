@@ -10,7 +10,6 @@ var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Token$Avocardo = require("./Token.bs.js");
 var Words$Avocardo = require("./Words.bs.js");
 var Keyboard$Avocardo = require("./hooks/Keyboard.bs.js");
-var Translation$Avocardo = require("./Translation.bs.js");
 
 var app = Css.style({
       hd: Css.height(Css.px(200)),
@@ -193,7 +192,7 @@ function willRestartQuiz(cur, next) {
   }
 }
 
-function useReducer(getInitialState, reduce) {
+function useReducer(getInitialState, reduce, next) {
   var match = React.useState(function () {
         return Curry._1(getInitialState, undefined);
       });
@@ -214,7 +213,7 @@ function useReducer(getInitialState, reduce) {
                         }));
           }), React.useCallback((function (param) {
               if (willRestartQuiz(state, reduce_quiz(state, /* Enter */0))) {
-                Translation$Avocardo.next(undefined);
+                Curry._1(next, undefined);
               }
               return Curry._1(setState, (function (s) {
                             return Curry._2(reduce, s, /* Enter */0);
@@ -226,22 +225,23 @@ function useReducer(getInitialState, reduce) {
           }));
   return [
           state,
-          Translation$Avocardo.getExercise(undefined),
           dispatch
         ];
 }
 
 function Card(Props) {
+  var exercise = Props.exercise;
+  var next = Props.next;
   var match = useReducer((function (param) {
           return {
                   TAG: 0,
                   _0: "",
                   [Symbol.for("name")]: "Solving"
                 };
-        }), reduce_quiz);
-  var dispatch = match[2];
-  var e = match[1];
+        }), reduce_quiz, next);
+  var dispatch = match[1];
   var quiz = match[0];
+  var e = Curry._1(exercise.read, undefined);
   if (quiz.TAG) {
     return React.createElement(Card$Evaluation, {
                 selection: quiz._0,
