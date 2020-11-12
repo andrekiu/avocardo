@@ -1,18 +1,24 @@
 module Styles = {
   open Css;
-  let app = style([height(px(200)), width(px(200))]);
-  let challenge =
+  let app =
     style([
-      textAlign(center),
-      height(px(25)),
-      verticalAlign(middle),
-      marginTop(px(25)),
+      height(px(200)),
+      width(px(200)),
+      border(`px(1), `solid, `currentColor),
+      display(`grid),
+      gridTemplateColumns([`repeat((`num(3), `fr(1.)))]),
+      gridAutoRows(`minmax((`px(20), `px(20)))),
     ]);
+
+  let input = style([gridRow(3, 3), gridColumn(1, 4), textAlign(center)]);
+
+  let challenge =
+    style([gridRow(2, 2), gridColumn(1, 4), textAlign(center)]);
   let options =
     style([
+      gridRow(4, 10),
+      gridColumn(1, 4),
       display(`flex),
-      width(pct(100.)),
-      height(px(150)),
       justifyContent(`spaceEvenly),
     ]);
   let column =
@@ -21,15 +27,12 @@ module Styles = {
       flexDirection(`column),
       justifyContent(`spaceEvenly),
     ]);
-  let center =
-    style([
-      display(inlineBlock),
-      margin2(~v=`percent(45.), ~h=`percent(25.)),
-      textAlign(center),
-    ]);
+  let center = style([gridColumn(2, 2), gridRow(5, 7), textAlign(center)]);
+  let filter =
+    style([gridColumn(3, 3), gridRow(1, 1), textAlign(`center)]);
 };
 
-module Evaluation = {
+module ExerciseSolver = {
   open PronounExercises;
   let contains = (translations, w) =>
     Array.exists(
@@ -41,15 +44,6 @@ module Evaluation = {
       translations,
     );
 
-  let solved = (selection, exercise) => {
-    let tokens = String.split_on_char(' ', selection);
-    switch (tokens) {
-    | [p, c] =>
-      contains(exercise.pronouns, p) && contains(exercise.nouns, c)
-    | _ => false
-    };
-  };
-
   let solution = exercise => {
     let rec findRight = (opts, idx) =>
       switch (opts[idx]) {
@@ -59,20 +53,33 @@ module Evaluation = {
     findRight(exercise.pronouns, 0) ++ " " ++ findRight(exercise.nouns, 0);
   };
 
+  let solved = (selection, exercise) => {
+    let tokens = String.split_on_char(' ', selection);
+    switch (tokens) {
+    | [p, c] =>
+      contains(exercise.pronouns, p) && contains(exercise.nouns, c)
+    | _ => false
+    };
+  };
+};
+
+module Evaluation = {
   [@react.component]
   let make = (~selection, ~exercise, ~onNext) => {
     <div style=Styles.app>
-      {solved(selection, exercise)
-         ? <button onClick={_ => onNext()} style=Styles.center>
-             {React.string("Beautiful Pepper")}
-           </button>
+      {ExerciseSolver.solved(selection, exercise)
+         ? <div style=Styles.center>
+             <button onClick={_ => onNext()}>
+               {React.string("Beautiful Pepper")}
+             </button>
+           </div>
          : <>
              <div style=Styles.center>
-               <div> {React.string(exercise.quiz)} </div>
-               <div> {React.string(solution(exercise))} </div>
                <button onClick={_ => onNext()}>
                  {React.string("Farty Pepper")}
                </button>
+               <div> {React.string(exercise.quiz)} </div>
+               <div> {React.string(ExerciseSolver.solution(exercise))} </div>
              </div>
            </>}
     </div>;
@@ -100,46 +107,54 @@ let reduce_quiz = (state: quiz_stage, action) =>
 let willRestartQuiz = (cur, next) =>
   switch (cur, next) {
   | (Veredict(_), Solving(_)) => true
-  | (_, _) => false
+  | _ => false
   };
 
-let useReducer = (getInitialState, reduce, next) => {
-  let (state, setState) = React.useState(getInitialState);
-  let dispatch = a => {
-    setState(s => reduce(s, a));
+let willShowVeredict = (cur, next) => {
+  switch (cur, next) {
+  | (Solving(_), Veredict(_)) => true
+  | _ => false
   };
-  Keyboard.use(
-    ~onChar=React.useCallback(c => dispatch(Char(c))),
-    ~onEnter=
-      React.useCallback1(
-        () => {
-          if (willRestartQuiz(state, reduce_quiz(state, Enter))) {
-            next();
-          };
-          dispatch(Enter);
-        },
-        [|state|],
-      ),
-    ~onDelete=React.useCallback(() => dispatch(Delete)),
-  );
-  (state, dispatch);
 };
 
 [@react.component]
 let make =
     (
-      ~exercise: Suspendable.t(Avocardo.PronounExercises.pronoun_exercise),
+      ~exercise: Suspendable.t(PronounExercises.pronoun_exercise),
       ~next: unit => unit,
+      ~storeStatus: (PronounExercises.pronoun_exercise, bool) => unit,
+      ~filter,
     ) => {
-  let (quiz, dispatch) = useReducer(() => Solving(""), reduce_quiz, next);
+  let (quiz, setQuiz) = React.useState(() => Solving(""));
+  let dispatch = a => {
+    setQuiz(s => reduce_quiz(s, a));
+  };
   let e = exercise.read();
+  Keyboard.use(
+    ~onChar=React.useCallback(c => dispatch(Char(c))),
+    ~onEnter=
+      React.useCallback1(
+        () => {
+          switch (quiz, reduce_quiz(quiz, Enter)) {
+          | (Veredict(_), Solving(_)) => next()
+          | (Solving(_), Veredict(s)) =>
+            storeStatus(e, ExerciseSolver.solved(s, e))
+          | _ => ignore()
+          };
+          dispatch(Enter);
+        },
+        [|quiz|],
+      ),
+    ~onDelete=React.useCallback(() => dispatch(Delete)),
+  );
   switch (quiz) {
   | Solving(selection) =>
     let (styledPronouns, styledCandidates) =
       Token.StyledWords.style(selection, e.pronouns, e.nouns);
     <div style=Styles.app>
-      <div> {React.string(selection)} </div>
+      <div style=Styles.filter> filter </div>
       <div style=Styles.challenge> {React.string(e.quiz)} </div>
+      <div style=Styles.input> {React.string(selection)} <Prompt /> </div>
       <div style=Styles.options>
         <div style=Styles.column>
           {Array.map(tok => <Token tok />, styledPronouns) |> React.array}

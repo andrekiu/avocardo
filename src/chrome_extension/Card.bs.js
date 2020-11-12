@@ -9,36 +9,87 @@ var $$String = require("bs-platform/lib/js/string.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var Token$Avocardo = require("./Token.bs.js");
 var Words$Avocardo = require("./Words.bs.js");
+var Prompt$Avocardo = require("./Prompt.bs.js");
 var Keyboard$Avocardo = require("./hooks/Keyboard.bs.js");
 
 var app = Css.style({
       hd: Css.height(Css.px(200)),
       tl: {
         hd: Css.width(Css.px(200)),
-        tl: /* [] */0
-      }
-    });
-
-var challenge = Css.style({
-      hd: Css.textAlign(Css.center),
-      tl: {
-        hd: Css.height(Css.px(25)),
         tl: {
-          hd: Css.verticalAlign(Css.middle),
+          hd: Css.border({
+                NAME: "px",
+                VAL: 1
+              }, "solid", "currentColor"),
           tl: {
-            hd: Css.marginTop(Css.px(25)),
-            tl: /* [] */0
+            hd: Css.display("grid"),
+            tl: {
+              hd: Css.gridTemplateColumns({
+                    hd: {
+                      NAME: "repeat",
+                      VAL: [
+                        {
+                          NAME: "num",
+                          VAL: 3
+                        },
+                        {
+                          NAME: "fr",
+                          VAL: 1
+                        }
+                      ]
+                    },
+                    tl: /* [] */0
+                  }),
+              tl: {
+                hd: Css.gridAutoRows({
+                      NAME: "minmax",
+                      VAL: [
+                        {
+                          NAME: "px",
+                          VAL: 20
+                        },
+                        {
+                          NAME: "px",
+                          VAL: 20
+                        }
+                      ]
+                    }),
+                tl: /* [] */0
+              }
+            }
           }
         }
       }
     });
 
-var options = Css.style({
-      hd: Css.display("flex"),
+var input = Css.style({
+      hd: Css.gridRow(3, 3),
       tl: {
-        hd: Css.width(Css.pct(100)),
+        hd: Css.gridColumn(1, 4),
         tl: {
-          hd: Css.height(Css.px(150)),
+          hd: Css.textAlign(Css.center),
+          tl: /* [] */0
+        }
+      }
+    });
+
+var challenge = Css.style({
+      hd: Css.gridRow(2, 2),
+      tl: {
+        hd: Css.gridColumn(1, 4),
+        tl: {
+          hd: Css.textAlign(Css.center),
+          tl: /* [] */0
+        }
+      }
+    });
+
+var options = Css.style({
+      hd: Css.gridRow(4, 10),
+      tl: {
+        hd: Css.gridColumn(1, 4),
+        tl: {
+          hd: Css.display("flex"),
           tl: {
             hd: Css.justifyContent("spaceEvenly"),
             tl: /* [] */0
@@ -59,15 +110,9 @@ var column = Css.style({
     });
 
 var center = Css.style({
-      hd: Css.display(Css.inlineBlock),
+      hd: Css.gridColumn(2, 2),
       tl: {
-        hd: Css.margin2({
-              NAME: "percent",
-              VAL: 45
-            }, {
-              NAME: "percent",
-              VAL: 25
-            }),
+        hd: Css.gridRow(5, 7),
         tl: {
           hd: Css.textAlign(Css.center),
           tl: /* [] */0
@@ -75,12 +120,25 @@ var center = Css.style({
       }
     });
 
+var filter = Css.style({
+      hd: Css.gridColumn(3, 3),
+      tl: {
+        hd: Css.gridRow(1, 1),
+        tl: {
+          hd: Css.textAlign("center"),
+          tl: /* [] */0
+        }
+      }
+    });
+
 var Styles = {
   app: app,
+  input: input,
   challenge: challenge,
   options: options,
   column: column,
-  center: center
+  center: center,
+  filter: filter
 };
 
 function contains(translations, w) {
@@ -91,19 +149,6 @@ function contains(translations, w) {
                   return Words$Avocardo.is_match(t._0, w);
                 }
               }), translations);
-}
-
-function solved(selection, exercise) {
-  var tokens = $$String.split_on_char(/* " " */32, selection);
-  if (!tokens) {
-    return false;
-  }
-  var match = tokens.tl;
-  if (match && !(match.tl || !contains(exercise.pronouns, tokens.hd))) {
-    return contains(exercise.nouns, match.hd);
-  } else {
-    return false;
-  }
 }
 
 function solution(exercise) {
@@ -121,30 +166,47 @@ function solution(exercise) {
   return findRight(exercise.pronouns, 0) + (" " + findRight(exercise.nouns, 0));
 }
 
+function solved(selection, exercise) {
+  var tokens = $$String.split_on_char(/* " " */32, selection);
+  if (!tokens) {
+    return false;
+  }
+  var match = tokens.tl;
+  if (match && !(match.tl || !contains(exercise.pronouns, tokens.hd))) {
+    return contains(exercise.nouns, match.hd);
+  } else {
+    return false;
+  }
+}
+
+var ExerciseSolver = {
+  contains: contains,
+  solution: solution,
+  solved: solved
+};
+
 function Card$Evaluation(Props) {
   var selection = Props.selection;
   var exercise = Props.exercise;
   var onNext = Props.onNext;
   return React.createElement("div", {
               style: app
-            }, solved(selection, exercise) ? React.createElement("button", {
-                    style: center,
-                    onClick: (function (param) {
-                        return Curry._1(onNext, undefined);
-                      })
-                  }, "Beautiful Pepper") : React.createElement(React.Fragment, undefined, React.createElement("div", {
+            }, solved(selection, exercise) ? React.createElement("div", {
+                    style: center
+                  }, React.createElement("button", {
+                        onClick: (function (param) {
+                            return Curry._1(onNext, undefined);
+                          })
+                      }, "Beautiful Pepper")) : React.createElement(React.Fragment, undefined, React.createElement("div", {
                         style: center
-                      }, React.createElement("div", undefined, exercise.quiz), React.createElement("div", undefined, solution(exercise)), React.createElement("button", {
+                      }, React.createElement("button", {
                             onClick: (function (param) {
                                 return Curry._1(onNext, undefined);
                               })
-                          }, "Farty Pepper"))));
+                          }, "Farty Pepper"), React.createElement("div", undefined, exercise.quiz), React.createElement("div", undefined, solution(exercise)))));
 }
 
 var Evaluation = {
-  contains: contains,
-  solved: solved,
-  solution: solution,
   make: Card$Evaluation
 };
 
@@ -192,62 +254,63 @@ function willRestartQuiz(cur, next) {
   }
 }
 
-function useReducer(getInitialState, reduce, next) {
-  var match = React.useState(function () {
-        return Curry._1(getInitialState, undefined);
-      });
-  var setState = match[1];
-  var state = match[0];
-  var dispatch = function (a) {
-    return Curry._1(setState, (function (s) {
-                  return Curry._2(reduce, s, a);
-                }));
-  };
-  Keyboard$Avocardo.use(React.useCallback(function (c) {
-            var a = {
-              _0: c,
-              [Symbol.for("name")]: "Char"
-            };
-            return Curry._1(setState, (function (s) {
-                          return Curry._2(reduce, s, a);
-                        }));
-          }), React.useCallback((function (param) {
-              if (willRestartQuiz(state, reduce_quiz(state, /* Enter */0))) {
-                Curry._1(next, undefined);
-              }
-              return Curry._1(setState, (function (s) {
-                            return Curry._2(reduce, s, /* Enter */0);
-                          }));
-            }), [state]), React.useCallback(function (param) {
-            return Curry._1(setState, (function (s) {
-                          return Curry._2(reduce, s, /* Delete */1);
-                        }));
-          }));
-  return [
-          state,
-          dispatch
-        ];
+function willShowVeredict(cur, next) {
+  if (cur.TAG || !next.TAG) {
+    return false;
+  } else {
+    return true;
+  }
 }
 
 function Card(Props) {
   var exercise = Props.exercise;
   var next = Props.next;
-  var match = useReducer((function (param) {
-          return {
-                  TAG: 0,
-                  _0: "",
-                  [Symbol.for("name")]: "Solving"
-                };
-        }), reduce_quiz, next);
-  var dispatch = match[1];
+  var storeStatus = Props.storeStatus;
+  var filter$1 = Props.filter;
+  var match = React.useState(function () {
+        return {
+                TAG: 0,
+                _0: "",
+                [Symbol.for("name")]: "Solving"
+              };
+      });
+  var setQuiz = match[1];
   var quiz = match[0];
   var e = Curry._1(exercise.read, undefined);
+  Keyboard$Avocardo.use(React.useCallback(function (c) {
+            var a = {
+              _0: c,
+              [Symbol.for("name")]: "Char"
+            };
+            return Curry._1(setQuiz, (function (s) {
+                          return reduce_quiz(s, a);
+                        }));
+          }), React.useCallback((function (param) {
+              var match = reduce_quiz(quiz, /* Enter */0);
+              if (quiz.TAG) {
+                if (!match.TAG) {
+                  Curry._1(next, undefined);
+                }
+                
+              } else if (match.TAG) {
+                Curry._2(storeStatus, e, solved(match._0, e));
+              }
+              return Curry._1(setQuiz, (function (s) {
+                            return reduce_quiz(s, /* Enter */0);
+                          }));
+            }), [quiz]), React.useCallback(function (param) {
+            return Curry._1(setQuiz, (function (s) {
+                          return reduce_quiz(s, /* Delete */1);
+                        }));
+          }));
   if (quiz.TAG) {
     return React.createElement(Card$Evaluation, {
                 selection: quiz._0,
                 exercise: e,
                 onNext: (function (param) {
-                    return Curry._1(dispatch, /* Enter */0);
+                    return Curry._1(setQuiz, (function (s) {
+                                  return reduce_quiz(s, /* Enter */0);
+                                }));
                   })
               });
   }
@@ -255,9 +318,13 @@ function Card(Props) {
   var match$1 = Token$Avocardo.StyledWords.style(selection, e.pronouns, e.nouns);
   return React.createElement("div", {
               style: app
-            }, React.createElement("div", undefined, selection), React.createElement("div", {
+            }, React.createElement("div", {
+                  style: filter
+                }, filter$1), React.createElement("div", {
                   style: challenge
                 }, e.quiz), React.createElement("div", {
+                  style: input
+                }, selection, React.createElement(Prompt$Avocardo.make, {})), React.createElement("div", {
                   style: options
                 }, React.createElement("div", {
                       style: column
@@ -277,9 +344,10 @@ function Card(Props) {
 var make = Card;
 
 exports.Styles = Styles;
+exports.ExerciseSolver = ExerciseSolver;
 exports.Evaluation = Evaluation;
 exports.reduce_quiz = reduce_quiz;
 exports.willRestartQuiz = willRestartQuiz;
-exports.useReducer = useReducer;
+exports.willShowVeredict = willShowVeredict;
 exports.make = make;
 /* app Not a pure module */

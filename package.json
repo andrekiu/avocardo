@@ -3,7 +3,8 @@
     "bundle-dev": "sh ./scripts/bundle_client.sh",
     "client-dev": "yarn run --experimental-scope-hoisting parcel watch  src/chrome_extension/UI.re -d build/chrome_extension_dev --no-hmr",
     "server-dev": "yarn run nodemon --watch ./src/server src/server/Server.bs.js",
-    "react-dev": "yarn run react-devtools"
+    "react-dev": "yarn run react-devtools",
+    "dev": "yarn run bundle-dev; yarn run client-dev & yarn run server-dev"
   },
   "devDependencies": {
     "bs-platform": "^8.2.0",

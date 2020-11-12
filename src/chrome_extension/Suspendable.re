@@ -34,3 +34,8 @@ let make: Js.Promise.t('a) => t('a) =
     }:
       t('a)
   );
+
+let const: 'a => t('a) =
+  c => {
+    make(Js.Promise.resolve(c));
+  };

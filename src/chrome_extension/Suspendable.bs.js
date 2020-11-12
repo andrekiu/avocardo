@@ -33,5 +33,10 @@ function make(p) {
         };
 }
 
+function $$const(c) {
+  return make(Promise.resolve(c));
+}
+
 exports.make = make;
+exports.$$const = $$const;
 /* No side effect */
