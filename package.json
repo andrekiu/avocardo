@@ -21,6 +21,7 @@
     "bs-express": "^1.0.2",
     "bs-fetch": "^0.6.2",
     "bs-webapi": "^0.19.1",
+    "mysql": "^2.18.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "reason-react": "0.9.1"

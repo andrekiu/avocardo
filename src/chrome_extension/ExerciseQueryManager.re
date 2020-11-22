@@ -3,6 +3,7 @@ type filter =
   | Any
   | JustFails;
 type t = {
+  fingerprint: string,
   fails: list(pronoun_exercise),
   exercise: Suspendable.t(pronoun_exercise),
 };
@@ -16,7 +17,8 @@ let getExercise = (qm, filter) => {
   };
 };
 
-let make = (): t => {
+let make = (fingerprint): t => {
+  fingerprint,
   fails: [],
   exercise: Suspendable.make(Translation.getExercise()),
 };

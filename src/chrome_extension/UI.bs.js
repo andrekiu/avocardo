@@ -141,7 +141,7 @@ var Filter = {
 };
 
 function UI$App(Props) {
-  Props.fingerprint;
+  var fingerprint = Props.fingerprint;
   var match = React.useState(function () {
         return Suspendable$Avocardo.make(Timer$Avocardo.waitMS(500));
       });
@@ -152,7 +152,7 @@ function UI$App(Props) {
   var setFilter = match$1[1];
   var filter = match$1[0];
   var match$2 = React.useState(function () {
-        return ExerciseQueryManager$Avocardo.make(undefined);
+        return ExerciseQueryManager$Avocardo.make(fingerprint);
       });
   var setQuery = match$2[1];
   var response = match$2[0];

@@ -62,7 +62,7 @@ module App = {
     let (wait, setWait) = React.useState(delay);
     let (filter, setFilter) = React.useState(() => ExerciseQueryManager.Any);
     let (response, setQuery) =
-      React.useState(() => ExerciseQueryManager.make());
+      React.useState(() => ExerciseQueryManager.make(fingerprint));
 
     <React.Suspense fallback={<Shimmer />}>
       <Wait wait />
