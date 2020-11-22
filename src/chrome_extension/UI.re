@@ -58,7 +58,7 @@ module Filter = {
 
 module App = {
   [@react.component]
-  let make = () => {
+  let make = (~fingerprint) => {
     let (wait, setWait) = React.useState(delay);
     let (filter, setFilter) = React.useState(() => ExerciseQueryManager.Any);
     let (response, setQuery) =
@@ -99,7 +99,9 @@ module App = {
   };
 };
 
-switch (ReactDOM.querySelector("#root")) {
-| Some(root) => ReactDOM.render(<App />, root)
-| None => ()
-};
+Fingerprint.get(fingerprint => {
+  switch (ReactDOM.querySelector("#root")) {
+  | Some(root) => ReactDOM.render(<App fingerprint />, root)
+  | None => ()
+  }
+});

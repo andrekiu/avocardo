@@ -8,6 +8,7 @@ var React = require("react");
 var ReactDom = require("react-dom");
 var Card$Avocardo = require("./Card.bs.js");
 var Timer$Avocardo = require("./Timer.bs.js");
+var Fingerprint$Avocardo = require("./auth/Fingerprint.bs.js");
 var Suspendable$Avocardo = require("./Suspendable.bs.js");
 var ExerciseQueryManager$Avocardo = require("./ExerciseQueryManager.bs.js");
 
@@ -140,6 +141,7 @@ var Filter = {
 };
 
 function UI$App(Props) {
+  Props.fingerprint;
   var match = React.useState(function () {
         return Suspendable$Avocardo.make(Timer$Avocardo.waitMS(500));
       });
@@ -212,11 +214,16 @@ var App = {
   make: UI$App
 };
 
-var root = document.querySelector("#root");
-
-if (!(root == null)) {
-  ReactDom.render(React.createElement(UI$App, {}), root);
-}
+Fingerprint$Avocardo.get(function (fingerprint) {
+      var root = document.querySelector("#root");
+      if (!(root == null)) {
+        ReactDom.render(React.createElement(UI$App, {
+                  fingerprint: fingerprint
+                }), root);
+        return ;
+      }
+      
+    });
 
 exports.Wait = Wait;
 exports.delay = delay;
