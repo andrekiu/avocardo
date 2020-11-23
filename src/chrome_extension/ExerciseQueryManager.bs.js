@@ -16,8 +16,9 @@ function getExercise(qm, filter) {
   return Suspendable$Avocardo.$$const(Caml_array.caml_array_get(shuffled, 0));
 }
 
-function make(param) {
+function make(fingerprint) {
   return {
+          fingerprint: fingerprint,
           fails: /* [] */0,
           exercise: Suspendable$Avocardo.make(Translation$Avocardo.getExercise(undefined))
         };
@@ -25,6 +26,7 @@ function make(param) {
 
 function appendFail(qm, f) {
   return {
+          fingerprint: qm.fingerprint,
           fails: {
             hd: f,
             tl: qm.fails
@@ -35,6 +37,7 @@ function appendFail(qm, f) {
 
 function removeFail(qm, f) {
   return {
+          fingerprint: qm.fingerprint,
           fails: List.filter(function (e) {
                   return e.quiz !== f.quiz;
                 })(qm.fails),
@@ -44,6 +47,7 @@ function removeFail(qm, f) {
 
 function preloadQuery(qm, f) {
   return {
+          fingerprint: qm.fingerprint,
           fails: qm.fails,
           exercise: getExercise(qm, f)
         };
