@@ -5,3 +5,4 @@ lib
 .merlin
 env
 bin
+mysql_options.cnf
