@@ -1,10 +1,11 @@
 {
   "scripts": {
-    "bundle-dev": "sh ./scripts/bundle_client.sh",
-    "client-dev": "yarn run --experimental-scope-hoisting parcel watch  src/chrome_extension/UI.re -d build/chrome_extension_dev --no-hmr",
+    "bundle": "sh ./scripts/bundle_client.sh",
+    "client-prod": "yarn run --experimental-scope-hoisting parcel build src/chrome_extension/UI.re -d build/chrome_extension_dev",
+    "client-dev": "yarn run --experimental-scope-hoisting parcel watch src/chrome_extension/UI.re -d build/chrome_extension_dev --no-hmr",
     "server-dev": "yarn run nodemon --watch ./src/server src/server/Server.bs.js",
     "react-dev": "yarn run react-devtools",
-    "dev": "yarn run bundle-dev; yarn run client-dev & yarn run server-dev"
+    "prod": "yarn run bundle prod; yarn run client-prod" 
   },
   "devDependencies": {
     "bs-platform": "^8.2.0",
@@ -20,7 +21,9 @@
     "bs-css-dom": "^2.0.0",
     "bs-express": "^1.0.2",
     "bs-fetch": "^0.6.2",
+    "bs-mysql2": "https://github.com/andrekiu/bs-mysql2.git",
     "bs-webapi": "^0.19.1",
+    "dotenv": "^8.2.0",
     "mysql": "^2.18.1",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",

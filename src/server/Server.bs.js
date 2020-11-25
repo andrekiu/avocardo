@@ -16,11 +16,10 @@ function makeSuccessJson(response) {
   return json;
 }
 
-Express.App.get(app, "/pronoun_exercises", Express.Middleware.from(function (param, param$1) {
-          var partial_arg = makeSuccessJson(PronounController$Avocardo.jsonResponse(undefined));
-          return function (param) {
-            return Express.$$Response.sendJson(partial_arg, param);
-          };
+Express.App.get(app, "/pronoun_exercises", Express.PromiseMiddleware.from(function (param, param$1, res) {
+          return PronounController$Avocardo.genJsonResponse(undefined).then(function (json) {
+                      return Promise.resolve(Express.$$Response.sendJson(makeSuccessJson(json), res));
+                    });
         }));
 
 function onListen(e) {

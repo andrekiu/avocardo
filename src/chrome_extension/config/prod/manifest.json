@@ -1,0 +1,14 @@
+{
+  "name": "Avocardo",
+  "version": "0.1",
+  "description": "Avocado cards to test your spanish!",
+  "permissions": ["declarativeContent", "http://avocardo.pepperavocado.com/*", "storage"],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "page_action": {
+    "default_popup": "index.html"
+  },
+  "manifest_version": 2
+}

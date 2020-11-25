@@ -6,3 +6,5 @@ lib
 env
 bin
 mysql_options.cnf
+.env
+.env.production

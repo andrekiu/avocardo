@@ -1,1 +1,2 @@
-cp src/chrome_extension/config/* build/chrome_extension_dev
+SRC="src/chrome_extension/config/$1/*"
+DONE=$(cp $SRC build/chrome_extension)

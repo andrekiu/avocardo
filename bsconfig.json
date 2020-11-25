@@ -23,7 +23,8 @@
     "bs-css-dom",
     "bs-express",
     "bs-fetch",
-    "@glennsl/bs-json"
+    "@glennsl/bs-json",
+    "bs-mysql2"
   ],
   "warnings": {
     "error": "+101"

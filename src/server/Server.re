@@ -12,8 +12,11 @@ let makeSuccessJson = response => {
 App.get(
   app,
   ~path="/pronoun_exercises",
-  Middleware.from((_, _) => {
-    Response.sendJson(makeSuccessJson(PronounController.jsonResponse()))
+  PromiseMiddleware.from((_, _, res) => {
+    PronounController.genJsonResponse()
+    |> Js.Promise.then_(json => {
+         makeSuccessJson(json)->Response.sendJson(res)->Js.Promise.resolve
+       })
   }),
 );
 
