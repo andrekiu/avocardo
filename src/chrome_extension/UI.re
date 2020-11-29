@@ -58,11 +58,10 @@ module Filter = {
 
 module App = {
   [@react.component]
-  let make = (~fingerprint) => {
+  let make = (~qm: ExerciseQueryManager.t) => {
     let (wait, setWait) = React.useState(delay);
     let (filter, setFilter) = React.useState(() => ExerciseQueryManager.Any);
-    let (response, setQuery) =
-      React.useState(() => ExerciseQueryManager.make(fingerprint));
+    let (response, setQuery) = React.useState(() => qm);
 
     <React.Suspense fallback={<Shimmer />}>
       <Wait wait />
@@ -72,7 +71,8 @@ module App = {
           setWait(_ => delay());
           setQuery(qm => ExerciseQueryManager.preloadQuery(qm, filter));
         }}
-        storeStatus={(e, didSucceed) =>
+        storeStatus={(e, didSucceed) => {
+          ExerciseQueryManager.saveAnswer(qm, e, didSucceed);
           switch (filter, didSucceed) {
           | (Any, false) =>
             setQuery(qm => ExerciseQueryManager.appendFail(qm, e))
@@ -82,8 +82,8 @@ module App = {
               setFilter(_ => Any);
             };
           | _ => ignore()
-          }
-        }
+          };
+        }}
         filter={
           <Filter
             filter
@@ -101,7 +101,11 @@ module App = {
 
 Fingerprint.get(fingerprint => {
   switch (ReactDOM.querySelector("#root")) {
-  | Some(root) => ReactDOM.render(<App fingerprint />, root)
+  | Some(root) =>
+    ReactDOM.render(
+      <App qm={ExerciseQueryManager.make(fingerprint)} />,
+      root,
+    )
   | None => ()
   }
 });

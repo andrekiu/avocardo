@@ -17,6 +17,16 @@ let getExercise = (qm, filter) => {
   };
 };
 
+let saveAnswer = (qm: t, e: pronoun_exercise, didSucceed: bool) => {
+  Translation.saveAnswer(
+    Answer.Encode.answer({
+      fingerprint: qm.fingerprint,
+      question_id: e.id,
+      assesment: didSucceed ? Correct : Incorrect,
+    }),
+  );
+};
+
 let make = (fingerprint): t => {
   fingerprint,
   fails: [],

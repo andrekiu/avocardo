@@ -3,7 +3,7 @@ use avocardo;
 
 create table if not exists answers (
   id bigint not null auto_increment,
-  user_id bigint not null, 
+  fingerprint varchar(128) not null, 
   question_id bigint not null,
   assesment varchar(64) not null,
   answered_time datetime not null,

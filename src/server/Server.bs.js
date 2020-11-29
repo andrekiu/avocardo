@@ -4,10 +4,14 @@
 var Js_exn = require("bs-platform/lib/js/js_exn.js");
 var Express = require("bs-express/src/Express.js");
 var Process = require("process");
+var Belt_Option = require("bs-platform/lib/js/belt_Option.js");
 var Caml_js_exceptions = require("bs-platform/lib/js/caml_js_exceptions.js");
+var AnswerController$Avocardo = require("./answers/AnswerController.bs.js");
 var PronounController$Avocardo = require("./exercises/PronounController.bs.js");
 
 var app = Express.express(undefined);
+
+Express.App.use(app, Express.Middleware.json(undefined, undefined, undefined, undefined));
 
 function makeSuccessJson(response) {
   var json = {};
@@ -19,6 +23,12 @@ function makeSuccessJson(response) {
 Express.App.get(app, "/pronoun_exercises", Express.PromiseMiddleware.from(function (param, param$1, res) {
           return PronounController$Avocardo.genJsonResponse(undefined).then(function (json) {
                       return Promise.resolve(Express.$$Response.sendJson(makeSuccessJson(json), res));
+                    });
+        }));
+
+Express.App.post(app, "/answer", Express.PromiseMiddleware.from(function (param, req, res) {
+          return AnswerController$Avocardo.genSave(Belt_Option.getExn(Express.$$Request.bodyJSON(req))).then(function (param) {
+                      return Promise.resolve(Express.$$Response.sendJson(makeSuccessJson(1), res));
                     });
         }));
 

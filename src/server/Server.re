@@ -1,6 +1,7 @@
 open Express;
 
 let app = express();
+App.use(app, Express.Middleware.json());
 
 let makeSuccessJson = response => {
   let json = Js.Dict.empty();
@@ -16,6 +17,19 @@ App.get(
     PronounController.genJsonResponse()
     |> Js.Promise.then_(json => {
          makeSuccessJson(json)->Response.sendJson(res)->Js.Promise.resolve
+       })
+  }),
+);
+
+App.post(
+  app,
+  ~path="/answer",
+  PromiseMiddleware.from((_, req, res) => {
+    AnswerController.genSave(Request.bodyJSON(req) |> Belt.Option.getExn)
+    |> Js.Promise.then_(_ => {
+         makeSuccessJson(Js.Json.number(1.))
+         ->Response.sendJson(res)
+         ->Js.Promise.resolve
        })
   }),
 );

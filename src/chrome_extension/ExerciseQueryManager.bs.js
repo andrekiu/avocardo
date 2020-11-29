@@ -5,6 +5,7 @@ var List = require("bs-platform/lib/js/list.js");
 var $$Array = require("bs-platform/lib/js/array.js");
 var Belt_Array = require("bs-platform/lib/js/belt_Array.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
+var Answer$Avocardo = require("../server/answers/Answer.bs.js");
 var Suspendable$Avocardo = require("./Suspendable.bs.js");
 var Translation$Avocardo = require("./Translation.bs.js");
 
@@ -14,6 +15,14 @@ function getExercise(qm, filter) {
   }
   var shuffled = Belt_Array.shuffle($$Array.of_list(qm.fails));
   return Suspendable$Avocardo.$$const(Caml_array.caml_array_get(shuffled, 0));
+}
+
+function saveAnswer(qm, e, didSucceed) {
+  return Translation$Avocardo.saveAnswer(Answer$Avocardo.Encode.answer({
+                  fingerprint: qm.fingerprint,
+                  question_id: e.id,
+                  assesment: didSucceed ? /* Correct */0 : /* Incorrect */1
+                }));
 }
 
 function make(fingerprint) {
@@ -54,6 +63,7 @@ function preloadQuery(qm, f) {
 }
 
 exports.getExercise = getExercise;
+exports.saveAnswer = saveAnswer;
 exports.make = make;
 exports.appendFail = appendFail;
 exports.removeFail = removeFail;

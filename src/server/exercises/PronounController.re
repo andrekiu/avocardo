@@ -3,18 +3,20 @@ open PronounExercises;
 module Decode = {
   open Json.Decode;
   type t = {
+    id: int,
     question: string,
     answer: string,
     alternatives: array(string),
   };
   let row = (json): t => {
+    id: json |> field("id", int),
     question: json |> field("question", string),
     answer: json |> field("answer", string),
     alternatives: json |> field("alternatives", array(string)),
   };
 };
 
-let format = ({question, answer, alternatives}: Decode.t) => {
+let format = ({id, question, answer, alternatives}: Decode.t) => {
   let split = sentence => {
     let firstBlankspace = String.index(sentence, ' ');
     (
@@ -50,17 +52,34 @@ let format = ({question, answer, alternatives}: Decode.t) => {
   let (pronounAnswer, nounAnswer) = split(answer);
   let components = Array.map(split, alternatives);
   {
+    id,
     quiz: question,
     pronouns: transform(Array.map(fst, components), pronounAnswer),
     nouns: transform(Array.map(snd, components), nounAnswer),
   };
 };
 
+let randomQuestion =
+  Requery.QueryBuilder.(
+    () => {
+      select(
+        [
+          e(tcol(tname("quizzes"), cname("id"))),
+          e(tcol(tname("quizzes"), cname("question"))),
+          e(tcol(tname("quizzes"), cname("answer"))),
+          e(tcol(tname("quizzes"), cname("alternatives"))),
+        ]
+        |> from(tableNamed("quizzes")),
+      )
+      |> orderBy1(call(fname("RAND"), []), asc);
+    }
+  );
+
 let genPronounExercices = () => {
   Js.Promise.make((~resolve, ~reject) => {
     MySql2.execute(
       DB.getConnection(),
-      "SELECT question, answer, alternatives FROM quizzes ORDER BY RAND() LIMIT 1",
+      randomQuestion() |> Requery.RenderQuery.Default.select,
       None,
       msg =>
       switch (msg) {

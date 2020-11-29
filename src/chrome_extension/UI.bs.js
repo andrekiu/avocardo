@@ -141,7 +141,7 @@ var Filter = {
 };
 
 function UI$App(Props) {
-  var fingerprint = Props.fingerprint;
+  var qm = Props.qm;
   var match = React.useState(function () {
         return Suspendable$Avocardo.make(Timer$Avocardo.waitMS(500));
       });
@@ -152,7 +152,7 @@ function UI$App(Props) {
   var setFilter = match$1[1];
   var filter = match$1[0];
   var match$2 = React.useState(function () {
-        return ExerciseQueryManager$Avocardo.make(fingerprint);
+        return qm;
       });
   var setQuery = match$2[1];
   var response = match$2[0];
@@ -172,6 +172,7 @@ function UI$App(Props) {
                                   }));
                     }),
                   storeStatus: (function (e, didSucceed) {
+                      ExerciseQueryManager$Avocardo.saveAnswer(qm, e, didSucceed);
                       if (filter) {
                         if (didSucceed) {
                           Curry._1(setQuery, (function (qm) {
@@ -218,7 +219,7 @@ Fingerprint$Avocardo.get(function (fingerprint) {
       var root = document.querySelector("#root");
       if (!(root == null)) {
         ReactDom.render(React.createElement(UI$App, {
-                  fingerprint: fingerprint
+                  qm: ExerciseQueryManager$Avocardo.make(fingerprint)
                 }), root);
         return ;
       }

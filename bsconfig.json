@@ -24,7 +24,10 @@
     "bs-express",
     "bs-fetch",
     "@glennsl/bs-json",
-    "bs-mysql2"
+    "bs-mysql2",
+    "@adnelson/requery",
+    "bs-webapi",
+    "tablecloth-bucklescript"
   ],
   "warnings": {
     "error": "+101"

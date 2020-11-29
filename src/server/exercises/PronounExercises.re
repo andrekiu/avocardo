@@ -3,6 +3,7 @@ type word =
   | Wrong(string);
 
 type pronoun_exercise = {
+  id: int,
   quiz: string,
   pronouns: array(word),
   nouns: array(word),
@@ -25,9 +26,10 @@ module Encode = {
       }
     );
 
-  let exercise = ({quiz, nouns, pronouns}) =>
+  let exercise = ({id, quiz, nouns, pronouns}) =>
     Json.Encode.(
       object_([
+        ("id", int(id)),
         ("quiz", string(quiz)),
         ("nouns", array(word, nouns)),
         ("pronouns", array(word, pronouns)),
@@ -43,6 +45,7 @@ module Decode = {
   };
 
   let exercise = (json): pronoun_exercise => {
+    id: json |> field("id", int),
     quiz: json |> field("quiz", string),
     pronouns: json |> field("pronouns", array(word)),
     nouns: json |> field("nouns", array(word)),

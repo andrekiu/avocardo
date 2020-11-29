@@ -2,16 +2,20 @@
 'use strict';
 
 var $$Array = require("bs-platform/lib/js/array.js");
+var Curry = require("bs-platform/lib/js/curry.js");
 var MySql2 = require("bs-mysql2/src/MySql2.bs.js");
 var $$String = require("bs-platform/lib/js/string.js");
 var Caml_array = require("bs-platform/lib/js/caml_array.js");
 var DB$Avocardo = require("../db/DB.bs.js");
 var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 var Caml_primitive = require("bs-platform/lib/js/caml_primitive.js");
+var RenderQuery$Requery = require("@adnelson/requery/src/RenderQuery.bs.js");
+var QueryBuilder$Requery = require("@adnelson/requery/src/QueryBuilder.bs.js");
 var PronounExercises$Avocardo = require("./PronounExercises.bs.js");
 
 function row(json) {
   return {
+          id: Json_decode.field("id", Json_decode.$$int, json),
           question: Json_decode.field("question", Json_decode.string, json),
           answer: Json_decode.field("answer", Json_decode.string, json),
           alternatives: Json_decode.field("alternatives", (function (param) {
@@ -78,6 +82,7 @@ function format(param) {
   var match = split(param.answer);
   var components = $$Array.map(split, param.alternatives);
   return {
+          id: param.id,
           quiz: param.question,
           pronouns: transform($$Array.map((function (prim) {
                       return prim[0];
@@ -88,9 +93,25 @@ function format(param) {
         };
 }
 
+function randomQuestion(param) {
+  return QueryBuilder$Requery.orderBy1(QueryBuilder$Requery.call(Curry._1(QueryBuilder$Requery.fname, "RAND"), /* [] */0), QueryBuilder$Requery.asc, QueryBuilder$Requery.select(QueryBuilder$Requery.from(QueryBuilder$Requery.tableNamed(undefined, "quizzes"), {
+                      hd: QueryBuilder$Requery.e(undefined, QueryBuilder$Requery.tcol(Curry._1(QueryBuilder$Requery.tname, "quizzes"), Curry._1(QueryBuilder$Requery.cname, "id"))),
+                      tl: {
+                        hd: QueryBuilder$Requery.e(undefined, QueryBuilder$Requery.tcol(Curry._1(QueryBuilder$Requery.tname, "quizzes"), Curry._1(QueryBuilder$Requery.cname, "question"))),
+                        tl: {
+                          hd: QueryBuilder$Requery.e(undefined, QueryBuilder$Requery.tcol(Curry._1(QueryBuilder$Requery.tname, "quizzes"), Curry._1(QueryBuilder$Requery.cname, "answer"))),
+                          tl: {
+                            hd: QueryBuilder$Requery.e(undefined, QueryBuilder$Requery.tcol(Curry._1(QueryBuilder$Requery.tname, "quizzes"), Curry._1(QueryBuilder$Requery.cname, "alternatives"))),
+                            tl: /* [] */0
+                          }
+                        }
+                      }
+                    })));
+}
+
 function genPronounExercices(param) {
   return new Promise((function (resolve, reject) {
-                return MySql2.execute(DB$Avocardo.getConnection(undefined), "SELECT question, answer, alternatives FROM quizzes ORDER BY RAND() LIMIT 1", undefined, (function (msg) {
+                return MySql2.execute(DB$Avocardo.getConnection(undefined), RenderQuery$Requery.Default.select(randomQuestion(undefined)), undefined, (function (msg) {
                               var variant = msg.NAME;
                               if (variant === "Select") {
                                 return resolve(row(Caml_array.caml_array_get(MySql2.Select.rows(msg.VAL), 0)));
@@ -114,6 +135,7 @@ function genJsonResponse(param) {
 
 exports.Decode = Decode;
 exports.format = format;
+exports.randomQuestion = randomQuestion;
 exports.genPronounExercices = genPronounExercices;
 exports.genJsonResponse = genJsonResponse;
 /* MySql2 Not a pure module */

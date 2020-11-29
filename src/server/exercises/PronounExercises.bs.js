@@ -45,20 +45,26 @@ function word(w) {
 function exercise(param) {
   return Json_encode.object_({
               hd: [
-                "quiz",
-                param.quiz
+                "id",
+                param.id
               ],
               tl: {
                 hd: [
-                  "nouns",
-                  Json_encode.array(word, param.nouns)
+                  "quiz",
+                  param.quiz
                 ],
                 tl: {
                   hd: [
-                    "pronouns",
-                    Json_encode.array(word, param.pronouns)
+                    "nouns",
+                    Json_encode.array(word, param.nouns)
                   ],
-                  tl: /* [] */0
+                  tl: {
+                    hd: [
+                      "pronouns",
+                      Json_encode.array(word, param.pronouns)
+                    ],
+                    tl: /* [] */0
+                  }
                 }
               }
             });
@@ -88,6 +94,7 @@ function word$1(json) {
 
 function exercise$1(json) {
   return {
+          id: Json_decode.field("id", Json_decode.$$int, json),
           quiz: Json_decode.field("quiz", Json_decode.string, json),
           pronouns: Json_decode.field("pronouns", (function (param) {
                   return Json_decode.array(word$1, param);
