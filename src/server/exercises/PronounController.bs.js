@@ -111,19 +111,21 @@ function randomQuestion(param) {
 
 function genPronounExercices(param) {
   return new Promise((function (resolve, reject) {
-                return MySql2.execute(DB$Avocardo.getConnection(undefined), RenderQuery$Requery.Default.select(randomQuestion(undefined)), undefined, (function (msg) {
-                              var variant = msg.NAME;
-                              if (variant === "Select") {
-                                return resolve(row(Caml_array.caml_array_get(MySql2.Select.rows(msg.VAL), 0)));
-                              } else if (variant === "Mutation") {
-                                return reject({
-                                            RE_EXN_ID: "Failure",
-                                            _1: "UNEXPECTED_MUTATION"
-                                          });
-                              } else {
-                                return reject(MySql2.Exn.toExn(msg.VAL));
-                              }
-                            }));
+                return DB$Avocardo.withConnection(function (conn) {
+                            return MySql2.execute(conn, RenderQuery$Requery.Default.select(randomQuestion(undefined)), undefined, (function (msg) {
+                                          var variant = msg.NAME;
+                                          if (variant === "Select") {
+                                            return resolve(row(Caml_array.caml_array_get(MySql2.Select.rows(msg.VAL), 0)));
+                                          } else if (variant === "Mutation") {
+                                            return reject({
+                                                        RE_EXN_ID: "Failure",
+                                                        _1: "UNEXPECTED_MUTATION"
+                                                      });
+                                          } else {
+                                            return reject(MySql2.Exn.toExn(msg.VAL));
+                                          }
+                                        }));
+                          });
               }));
 }
 

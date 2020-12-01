@@ -29,13 +29,16 @@ let genInsertAnswer = (answer: Answer.Decode.t) => {
         |> into(tname("answers"))
       )
       ->Requery.RenderQuery.Default.insert;
-    Js.log(statement);
-    MySql2.execute(DB.getConnection(), statement, None, msg =>
-      switch (msg) {
-      | `Error(e) => reject(. MySql2.Exn.toExn(e))
-      | `Select(_) => reject(. Failure("UNEXPECTED_SELECT"))
-      | `Mutation(mutation) => resolve(. MySql2.Mutation.insertId(mutation))
-      }
+
+    DB.withConnection(conn =>
+      MySql2.execute(conn, statement, None, msg =>
+        switch (msg) {
+        | `Error(e) => reject(. MySql2.Exn.toExn(e))
+        | `Select(_) => reject(. Failure("UNEXPECTED_SELECT"))
+        | `Mutation(mutation) =>
+          resolve(. MySql2.Mutation.insertId(mutation))
+        }
+      )
     );
   });
 };

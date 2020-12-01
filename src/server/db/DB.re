@@ -3,7 +3,7 @@
 [@bs.module "dotenv"] external config: unit => unit = "config";
 
 config();
-let conn =
+let conn = () =>
   MySql2.Connection.connect(
     ~database="avocardo",
     ~user="root",
@@ -13,4 +13,8 @@ let conn =
     (),
   );
 
-let getConnection = () => conn;
+let withConnection = cb => {
+  let conn = conn();
+  cb(conn);
+  MySql2.Connection.close(conn);
+};

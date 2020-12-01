@@ -43,19 +43,21 @@ function genInsertAnswer(answer) {
                               Answer$Avocardo.Encode.assesmentToStr(answer.assesment)
                             ])));
                 console.log(statement);
-                return MySql2.execute(DB$Avocardo.getConnection(undefined), statement, undefined, (function (msg) {
-                              var variant = msg.NAME;
-                              if (variant === "Select") {
-                                return reject({
-                                            RE_EXN_ID: "Failure",
-                                            _1: "UNEXPECTED_SELECT"
-                                          });
-                              } else if (variant === "Mutation") {
-                                return resolve(MySql2.Mutation.insertId(msg.VAL));
-                              } else {
-                                return reject(MySql2.Exn.toExn(msg.VAL));
-                              }
-                            }));
+                return DB$Avocardo.withConnection(function (conn) {
+                            return MySql2.execute(conn, statement, undefined, (function (msg) {
+                                          var variant = msg.NAME;
+                                          if (variant === "Select") {
+                                            return reject({
+                                                        RE_EXN_ID: "Failure",
+                                                        _1: "UNEXPECTED_SELECT"
+                                                      });
+                                          } else if (variant === "Mutation") {
+                                            return resolve(MySql2.Mutation.insertId(msg.VAL));
+                                          } else {
+                                            return reject(MySql2.Exn.toExn(msg.VAL));
+                                          }
+                                        }));
+                          });
               }));
 }
 

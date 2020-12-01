@@ -77,17 +77,16 @@ let randomQuestion =
 
 let genPronounExercices = () => {
   Js.Promise.make((~resolve, ~reject) => {
-    MySql2.execute(
-      DB.getConnection(),
-      randomQuestion() |> Requery.RenderQuery.Default.select,
-      None,
-      msg =>
-      switch (msg) {
-      | `Error(e) => reject(. MySql2.Exn.toExn(e))
-      | `Select(select) =>
-        resolve(. MySql2.Select.rows(select)[0] |> Decode.row)
-      | `Mutation(_) => reject(. Failure("UNEXPECTED_MUTATION"))
-      }
+    DB.withConnection(conn =>
+      MySql2.execute(
+        conn, randomQuestion() |> Requery.RenderQuery.Default.select, None, msg =>
+        switch (msg) {
+        | `Error(e) => reject(. MySql2.Exn.toExn(e))
+        | `Select(select) =>
+          resolve(. MySql2.Select.rows(select)[0] |> Decode.row)
+        | `Mutation(_) => reject(. Failure("UNEXPECTED_MUTATION"))
+        }
+      )
     )
   });
 };
