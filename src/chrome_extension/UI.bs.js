@@ -27,57 +27,51 @@ function delay(param) {
 }
 
 var app = Css.style({
-      hd: Css.border({
+      hd: Css.height({
             NAME: "px",
-            VAL: 1
-          }, "solid", "currentColor"),
+            VAL: 200
+          }),
       tl: {
-        hd: Css.height({
+        hd: Css.width({
               NAME: "px",
               VAL: 200
             }),
         tl: {
-          hd: Css.width({
-                NAME: "px",
-                VAL: 200
-              }),
+          hd: Css.display("grid"),
           tl: {
-            hd: Css.display("grid"),
+            hd: Css.gridTemplateColumns({
+                  hd: {
+                    NAME: "repeat",
+                    VAL: [
+                      {
+                        NAME: "num",
+                        VAL: 3
+                      },
+                      {
+                        NAME: "fr",
+                        VAL: 1
+                      }
+                    ]
+                  },
+                  tl: /* [] */0
+                }),
             tl: {
-              hd: Css.gridTemplateColumns({
-                    hd: {
-                      NAME: "repeat",
-                      VAL: [
-                        {
-                          NAME: "num",
-                          VAL: 3
-                        },
-                        {
-                          NAME: "fr",
-                          VAL: 1
-                        }
-                      ]
-                    },
-                    tl: /* [] */0
+              hd: Css.gridGap({
+                    NAME: "px",
+                    VAL: 10
                   }),
               tl: {
-                hd: Css.gridGap({
-                      NAME: "px",
-                      VAL: 10
+                hd: Css.gridAutoRows({
+                      NAME: "minmax",
+                      VAL: [
+                        {
+                          NAME: "px",
+                          VAL: 50
+                        },
+                        "auto"
+                      ]
                     }),
-                tl: {
-                  hd: Css.gridAutoRows({
-                        NAME: "minmax",
-                        VAL: [
-                          {
-                            NAME: "px",
-                            VAL: 50
-                          },
-                          "auto"
-                        ]
-                      }),
-                  tl: /* [] */0
-                }
+                tl: /* [] */0
               }
             }
           }

@@ -14,7 +14,6 @@ module Styles = {
   open Css;
   let app =
     style([
-      border(`px(1), `solid, `currentColor),
       height(`px(200)),
       width(`px(200)),
       display(`grid),

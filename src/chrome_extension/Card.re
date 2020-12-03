@@ -13,7 +13,12 @@ module Styles = {
   let input = style([gridRow(3, 3), gridColumn(1, 4), textAlign(center)]);
 
   let challenge =
-    style([gridRow(2, 2), gridColumn(1, 4), textAlign(center)]);
+    style([
+      gridRow(2, 2),
+      gridColumn(1, 4),
+      textAlign(center),
+      fontWeight(`bold),
+    ]);
   let options =
     style([
       gridRow(4, 10),
@@ -26,6 +31,7 @@ module Styles = {
       display(`flex),
       flexDirection(`column),
       justifyContent(`spaceEvenly),
+      alignItems(`center),
     ]);
   let center = style([gridColumn(2, 2), gridRow(5, 7), textAlign(center)]);
   let filter =

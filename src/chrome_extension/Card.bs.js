@@ -79,7 +79,10 @@ var challenge = Css.style({
         hd: Css.gridColumn(1, 4),
         tl: {
           hd: Css.textAlign(Css.center),
-          tl: /* [] */0
+          tl: {
+            hd: Css.fontWeight("bold"),
+            tl: /* [] */0
+          }
         }
       }
     });
@@ -104,7 +107,10 @@ var column = Css.style({
         hd: Css.flexDirection("column"),
         tl: {
           hd: Css.justifyContent("spaceEvenly"),
-          tl: /* [] */0
+          tl: {
+            hd: Css.alignItems("center"),
+            tl: /* [] */0
+          }
         }
       }
     });

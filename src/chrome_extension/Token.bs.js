@@ -16,20 +16,50 @@ var bold = Css.style({
 
 var noop = Css.style(/* [] */0);
 
-function opacity(pct) {
+function token(pct) {
+  var begin_rbg = [
+    223,
+    223,
+    226
+  ];
+  var get_delta = function (param, param$1) {
+    return [
+            param$1[0] - param[0],
+            param$1[1] - param[1],
+            param$1[2] - param[2]
+          ];
+  };
+  var scale = function (param, param$1, pct) {
+    return [
+            param[0] + param$1[0] * pct,
+            param[1] + param$1[1] * pct,
+            param[2] + param$1[2] * pct
+          ];
+  };
+  var match = scale(begin_rbg, get_delta(begin_rbg, [
+            180,
+            206,
+            141
+          ]), pct);
   return Css.style({
-              hd: Css.backgroundColor(Css.rgba(168, 202, 89, {
-                        NAME: "percent",
-                        VAL: pct
-                      })),
-              tl: /* [] */0
+              hd: Css.backgroundColor(Css.rgb(match[0] | 0, match[1] | 0, match[2] | 0)),
+              tl: {
+                hd: Css.padding2(Css.px(8), Css.px(12)),
+                tl: {
+                  hd: Css.borderRadius(Css.px(5)),
+                  tl: {
+                    hd: Css.border(Css.px(0), "none", Css.currentColor),
+                    tl: /* [] */0
+                  }
+                }
+              }
             });
 }
 
 var Styles = {
   bold: bold,
   noop: noop,
-  opacity: opacity
+  token: token
 };
 
 function create(word, matchedPrefix) {
@@ -52,7 +82,7 @@ function create(word, matchedPrefix) {
                 word,
                 false
               ]],
-          container: word.length === 0 ? 0 : matchedPrefix / word.length * 100
+          pct_match: word.length === 0 ? 0 : matchedPrefix / word.length
         };
 }
 
@@ -62,14 +92,14 @@ function map(fn, tok) {
               }), tok.tokens);
 }
 
-function highlight(tok) {
-  return opacity(tok.container);
+function style(tok) {
+  return token(tok.pct_match);
 }
 
 var StyledToken = {
   create: create,
   map: map,
-  highlight: highlight
+  style: style
 };
 
 function match_(words, prefix) {
@@ -78,7 +108,7 @@ function match_(words, prefix) {
               }), $$Array.map(PronounExercises$Avocardo.toString, words));
 }
 
-function style(word, pronouns, candidates) {
+function style$1(word, pronouns, candidates) {
   var tokens = $$String.split_on_char(/* " " */32, word);
   if (!tokens) {
     return [
@@ -103,13 +133,13 @@ function style(word, pronouns, candidates) {
 
 var StyledWords = {
   match_: match_,
-  style: style
+  style: style$1
 };
 
 function Token(Props) {
   var tok = Props.tok;
   return React.createElement("button", {
-              style: opacity(tok.container)
+              style: token(tok.pct_match)
             }, map((function (str, style) {
                     return React.createElement("span", {
                                 style: style
