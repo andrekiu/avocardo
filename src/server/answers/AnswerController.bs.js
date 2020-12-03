@@ -42,7 +42,6 @@ function genInsertAnswer(answer) {
                               answer.question_id,
                               Answer$Avocardo.Encode.assesmentToStr(answer.assesment)
                             ])));
-                console.log(statement);
                 return DB$Avocardo.withConnection(function (conn) {
                             return MySql2.execute(conn, statement, undefined, (function (msg) {
                                           var variant = msg.NAME;
