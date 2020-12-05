@@ -33,7 +33,19 @@ module Styles = {
       justifyContent(`spaceEvenly),
       alignItems(`center),
     ]);
-  let center = style([gridColumn(2, 2), gridRow(5, 7), textAlign(center)]);
+  let center = style([gridColumn(2, 2), gridRow(5, 7), height(px(80))]);
+  let correctResult =
+    style([
+      gridColumn(2, 2),
+      gridRow(3, 3),
+      textAlign(`center),
+      fontWeight(`bold),
+      fontStyle(`italic),
+    ]);
+  let bold = style([fontWeight(`bold)]);
+  let italic = style([fontStyle(`italic)]);
+  let result =
+    style([gridColumn(2, 2), gridRow(3, 3), textAlign(`center)]);
   let filter =
     style([gridColumn(3, 3), gridRow(1, 1), textAlign(`center)]);
 };
@@ -71,22 +83,29 @@ module ExerciseSolver = {
 
 module Evaluation = {
   [@react.component]
-  let make = (~selection, ~exercise, ~onNext) => {
+  let make = (~selection, ~exercise) => {
     <div style=Styles.app>
       {ExerciseSolver.solved(selection, exercise)
-         ? <div style=Styles.center>
-             <button onClick={_ => onNext()}>
-               {React.string("Beautiful Pepper")}
-             </button>
-           </div>
+         ? <>
+             <span style=Styles.correctResult>
+               {React.string("You got it!")}
+             </span>
+             <img
+               style=Styles.center
+               src={Chrome.Runtime.getURL("success.jpg")}
+             />
+           </>
          : <>
-             <div style=Styles.center>
-               <button onClick={_ => onNext()}>
-                 {React.string("Farty Pepper")}
-               </button>
-               <div> {React.string(exercise.quiz)} </div>
-               <div> {React.string(ExerciseSolver.solution(exercise))} </div>
+             <div style=Styles.result>
+               <div style=Styles.bold> {React.string(exercise.quiz)} </div>
+               <div style=Styles.italic>
+                 {ExerciseSolver.solution(exercise) |> React.string}
+               </div>
              </div>
+             <img
+               style=Styles.center
+               src={Chrome.Runtime.getURL("failure.jpg")}
+             />
            </>}
     </div>;
   };
@@ -170,7 +189,6 @@ let make =
         </div>
       </div>
     </div>;
-  | Veredict(selection) =>
-    <Evaluation selection exercise=e onNext={() => dispatch(Enter)} />
+  | Veredict(selection) => <Evaluation selection exercise=e />
   };
 };

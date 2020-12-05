@@ -106,7 +106,13 @@ var Shimmer = {
 
 var style = Css.style({
       hd: Css.cursor(Css.pointer),
-      tl: /* [] */0
+      tl: {
+        hd: Css.padding2(Css.px(10), Css.px(15)),
+        tl: {
+          hd: Css.textAlign("right"),
+          tl: /* [] */0
+        }
+      }
     });
 
 function UI$Filter(Props) {
@@ -125,7 +131,7 @@ function UI$Filter(Props) {
                       return Curry._1(onChangeFilter, /* Any */0);
                     }
                   })
-              }, List.length(fails), filter === /* Any */0 ? String.fromCodePoint(128293) : String.fromCodePoint(128584));
+              }, filter === /* Any */0 ? String.fromCodePoint(128293) : String.fromCodePoint(128584), " ", List.length(fails));
   }
 }
 

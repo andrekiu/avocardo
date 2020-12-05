@@ -120,7 +120,45 @@ var center = Css.style({
       tl: {
         hd: Css.gridRow(5, 7),
         tl: {
-          hd: Css.textAlign(Css.center),
+          hd: Css.height(Css.px(80)),
+          tl: /* [] */0
+        }
+      }
+    });
+
+var correctResult = Css.style({
+      hd: Css.gridColumn(2, 2),
+      tl: {
+        hd: Css.gridRow(3, 3),
+        tl: {
+          hd: Css.textAlign("center"),
+          tl: {
+            hd: Css.fontWeight("bold"),
+            tl: {
+              hd: Css.fontStyle("italic"),
+              tl: /* [] */0
+            }
+          }
+        }
+      }
+    });
+
+var bold = Css.style({
+      hd: Css.fontWeight("bold"),
+      tl: /* [] */0
+    });
+
+var italic = Css.style({
+      hd: Css.fontStyle("italic"),
+      tl: /* [] */0
+    });
+
+var result = Css.style({
+      hd: Css.gridColumn(2, 2),
+      tl: {
+        hd: Css.gridRow(3, 3),
+        tl: {
+          hd: Css.textAlign("center"),
           tl: /* [] */0
         }
       }
@@ -144,6 +182,10 @@ var Styles = {
   options: options,
   column: column,
   center: center,
+  correctResult: correctResult,
+  bold: bold,
+  italic: italic,
+  result: result,
   filter: filter
 };
 
@@ -194,22 +236,23 @@ var ExerciseSolver = {
 function Card$Evaluation(Props) {
   var selection = Props.selection;
   var exercise = Props.exercise;
-  var onNext = Props.onNext;
   return React.createElement("div", {
               style: app
-            }, solved(selection, exercise) ? React.createElement("div", {
-                    style: center
-                  }, React.createElement("button", {
-                        onClick: (function (param) {
-                            return Curry._1(onNext, undefined);
-                          })
-                      }, "Beautiful Pepper")) : React.createElement(React.Fragment, undefined, React.createElement("div", {
-                        style: center
-                      }, React.createElement("button", {
-                            onClick: (function (param) {
-                                return Curry._1(onNext, undefined);
-                              })
-                          }, "Farty Pepper"), React.createElement("div", undefined, exercise.quiz), React.createElement("div", undefined, solution(exercise)))));
+            }, solved(selection, exercise) ? React.createElement(React.Fragment, undefined, React.createElement("span", {
+                        style: correctResult
+                      }, "You got it!"), React.createElement("img", {
+                        style: center,
+                        src: chrome.runtime.getURL("success.jpg")
+                      })) : React.createElement(React.Fragment, undefined, React.createElement("div", {
+                        style: result
+                      }, React.createElement("div", {
+                            style: bold
+                          }, exercise.quiz), React.createElement("div", {
+                            style: italic
+                          }, solution(exercise))), React.createElement("img", {
+                        style: center,
+                        src: chrome.runtime.getURL("failure.jpg")
+                      })));
 }
 
 var Evaluation = {
@@ -312,12 +355,7 @@ function Card(Props) {
   if (quiz.TAG) {
     return React.createElement(Card$Evaluation, {
                 selection: quiz._0,
-                exercise: e,
-                onNext: (function (param) {
-                    return Curry._1(setQuiz, (function (s) {
-                                  return reduce_quiz(s, /* Enter */0);
-                                }));
-                  })
+                exercise: e
               });
   }
   var selection = quiz._0;

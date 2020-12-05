@@ -8,3 +8,4 @@ bin
 mysql_options.cnf
 .env
 .env.production
+.DS_Store

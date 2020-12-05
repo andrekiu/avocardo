@@ -35,7 +35,14 @@ module Shimmer = {
 };
 
 module Filter = {
-  let style = Css.(style([cursor(pointer)]));
+  let style =
+    Css.(
+      style([
+        cursor(pointer),
+        padding2(~v=px(10), ~h=px(15)),
+        textAlign(`right),
+      ])
+    );
   open ExerciseQueryManager;
   [@react.component]
   let make = (~filter, ~fails, ~onChangeFilter) =>
@@ -47,10 +54,11 @@ module Filter = {
         onClick={_ =>
           filter == Any ? onChangeFilter(JustFails) : onChangeFilter(Any)
         }>
-        {React.int(List.length(fails))}
         {filter == Any
            ? React.string(Js.String.fromCodePoint(0x1F525))
            : React.string(Js.String.fromCodePoint(0x1F648))}
+        {React.string(" ")}
+        {React.int(List.length(fails))}
       </div>;
     };
 };
