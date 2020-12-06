@@ -65,27 +65,26 @@ module Filter = {
 
 module App = {
   [@react.component]
-  let make = (~qm: ExerciseQueryManager.t) => {
-    let (wait, setWait) = React.useState(delay);
+  let make = (~initialQM: ExerciseQueryManager.t) => {
     let (filter, setFilter) = React.useState(() => ExerciseQueryManager.Any);
-    let (response, setQuery) = React.useState(() => qm);
+    let (qm, setQuery) = Experimental.useStateStatic(initialQM);
+    let next =
+      React.useCallback2(
+        () => setQuery(ExerciseQueryManager.preloadQuery(qm, filter)),
+        (qm, filter),
+      );
 
     <React.Suspense fallback={<Shimmer />}>
-      <Wait wait />
       <Card
-        exercise={response.exercise}
-        next={() => {
-          setWait(_ => delay());
-          setQuery(qm => ExerciseQueryManager.preloadQuery(qm, filter));
-        }}
+        exercise={qm.exercise}
+        next
         storeStatus={(e, didSucceed) => {
           ExerciseQueryManager.saveAnswer(qm, e, didSucceed);
           switch (filter, didSucceed) {
-          | (Any, false) =>
-            setQuery(qm => ExerciseQueryManager.appendFail(qm, e))
+          | (Any, false) => setQuery(ExerciseQueryManager.appendFail(qm, e))
           | (JustFails, true) =>
-            setQuery(qm => ExerciseQueryManager.removeFail(qm, e));
-            if (List.length(response.fails) == 1) {
+            setQuery(ExerciseQueryManager.removeFail(qm, e));
+            if (List.length(qm.fails) == 1) {
               setFilter(_ => Any);
             };
           | _ => ignore()
@@ -94,10 +93,10 @@ module App = {
         filter={
           <Filter
             filter
-            fails={response.fails}
+            fails={qm.fails}
             onChangeFilter={f => {
               setFilter(_ => f);
-              setQuery(qm => ExerciseQueryManager.preloadQuery(qm, f));
+              setQuery(ExerciseQueryManager.preloadQuery(qm, f));
             }}
           />
         }
@@ -109,10 +108,10 @@ module App = {
 Fingerprint.get(fingerprint => {
   switch (ReactDOM.querySelector("#root")) {
   | Some(root) =>
-    ReactDOM.render(
-      <App qm={ExerciseQueryManager.make(fingerprint)} />,
-      root,
-    )
+    Experimental.createRoot(root)
+    ->Experimental.render(
+        <App initialQM={ExerciseQueryManager.make(fingerprint)} />,
+      )
   | None => ()
   }
 });

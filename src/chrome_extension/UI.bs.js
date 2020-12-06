@@ -141,74 +141,59 @@ var Filter = {
 };
 
 function UI$App(Props) {
-  var qm = Props.qm;
+  var initialQM = Props.initialQM;
   var match = React.useState(function () {
-        return Suspendable$Avocardo.make(Timer$Avocardo.waitMS(500));
-      });
-  var setWait = match[1];
-  var match$1 = React.useState(function () {
         return /* Any */0;
       });
-  var setFilter = match$1[1];
-  var filter = match$1[0];
-  var match$2 = React.useState(function () {
-        return qm;
-      });
-  var setQuery = match$2[1];
-  var response = match$2[0];
+  var setFilter = match[1];
+  var filter = match[0];
+  var match$1 = React.useState(initialQM);
+  var setQuery = match$1[1];
+  var qm = match$1[0];
+  var next = React.useCallback((function (param) {
+          return Curry._1(setQuery, ExerciseQueryManager$Avocardo.preloadQuery(qm, filter));
+        }), [
+        qm,
+        filter
+      ]);
   return React.createElement(React.Suspense, {
-              children: null,
-              fallback: React.createElement(UI$Shimmer, {})
-            }, React.createElement(UI$Wait, {
-                  wait: match[0]
-                }), React.createElement(Card$Avocardo.make, {
-                  exercise: response.exercise,
-                  next: (function (param) {
-                      Curry._1(setWait, (function (param) {
-                              return Suspendable$Avocardo.make(Timer$Avocardo.waitMS(500));
-                            }));
-                      return Curry._1(setQuery, (function (qm) {
-                                    return ExerciseQueryManager$Avocardo.preloadQuery(qm, filter);
-                                  }));
-                    }),
-                  storeStatus: (function (e, didSucceed) {
-                      ExerciseQueryManager$Avocardo.saveAnswer(qm, e, didSucceed);
-                      if (filter) {
-                        if (didSucceed) {
-                          Curry._1(setQuery, (function (qm) {
-                                  return ExerciseQueryManager$Avocardo.removeFail(qm, e);
-                                }));
-                          if (List.length(response.fails) === 1) {
-                            return Curry._1(setFilter, (function (param) {
-                                          return /* Any */0;
-                                        }));
+              children: React.createElement(Card$Avocardo.make, {
+                    exercise: qm.exercise,
+                    next: next,
+                    storeStatus: (function (e, didSucceed) {
+                        ExerciseQueryManager$Avocardo.saveAnswer(qm, e, didSucceed);
+                        if (filter) {
+                          if (didSucceed) {
+                            Curry._1(setQuery, ExerciseQueryManager$Avocardo.removeFail(qm, e));
+                            if (List.length(qm.fails) === 1) {
+                              return Curry._1(setFilter, (function (param) {
+                                            return /* Any */0;
+                                          }));
+                            } else {
+                              return ;
+                            }
                           } else {
                             return ;
                           }
-                        } else {
+                        } else if (didSucceed) {
                           return ;
+                        } else {
+                          return Curry._1(setQuery, ExerciseQueryManager$Avocardo.appendFail(qm, e));
                         }
-                      } else if (didSucceed) {
-                        return ;
-                      } else {
-                        return Curry._1(setQuery, (function (qm) {
-                                      return ExerciseQueryManager$Avocardo.appendFail(qm, e);
+                      }),
+                    filter: React.createElement(UI$Filter, {
+                          filter: filter,
+                          fails: qm.fails,
+                          onChangeFilter: (function (f) {
+                              Curry._1(setFilter, (function (param) {
+                                      return f;
                                     }));
-                      }
-                    }),
-                  filter: React.createElement(UI$Filter, {
-                        filter: filter,
-                        fails: response.fails,
-                        onChangeFilter: (function (f) {
-                            Curry._1(setFilter, (function (param) {
-                                    return f;
-                                  }));
-                            return Curry._1(setQuery, (function (qm) {
-                                          return ExerciseQueryManager$Avocardo.preloadQuery(qm, f);
-                                        }));
-                          })
-                      })
-                }));
+                              return Curry._1(setQuery, ExerciseQueryManager$Avocardo.preloadQuery(qm, f));
+                            })
+                        })
+                  }),
+              fallback: React.createElement(UI$Shimmer, {})
+            });
 }
 
 var App = {
@@ -218,9 +203,9 @@ var App = {
 Fingerprint$Avocardo.get(function (fingerprint) {
       var root = document.querySelector("#root");
       if (!(root == null)) {
-        ReactDom.render(React.createElement(UI$App, {
-                  qm: ExerciseQueryManager$Avocardo.make(fingerprint)
-                }), root);
+        ReactDom.unstable_createRoot(root).render(React.createElement(UI$App, {
+                  initialQM: ExerciseQueryManager$Avocardo.make(fingerprint)
+                }));
         return ;
       }
       

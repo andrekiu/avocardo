@@ -347,7 +347,10 @@ function Card(Props) {
               return Curry._1(setQuiz, (function (s) {
                             return reduce_quiz(s, /* Enter */0);
                           }));
-            }), [quiz]), React.useCallback(function (param) {
+            }), [
+            quiz,
+            next
+          ]), React.useCallback(function (param) {
             return Curry._1(setQuiz, (function (s) {
                           return reduce_quiz(s, /* Delete */1);
                         }));

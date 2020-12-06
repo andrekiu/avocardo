@@ -83,7 +83,7 @@ module ExerciseSolver = {
 
 module Evaluation = {
   [@react.component]
-  let make = (~selection, ~exercise) => {
+  let make = (~selection, ~exercise: PronounExercises.pronoun_exercise) => {
     <div style=Styles.app>
       {ExerciseSolver.solved(selection, exercise)
          ? <>
@@ -158,7 +158,7 @@ let make =
   Keyboard.use(
     ~onChar=React.useCallback(c => dispatch(Char(c))),
     ~onEnter=
-      React.useCallback1(
+      React.useCallback2(
         () => {
           switch (quiz, reduce_quiz(quiz, Enter)) {
           | (Veredict(_), Solving(_)) => next()
@@ -168,7 +168,7 @@ let make =
           };
           dispatch(Enter);
         },
-        [|quiz|],
+        (quiz, next),
       ),
     ~onDelete=React.useCallback(() => dispatch(Delete)),
   );
