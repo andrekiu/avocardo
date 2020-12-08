@@ -1,15 +1,3 @@
-module Wait = {
-  [@react.component]
-  let make = (~wait: Suspendable.t(unit)) => {
-    wait.read();
-    React.null;
-  };
-};
-
-let delay = () => {
-  Suspendable.make(Timer.waitMS(500));
-};
-
 module Styles = {
   open Css;
   let app =

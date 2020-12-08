@@ -7,24 +7,8 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var ReactDom = require("react-dom");
 var Card$Avocardo = require("./Card.bs.js");
-var Timer$Avocardo = require("./Timer.bs.js");
 var Fingerprint$Avocardo = require("./auth/Fingerprint.bs.js");
-var Suspendable$Avocardo = require("./Suspendable.bs.js");
 var ExerciseQueryManager$Avocardo = require("./ExerciseQueryManager.bs.js");
-
-function UI$Wait(Props) {
-  var wait = Props.wait;
-  Curry._1(wait.read, undefined);
-  return null;
-}
-
-var Wait = {
-  make: UI$Wait
-};
-
-function delay(param) {
-  return Suspendable$Avocardo.make(Timer$Avocardo.waitMS(500));
-}
 
 var app = Css.style({
       hd: Css.height({
@@ -211,8 +195,6 @@ Fingerprint$Avocardo.get(function (fingerprint) {
       
     });
 
-exports.Wait = Wait;
-exports.delay = delay;
 exports.Styles = Styles;
 exports.Shimmer = Shimmer;
 exports.Filter = Filter;
