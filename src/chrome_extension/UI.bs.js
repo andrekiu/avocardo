@@ -7,86 +7,9 @@ var Curry = require("bs-platform/lib/js/curry.js");
 var React = require("react");
 var ReactDom = require("react-dom");
 var Card$Avocardo = require("./Card.bs.js");
+var Shimmer$Avocardo = require("./Shimmer.bs.js");
 var Fingerprint$Avocardo = require("./auth/Fingerprint.bs.js");
 var ExerciseQueryManager$Avocardo = require("./ExerciseQueryManager.bs.js");
-
-var app = Css.style({
-      hd: Css.height({
-            NAME: "px",
-            VAL: 200
-          }),
-      tl: {
-        hd: Css.width({
-              NAME: "px",
-              VAL: 200
-            }),
-        tl: {
-          hd: Css.display("grid"),
-          tl: {
-            hd: Css.gridTemplateColumns({
-                  hd: {
-                    NAME: "repeat",
-                    VAL: [
-                      {
-                        NAME: "num",
-                        VAL: 3
-                      },
-                      {
-                        NAME: "fr",
-                        VAL: 1
-                      }
-                    ]
-                  },
-                  tl: /* [] */0
-                }),
-            tl: {
-              hd: Css.gridGap({
-                    NAME: "px",
-                    VAL: 10
-                  }),
-              tl: {
-                hd: Css.gridAutoRows({
-                      NAME: "minmax",
-                      VAL: [
-                        {
-                          NAME: "px",
-                          VAL: 50
-                        },
-                        "auto"
-                      ]
-                    }),
-                tl: /* [] */0
-              }
-            }
-          }
-        }
-      }
-    });
-
-var center = Css.style({
-      hd: Css.gridColumn(2, 2),
-      tl: {
-        hd: Css.gridRow(2, 2),
-        tl: /* [] */0
-      }
-    });
-
-var Styles = {
-  app: app,
-  center: center
-};
-
-function UI$Shimmer(Props) {
-  return React.createElement("div", {
-              style: app
-            }, React.createElement("span", {
-                  style: center
-                }, "Loading..."));
-}
-
-var Shimmer = {
-  make: UI$Shimmer
-};
 
 var style = Css.style({
       hd: Css.cursor(Css.pointer),
@@ -176,7 +99,7 @@ function UI$App(Props) {
                             })
                         })
                   }),
-              fallback: React.createElement(UI$Shimmer, {})
+              fallback: React.createElement(Shimmer$Avocardo.make, {})
             });
 }
 
@@ -195,8 +118,6 @@ Fingerprint$Avocardo.get(function (fingerprint) {
       
     });
 
-exports.Styles = Styles;
-exports.Shimmer = Shimmer;
 exports.Filter = Filter;
 exports.App = App;
-/* app Not a pure module */
+/* style Not a pure module */
