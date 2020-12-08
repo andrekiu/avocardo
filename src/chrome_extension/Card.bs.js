@@ -164,6 +164,17 @@ var result = Css.style({
       }
     });
 
+var longResult = Css.style({
+      hd: Css.gridColumn(2, 2),
+      tl: {
+        hd: Css.gridRow(2, 3),
+        tl: {
+          hd: Css.textAlign("center"),
+          tl: /* [] */0
+        }
+      }
+    });
+
 var filter = Css.style({
       hd: Css.gridColumn(3, 3),
       tl: {
@@ -186,6 +197,7 @@ var Styles = {
   bold: bold,
   italic: italic,
   result: result,
+  longResult: longResult,
   filter: filter
 };
 
@@ -233,6 +245,21 @@ var ExerciseSolver = {
   solved: solved
 };
 
+function Card$Result(Props) {
+  var exercise = Props.exercise;
+  return React.createElement("div", {
+              style: exercise.quiz.length > 14 ? result : longResult
+            }, React.createElement("div", {
+                  style: bold
+                }, exercise.quiz), React.createElement("div", {
+                  style: italic
+                }, solution(exercise)));
+}
+
+var Result = {
+  make: Card$Result
+};
+
 function Card$Evaluation(Props) {
   var selection = Props.selection;
   var exercise = Props.exercise;
@@ -243,13 +270,9 @@ function Card$Evaluation(Props) {
                       }, "You got it!"), React.createElement("img", {
                         style: center,
                         src: chrome.runtime.getURL("success.jpg")
-                      })) : React.createElement(React.Fragment, undefined, React.createElement("div", {
-                        style: result
-                      }, React.createElement("div", {
-                            style: bold
-                          }, exercise.quiz), React.createElement("div", {
-                            style: italic
-                          }, solution(exercise))), React.createElement("img", {
+                      })) : React.createElement(React.Fragment, undefined, React.createElement(Card$Result, {
+                        exercise: exercise
+                      }), React.createElement("img", {
                         style: center,
                         src: chrome.runtime.getURL("failure.jpg")
                       })));
@@ -392,6 +415,7 @@ var make = Card;
 
 exports.Styles = Styles;
 exports.ExerciseSolver = ExerciseSolver;
+exports.Result = Result;
 exports.Evaluation = Evaluation;
 exports.reduce_quiz = reduce_quiz;
 exports.willRestartQuiz = willRestartQuiz;

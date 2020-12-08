@@ -46,6 +46,8 @@ module Styles = {
   let italic = style([fontStyle(`italic)]);
   let result =
     style([gridColumn(2, 2), gridRow(3, 3), textAlign(`center)]);
+  let longResult =
+    style([gridColumn(2, 2), gridRow(2, 3), textAlign(`center)]);
   let filter =
     style([gridColumn(3, 3), gridRow(1, 1), textAlign(`center)]);
 };
@@ -81,6 +83,21 @@ module ExerciseSolver = {
   };
 };
 
+module Result = {
+  [@react.component]
+  let make = (~exercise: PronounExercises.pronoun_exercise) => {
+    <div
+      style={
+        String.length(exercise.quiz) > 14 ? Styles.result : Styles.longResult
+      }>
+      <div style=Styles.bold> {React.string(exercise.quiz)} </div>
+      <div style=Styles.italic>
+        {ExerciseSolver.solution(exercise) |> React.string}
+      </div>
+    </div>;
+  };
+};
+
 module Evaluation = {
   [@react.component]
   let make = (~selection, ~exercise: PronounExercises.pronoun_exercise) => {
@@ -96,12 +113,7 @@ module Evaluation = {
              />
            </>
          : <>
-             <div style=Styles.result>
-               <div style=Styles.bold> {React.string(exercise.quiz)} </div>
-               <div style=Styles.italic>
-                 {ExerciseSolver.solution(exercise) |> React.string}
-               </div>
-             </div>
+             <Result exercise />
              <img
                style=Styles.center
                src={Chrome.Runtime.getURL("failure.jpg")}
