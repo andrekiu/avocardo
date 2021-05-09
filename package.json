@@ -23,6 +23,7 @@
   "dependencies": {
     "@adnelson/requery": "^0.51.0-2",
     "@glennsl/bs-json": "^5.0.2",
+    "@rescript/react": "^0.10.3",
     "bs-css-dom": "^2.0.0",
     "bs-express": "^1.0.2",
     "bs-fetch": "^0.6.2",
@@ -32,7 +33,6 @@
     "mysql": "^2.18.1",
     "react": "^0.0.0-experimental-4ead6b530",
     "react-dom": "^0.0.0-experimental-4ead6b530",
-    "reason-react": "0.9.1",
     "rescript": "^9.1.2"
   }
 }

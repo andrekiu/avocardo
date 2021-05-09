@@ -26,7 +26,8 @@
     "@glennsl/bs-json",
     "bs-mysql2",
     "@adnelson/requery",
-    "bs-webapi"
+    "bs-webapi",
+    "@rescript/react"
   ],
   "warnings": {
     "error": "+101"

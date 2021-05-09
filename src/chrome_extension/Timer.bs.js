@@ -3,7 +3,7 @@
 
 
 function waitMS(delay) {
-  return new Promise((function (resolve, reject) {
+  return new Promise((function (resolve, param) {
                 setTimeout((function (param) {
                         return resolve(undefined);
                       }), delay);
