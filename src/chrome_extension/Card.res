@@ -1,42 +1,51 @@
 module Styles = {
-  open Css
-  let app = style(list{
-    height(px(200)),
-    width(px(200)),
-    border(#px(1), #solid, #currentColor),
-    display(#grid),
-    gridTemplateColumns(list{#repeat(#num(3), #fr(1.))}),
-    gridAutoRows(#minmax(#px(20), #px(20))),
-  })
+  let app = ReactDOM.Style.make(
+    ~height="200px",
+    ~width="200px",
+    ~border="1px solid currentcolor",
+    ~display="grid",
+    ~gridTemplateColumns="repeat(3, 1fr)",
+    ~gridAutoRows="minimax(20px, 20px)",
+    (),
+  )
+  let input = ReactDOM.Style.make(~gridRow="3 3", ~gridColumn="1 4", ~textAlign="center", ())
 
-  let input = style(list{gridRow(3, 3), gridColumn(1, 4), textAlign(center)})
+  let challenge = ReactDOM.Style.make(
+    ~gridRow="2 2",
+    ~gridColumn="1 4",
+    ~textAlign="center",
+    ~fontWeight="bold",
+    (),
+  )
+  let options = ReactDOM.Style.make(
+    ~gridRow="4 10",
+    ~gridColumn="1 4",
+    ~display="flex",
+    ~justifyContent="space-evenly",
+    (),
+  )
+  let column = ReactDOM.Style.make(
+    ~display="flex",
+    ~flexDirection="column",
+    ~justifyContent="space-evenly",
+    ~alignItems="center",
+    (),
+  )
 
-  let challenge = style(list{gridRow(2, 2), gridColumn(1, 4), textAlign(center), fontWeight(#bold)})
-  let options = style(list{
-    gridRow(4, 10),
-    gridColumn(1, 4),
-    display(#flex),
-    justifyContent(#spaceEvenly),
-  })
-  let column = style(list{
-    display(#flex),
-    flexDirection(#column),
-    justifyContent(#spaceEvenly),
-    alignItems(#center),
-  })
-  let center = style(list{gridColumn(2, 2), gridRow(5, 7), height(px(80))})
-  let correctResult = style(list{
-    gridColumn(2, 2),
-    gridRow(3, 3),
-    textAlign(#center),
-    fontWeight(#bold),
-    fontStyle(#italic),
-  })
-  let bold = style(list{fontWeight(#bold)})
-  let italic = style(list{fontStyle(#italic)})
-  let result = style(list{gridColumn(2, 2), gridRow(3, 3), textAlign(#center)})
-  let longResult = style(list{gridColumn(2, 2), gridRow(2, 3), textAlign(#center)})
-  let filter = style(list{gridColumn(3, 3), gridRow(1, 1), textAlign(#center)})
+  let center = ReactDOM.Style.make(~gridColumn="2 2", ~gridRow="5 7", ~height="80px", ())
+  let correctResult = ReactDOM.Style.make(
+    ~gridColumn="2 2",
+    ~gridRow="3 3",
+    ~textAlign="center",
+    ~fontWeight="bold",
+    ~fontStyle="italic",
+    (),
+  )
+  let bold = ReactDOM.Style.make(~fontWeight="bold", ())
+  let italic = ReactDOMStyle.make(~fontStyle="italic", ())
+  let result = ReactDOM.Style.make(~gridColumn="2 2", ~gridRow="3 3", ~textAlign="center", ())
+  let longResult = ReactDOM.Style.make(~gridColumn="2 2", ~gridRow="2 3", ~textAlign="center", ())
+  let filter = ReactDOM.Style.make(~gridColumn="3 3", ~gridRow="1 1", ~textAlign="center", ())
 }
 
 module ExerciseSolver = {

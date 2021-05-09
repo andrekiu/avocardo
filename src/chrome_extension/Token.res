@@ -1,22 +1,20 @@
 module Styles = {
-  open Css
-  let bold = style(list{fontWeight(#bold)})
-  let noop = style(list{})
+  let bold = ReactDOM.Style.make(~fontWeight="bold", ())
+  let noop = ReactDOM.Style.make()
   let token = pct => {
     let begin_rbg = (223., 223., 226.)
     let end_rbg = (180., 206., 141.)
     let get_delta = ((r1, b1, g1), (r2, b2, g2)) => (r2 -. r1, b2 -. b1, g2 -. g1)
     let scale = ((r, b, g), (dr, db, dg), pct) => (r +. dr *. pct, b +. db *. pct, g +. dg *. pct)
-    style(list{
-      backgroundColor(
-        switch scale(begin_rbg, get_delta(begin_rbg, end_rbg), pct) {
-        | (r, b, g) => rgb(int_of_float(r), int_of_float(b), int_of_float(g))
-        },
-      ),
-      padding2(~v=px(8), ~h=px(12)),
-      borderRadius(px(5)),
-      border(px(0), #none, currentColor),
-    })
+    let (r, b, g) = scale(begin_rbg, get_delta(begin_rbg, end_rbg), pct)
+    let to_str = e => e->int_of_float->string_of_int
+    ReactDOM.Style.make(
+      ~backgroundColor=`${r->to_str} ${b->to_str} ${g->to_str}`,
+      ~padding="8px 12px",
+      ~borderRadius="5px",
+      ~border="0px none currentcolor",
+      (),
+    )
   }
 }
 

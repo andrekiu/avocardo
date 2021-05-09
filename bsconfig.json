@@ -7,6 +7,10 @@
       "subdirs": true
     },
     {
+      "dir": "src/pages",
+      "subdirs": true
+    },
+    {
       "dir": "src/server",
       "subdirs": true
     }
@@ -18,16 +22,13 @@
   "suffix": ".bs.js",
   "reason": { "react-jsx": 3 },
   "bs-dependencies": [
-    "reason-react",
-    "bs-css",
-    "bs-css-dom",
+    "@rescript/react",
     "bs-express",
     "bs-fetch",
     "@glennsl/bs-json",
     "bs-mysql2",
     "@adnelson/requery",
-    "bs-webapi",
-    "@rescript/react"
+    "bs-webapi"
   ],
   "warnings": {
     "error": "+101"

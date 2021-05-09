@@ -1,8 +1,5 @@
 module Filter = {
-  let style = {
-    open Css
-    style(list{cursor(pointer), padding2(~v=px(10), ~h=px(15)), textAlign(#right)})
-  }
+  let style = ReactDOM.Style.make(~cursor="pointer", ~padding="10px 15px", ~textAlign="right", ())
   open ExerciseQueryManager
   @react.component
   let make = (~filter, ~fails, ~onChangeFilter) =>
