@@ -1,10 +1,10 @@
 {
   "scripts": {
     "bundle": "sh ./scripts/bundle_client.sh",
-    "client-prod": "yarn run --experimental-scope-hoisting parcel build src/chrome_extension/UI.re -d build/chrome_extension",
-    "client-dev": "yarn run --experimental-scope-hoisting parcel watch src/chrome_extension/UI.re -d build/chrome_extension --no-hmr",
-    "clean": "yarn run bsb -clean-world",
-    "build": "yarn run bsb -make-world",
+    "client-prod": "yarn run --experimental-scope-hoisting parcel build src/chrome_extension/UI.res -d build/chrome_extension",
+    "client-dev": "yarn run --experimental-scope-hoisting parcel watch src/chrome_extension/UI.res -d build/chrome_extension --no-hmr",
+    "clean": "yarn run rescript clean",
+    "build": "yarn run rescript",
     "server-prod": "yarn run nodemon src/server/Server.bs.js",
     "server-dev": "yarn run nodemon --watch ./src/server src/server/Server.bs.js",
     "server-debug": "node --inspect src/server/Server.bs.js",
@@ -33,6 +33,6 @@
     "react": "^0.0.0-experimental-4ead6b530",
     "react-dom": "^0.0.0-experimental-4ead6b530",
     "reason-react": "0.9.1",
-    "tablecloth-bucklescript": "^0.0.7"
+    "rescript": "^9.1.2"
   }
 }

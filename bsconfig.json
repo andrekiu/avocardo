@@ -11,10 +11,10 @@
       "subdirs": true
     }
   ],
-  "package-specs": {
+  "package-specs": [{
     "module": "commonjs",
     "in-source": true
-  },
+  }],
   "suffix": ".bs.js",
   "reason": { "react-jsx": 3 },
   "bs-dependencies": [
@@ -26,14 +26,12 @@
     "@glennsl/bs-json",
     "bs-mysql2",
     "@adnelson/requery",
-    "bs-webapi",
-    "tablecloth-bucklescript"
+    "bs-webapi"
   ],
   "warnings": {
     "error": "+101"
   },
   "bsc-flags": ["-bs-g"],
   "ppx-flags": [],
-  "namespace": true,
-  "refmt": 3
+  "namespace": true
 }
