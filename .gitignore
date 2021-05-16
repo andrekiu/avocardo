@@ -11,3 +11,4 @@ mysql_options.cnf
 .DS_Store
 .vscode
 .next
+.bsb.lock
