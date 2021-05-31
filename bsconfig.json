@@ -7,6 +7,10 @@
       "subdirs": true
     },
     {
+      "dir": "src/bindings",
+      "subdirs": true
+    },
+    {
       "dir": "src/pages",
       "subdirs": true
     },

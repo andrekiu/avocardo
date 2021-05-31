@@ -6,7 +6,9 @@ var Curry = require("rescript/lib/js/curry.js");
 var Belt_Option = require("rescript/lib/js/belt_Option.js");
 var Caml_option = require("rescript/lib/js/caml_option.js");
 
-function getFingerprint(param) {
+var Internals = {};
+
+function gen(param) {
   var randomPool = new Uint8Array(32);
   crypto.getRandomValues(randomPool);
   return $$Array.fold_left((function (sum, e) {
@@ -20,7 +22,7 @@ function sync(cb) {
           if (!(userid == null)) {
             return Curry._1(cb, Belt_Option.getExn((userid == null) ? undefined : Caml_option.some(userid)));
           }
-          var hash = getFingerprint(undefined);
+          var hash = gen(undefined);
           chrome.storage.sync.set({
                 userid: hash
               }, (function (param) {
@@ -31,13 +33,10 @@ function sync(cb) {
   
 }
 
-var Internals = {
-  getFingerprint: getFingerprint,
-  sync: sync
-};
-
 var get = sync;
 
 exports.Internals = Internals;
+exports.gen = gen;
+exports.sync = sync;
 exports.get = get;
 /* No side effect */
