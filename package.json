@@ -1,8 +1,8 @@
 {
   "scripts": {
     "bundle": "sh ./scripts/bundle_client.sh",
-    "client-prod": "yarn run --experimental-scope-hoisting parcel build src/chrome_extension/UI.res -d build/chrome_extension",
-    "client-dev": "yarn run --experimental-scope-hoisting parcel watch src/chrome_extension/UI.res -d build/chrome_extension --no-hmr",
+    "client-prod": "yarn run --experimental-scope-hoisting parcel build src/chrome_extension/UI.bs.js -d build/chrome_extension",
+    "client-dev": "yarn run --experimental-scope-hoisting parcel watch src/chrome_extension/UI.bs.js -d build/chrome_extension --no-hmr",
     "clean": "yarn run rescript clean",
     "build": "yarn run rescript",
     "server-prod": "yarn run nodemon src/server/Server.bs.js",
