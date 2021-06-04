@@ -4,7 +4,6 @@ module Styles = {
     ~width="200px",
     ~border="1px solid currentcolor",
     ~display="grid",
-    ~gridTemplateColumns="repeat(3, 1fr)",
     ~gridAutoRows="minimax(20px, 20px)",
     ~boxSizing="border-box",
     (),

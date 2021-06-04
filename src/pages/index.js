@@ -1,8 +1,11 @@
 import IndexRes from "../chrome_extension/IndexRes.bs.js";
-export { getServerSideProps } from "../chrome_extension/IndexResServer.bs.js";
+import { getServerSideProps as genProps } from "../chrome_extension/IndexResServer.bs.js";
 
-function Index(props) {
+export default function Index(props) {
   return <IndexRes {...props} />;
 }
 
-export default Index;
+export async function getServerSideProps(ctx) {
+  const props = await genProps(ctx);
+  return props;
+}

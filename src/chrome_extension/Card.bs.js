@@ -17,8 +17,7 @@ var app = {
   height: "200px",
   width: "200px",
   boxSizing: "border-box",
-  gridAutoRows: "minimax(20px, 20px)",
-  gridTemplateColumns: "repeat(3, 1fr)"
+  gridAutoRows: "minimax(20px, 20px)"
 };
 
 var input = {

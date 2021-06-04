@@ -1,5 +1,5 @@
-export default function handle(req, res) {
-  res.json({
-    data: 1,
-  });
+import Server from "../../server/Server.bs.js";
+
+export default function handler(req, res) {
+  return Server.handleAnswer(req, res);
 }
