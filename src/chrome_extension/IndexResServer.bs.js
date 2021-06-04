@@ -15,7 +15,6 @@ function getServerSideProps(ctx) {
     ctx.res.setHeader("Set-Cookie", "fingerprint=" + fp$1 + "; SameSite=Strict; Expires=Wed, 21 Oct 2021 07:28:00 GMT");
     fingerprint = fp$1;
   }
-  console.log(cookies);
   return Promise.resolve({
               props: {
                 fingerprint: fingerprint

@@ -14,6 +14,5 @@ let getServerSideProps: Next.GetServerSideProps.t<props, unit, unit> = ctx => {
     }
   | Some(fp) => fp
   }
-  Js.log(cookies)
   Js.Promise.resolve({"props": {fingerprint: fingerprint}})
 }
