@@ -4,10 +4,8 @@
 var List = require("rescript/lib/js/list.js");
 var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
-var ReactDom = require("react-dom");
 var Card$Avocardo = require("./Card.bs.js");
 var Shimmer$Avocardo = require("./Shimmer.bs.js");
-var Fingerprint$Avocardo = require("./auth/Fingerprint.bs.js");
 var ExerciseQueryManager$Avocardo = require("./ExerciseQueryManager.bs.js");
 
 var style = {
@@ -101,17 +99,6 @@ var App = {
   make: UI$App
 };
 
-Fingerprint$Avocardo.get(function (fingerprint) {
-      var root = document.querySelector("#root");
-      if (!(root == null)) {
-        ReactDom.unstable_createRoot(root).render(React.createElement(UI$App, {
-                  initialQM: ExerciseQueryManager$Avocardo.make(fingerprint)
-                }));
-        return ;
-      }
-      
-    });
-
 exports.Filter = Filter;
 exports.App = App;
-/*  Not a pure module */
+/* react Not a pure module */

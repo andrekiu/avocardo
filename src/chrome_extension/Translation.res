@@ -1,13 +1,13 @@
 let get = %raw(`
 function get(m) {
-  return process.env.SERVER_DOMAIN;
+  return process.env.NEXT_PUBLIC_SERVER_DOMAIN;
 }
 `)
 
 let getPathWithDomain = path => {
   let maybeDomain = get() // Node.Process.process##env->Js.Dict.get("SERVER_DOMAIN");
   let domain = maybeDomain |> Belt.Option.getExn
-  j`$domain/$path`
+  j`$domain/api/$path`
 }
 
 let saveAnswer = payload =>

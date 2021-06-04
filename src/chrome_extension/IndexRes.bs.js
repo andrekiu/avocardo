@@ -2,12 +2,14 @@
 'use strict';
 
 var React = require("react");
-var Js_dict = require("rescript/lib/js/js_dict.js");
-var ServerFingerprint$Avocardo = require("./auth/ServerFingerprint.bs.js");
+var UI$Avocardo = require("./UI.bs.js");
+var ExerciseQueryManager$Avocardo = require("./ExerciseQueryManager.bs.js");
 
 function IndexRes$P(Props) {
-  var hell = Props.hell;
-  return React.createElement("div", undefined, "Hello from rescript and next " + hell);
+  var fingerprint = Props.fingerprint;
+  return React.createElement(UI$Avocardo.App.make, {
+              initialQM: ExerciseQueryManager$Avocardo.make(fingerprint)
+            });
 }
 
 var P = {
@@ -16,26 +18,7 @@ var P = {
 
 function $$default(props) {
   return React.createElement(IndexRes$P, {
-              hell: props.hell
-            });
-}
-
-function getServerSideProps(ctx) {
-  var cookies = ctx.req.cookies;
-  var fp = Js_dict.get(cookies, "fingerprint");
-  var fingerprint;
-  if (fp !== undefined) {
-    fingerprint = fp;
-  } else {
-    var fp$1 = ServerFingerprint$Avocardo.gen(undefined);
-    ctx.res.setHeader("Set-Cookie", "fingerprint=" + fp$1 + "; SameSite=Strict; Expires=Wed, 21 Oct 2021 07:28:00 GMT");
-    fingerprint = fp$1;
-  }
-  console.log(cookies);
-  return Promise.resolve({
-              props: {
-                hell: fingerprint
-              }
+              fingerprint: props.fingerprint
             });
 }
 
@@ -43,5 +26,4 @@ exports.P = P;
 exports.$$default = $$default;
 exports.default = $$default;
 exports.__esModule = true;
-exports.getServerSideProps = getServerSideProps;
 /* react Not a pure module */

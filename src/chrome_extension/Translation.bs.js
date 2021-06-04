@@ -8,13 +8,13 @@ var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 var PronounExercises$Avocardo = require("../server/exercises/PronounExercises.bs.js");
 
 var get = (function get(m) {
-  return process.env.SERVER_DOMAIN;
+  return process.env.NEXT_PUBLIC_SERVER_DOMAIN;
 });
 
 function getPathWithDomain(path) {
   var maybeDomain = get(undefined);
   var domain = Belt_Option.getExn(maybeDomain);
-  return "" + domain + "/" + path;
+  return "" + domain + "/api/" + path;
 }
 
 function saveAnswer(payload) {

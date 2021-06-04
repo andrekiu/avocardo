@@ -54,14 +54,3 @@ module App = {
     </React.Suspense>
   }
 }
-
-Fingerprint.get(fingerprint =>
-  switch ReactDOM.querySelector("#root") {
-  | Some(root) =>
-    Experimental.createRoot(root)->Experimental.render(
-      <App initialQM={ExerciseQueryManager.make(fingerprint)} />,
-    )
-  | None => ()
-  }
-)
-

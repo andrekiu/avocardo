@@ -19,12 +19,16 @@
       "subdirs": true
     }
   ],
-  "package-specs": [{
-    "module": "commonjs",
-    "in-source": true
-  }],
+  "package-specs": [
+    {
+      "module": "commonjs",
+      "in-source": true
+    }
+  ],
   "suffix": ".bs.js",
-  "reason": { "react-jsx": 3 },
+  "reason": {
+    "react-jsx": 3
+  },
   "bs-dependencies": [
     "@rescript/react",
     "bs-express",
@@ -37,7 +41,9 @@
   "warnings": {
     "error": "+101"
   },
-  "bsc-flags": ["-bs-g"],
+  "bsc-flags": [
+    "-bs-g"
+  ],
   "ppx-flags": [],
   "namespace": true
 }
