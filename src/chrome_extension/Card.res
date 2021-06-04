@@ -6,6 +6,7 @@ module Styles = {
     ~display="grid",
     ~gridTemplateColumns="repeat(3, 1fr)",
     ~gridAutoRows="minimax(20px, 20px)",
+    ~boxSizing="border-box",
     (),
   )
   let input = ReactDOM.Style.make(~gridRow="3 3", ~gridColumn="1 4", ~textAlign="center", ())
@@ -91,11 +92,11 @@ module Evaluation = {
       {ExerciseSolver.solved(selection, exercise)
         ? <>
             <span style=Styles.correctResult> {React.string("You got it!")} </span>
-            <img style=Styles.center src={Chrome.Runtime.getURL("success.jpg")} />
+            // replace <img style=Styles.center src={Chrome.Runtime.getURL("success.jpg")} />
           </>
         : <>
             <Result exercise />
-            <img style=Styles.center src={Chrome.Runtime.getURL("failure.jpg")} />
+            // replace <img style=Styles.center src={Chrome.Runtime.getURL("success.jpg")} />
           </>}
     </div>
 }

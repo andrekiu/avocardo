@@ -16,6 +16,7 @@ var app = {
   display: "grid",
   height: "200px",
   width: "200px",
+  boxSizing: "border-box",
   gridAutoRows: "minimax(20px, 20px)",
   gridTemplateColumns: "repeat(3, 1fr)"
 };
@@ -168,14 +169,8 @@ function Card$Evaluation(Props) {
               style: app
             }, solved(selection, exercise) ? React.createElement(React.Fragment, undefined, React.createElement("span", {
                         style: correctResult
-                      }, "You got it!"), React.createElement("img", {
-                        style: center,
-                        src: chrome.runtime.getURL("success.jpg")
-                      })) : React.createElement(React.Fragment, undefined, React.createElement(Card$Result, {
+                      }, "You got it!")) : React.createElement(React.Fragment, undefined, React.createElement(Card$Result, {
                         exercise: exercise
-                      }), React.createElement("img", {
-                        style: center,
-                        src: chrome.runtime.getURL("failure.jpg")
                       })));
 }
 
