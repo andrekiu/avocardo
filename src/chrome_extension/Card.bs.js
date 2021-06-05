@@ -22,22 +22,22 @@ var app = {
 
 var input = {
   textAlign: "center",
-  gridColumn: "1 4",
-  gridRow: "3 3"
+  gridColumn: "1 / 4",
+  gridRow: "3 / 3"
 };
 
 var challenge = {
   fontWeight: "bold",
   textAlign: "center",
-  gridColumn: "1 4",
-  gridRow: "2 2"
+  gridColumn: "1 / 4",
+  gridRow: "2 / 2"
 };
 
 var options = {
   display: "flex",
   justifyContent: "space-evenly",
-  gridColumn: "1 4",
-  gridRow: "4 10"
+  gridColumn: "1 / 4",
+  gridRow: "4 / 10"
 };
 
 var column = {
@@ -49,16 +49,16 @@ var column = {
 
 var center = {
   height: "80px",
-  gridColumn: "2 2",
-  gridRow: "5 7"
+  gridColumn: "2 / 2",
+  gridRow: "5 / 7"
 };
 
 var correctResult = {
   fontStyle: "italic",
   fontWeight: "bold",
   textAlign: "center",
-  gridColumn: "2 2",
-  gridRow: "3 3"
+  gridColumn: "1 / 3",
+  gridRow: "2 / 2"
 };
 
 var bold = {
@@ -71,20 +71,14 @@ var italic = {
 
 var result = {
   textAlign: "center",
-  gridColumn: "2 2",
-  gridRow: "3 3"
-};
-
-var longResult = {
-  textAlign: "center",
-  gridColumn: "2 2",
-  gridRow: "2 3"
+  gridColumn: "1 / 3",
+  gridRow: "2 / 2"
 };
 
 var filter = {
   textAlign: "center",
-  gridColumn: "3 3",
-  gridRow: "1 1"
+  gridColumn: "3 / 3",
+  gridRow: "1 / 1"
 };
 
 var Styles = {
@@ -98,7 +92,6 @@ var Styles = {
   bold: bold,
   italic: italic,
   result: result,
-  longResult: longResult,
   filter: filter
 };
 
@@ -149,7 +142,7 @@ var ExerciseSolver = {
 function Card$Result(Props) {
   var exercise = Props.exercise;
   return React.createElement("div", {
-              style: exercise.quiz.length > 14 ? result : longResult
+              style: result
             }, React.createElement("div", {
                   style: bold
                 }, exercise.quiz), React.createElement("div", {
@@ -168,8 +161,14 @@ function Card$Evaluation(Props) {
               style: app
             }, solved(selection, exercise) ? React.createElement(React.Fragment, undefined, React.createElement("span", {
                         style: correctResult
-                      }, "You got it!")) : React.createElement(React.Fragment, undefined, React.createElement(Card$Result, {
+                      }, "You got it!"), React.createElement("img", {
+                        style: center,
+                        src: "/img/success.jpg"
+                      })) : React.createElement(React.Fragment, undefined, React.createElement(Card$Result, {
                         exercise: exercise
+                      }), React.createElement("img", {
+                        style: center,
+                        src: "/img/failure.jpg"
                       })));
 }
 

@@ -8,18 +8,18 @@ module Styles = {
     ~boxSizing="border-box",
     (),
   )
-  let input = ReactDOM.Style.make(~gridRow="3 3", ~gridColumn="1 4", ~textAlign="center", ())
+  let input = ReactDOM.Style.make(~gridRow="3 / 3", ~gridColumn="1 / 4", ~textAlign="center", ())
 
   let challenge = ReactDOM.Style.make(
-    ~gridRow="2 2",
-    ~gridColumn="1 4",
+    ~gridRow="2 / 2",
+    ~gridColumn="1 / 4",
     ~textAlign="center",
     ~fontWeight="bold",
     (),
   )
   let options = ReactDOM.Style.make(
-    ~gridRow="4 10",
-    ~gridColumn="1 4",
+    ~gridRow="4 / 10",
+    ~gridColumn="1 / 4",
     ~display="flex",
     ~justifyContent="space-evenly",
     (),
@@ -32,10 +32,10 @@ module Styles = {
     (),
   )
 
-  let center = ReactDOM.Style.make(~gridColumn="2 2", ~gridRow="5 7", ~height="80px", ())
+  let center = ReactDOM.Style.make(~gridColumn="2 / 2", ~gridRow="5 / 7", ~height="80px", ())
   let correctResult = ReactDOM.Style.make(
-    ~gridColumn="2 2",
-    ~gridRow="3 3",
+    ~gridColumn="1 / 3",
+    ~gridRow="2 / 2",
     ~textAlign="center",
     ~fontWeight="bold",
     ~fontStyle="italic",
@@ -43,9 +43,8 @@ module Styles = {
   )
   let bold = ReactDOM.Style.make(~fontWeight="bold", ())
   let italic = ReactDOMStyle.make(~fontStyle="italic", ())
-  let result = ReactDOM.Style.make(~gridColumn="2 2", ~gridRow="3 3", ~textAlign="center", ())
-  let longResult = ReactDOM.Style.make(~gridColumn="2 2", ~gridRow="2 3", ~textAlign="center", ())
-  let filter = ReactDOM.Style.make(~gridColumn="3 3", ~gridRow="1 1", ~textAlign="center", ())
+  let result = ReactDOM.Style.make(~gridRow="2 / 2", ~gridColumn="1 / 3", ~textAlign="center", ())
+  let filter = ReactDOM.Style.make(~gridColumn="3 / 3", ~gridRow="1 / 1", ~textAlign="center", ())
 }
 
 module ExerciseSolver = {
@@ -78,7 +77,7 @@ module ExerciseSolver = {
 module Result = {
   @react.component
   let make = (~exercise: PronounExercises.pronoun_exercise) =>
-    <div style={String.length(exercise.quiz) > 14 ? Styles.result : Styles.longResult}>
+    <div style={Styles.result}>
       <div style=Styles.bold> {React.string(exercise.quiz)} </div>
       <div style=Styles.italic> {ExerciseSolver.solution(exercise) |> React.string} </div>
     </div>
@@ -91,12 +90,9 @@ module Evaluation = {
       {ExerciseSolver.solved(selection, exercise)
         ? <>
             <span style=Styles.correctResult> {React.string("You got it!")} </span>
-            // replace <img style=Styles.center src={Chrome.Runtime.getURL("success.jpg")} />
+            <img style=Styles.center src={"/img/success.jpg"} />
           </>
-        : <>
-            <Result exercise />
-            // replace <img style=Styles.center src={Chrome.Runtime.getURL("success.jpg")} />
-          </>}
+        : <> <Result exercise /> <img style=Styles.center src={"/img/failure.jpg"} /> </>}
     </div>
 }
 
