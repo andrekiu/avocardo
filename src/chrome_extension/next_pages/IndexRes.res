@@ -8,7 +8,7 @@ module P = {
               return typeof window === 'undefined';
             }
           `)
-    isServer() ? React.null : <UI.App initialQM={ExerciseQueryManager.make(fingerprint)} />
+    isServer() ? React.null : <Index.App initialQM={ExerciseQueryManager.make(fingerprint)} />
   }
 }
 

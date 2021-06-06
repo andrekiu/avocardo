@@ -3,8 +3,8 @@
 
 var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
-var UI$Avocardo = require("./UI.bs.js");
-var ExerciseQueryManager$Avocardo = require("./ExerciseQueryManager.bs.js");
+var Index$Avocardo = require("../Index.bs.js");
+var ExerciseQueryManager$Avocardo = require("../ExerciseQueryManager.bs.js");
 
 function IndexRes$P(Props) {
   var fingerprint = Props.fingerprint;
@@ -14,7 +14,7 @@ function IndexRes$P(Props) {
   if (Curry._1(isServer, undefined)) {
     return null;
   } else {
-    return React.createElement(UI$Avocardo.App.make, {
+    return React.createElement(Index$Avocardo.App.make, {
                 initialQM: ExerciseQueryManager$Avocardo.make(fingerprint)
               });
   }

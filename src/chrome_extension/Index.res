@@ -1,5 +1,5 @@
 module Filter = {
-  @module external style: {"filter": string} = "./UI.module.css"
+  @module external style: {"filter": string} = "./Index.module.css"
   open ExerciseQueryManager
   @react.component
   let make = (~filter, ~fails, ~onChangeFilter) =>

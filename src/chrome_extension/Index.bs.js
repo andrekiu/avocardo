@@ -5,13 +5,13 @@ var List = require("rescript/lib/js/list.js");
 var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var Card$Avocardo = require("./Card.bs.js");
-var UIModuleCss = require("./UI.module.css");
 var Shimmer$Avocardo = require("./Shimmer.bs.js");
+var IndexModuleCss = require("./Index.module.css");
 var ExerciseQueryManager$Avocardo = require("./ExerciseQueryManager.bs.js");
 
-var style = UIModuleCss;
+var style = IndexModuleCss;
 
-function UI$Filter(Props) {
+function Index$Filter(Props) {
   var filter = Props.filter;
   var fails = Props.fails;
   var onChangeFilter = Props.onChangeFilter;
@@ -33,10 +33,10 @@ function UI$Filter(Props) {
 
 var Filter = {
   style: style,
-  make: UI$Filter
+  make: Index$Filter
 };
 
-function UI$App(Props) {
+function Index$App(Props) {
   var initialQM = Props.initialQM;
   var match = React.useState(function () {
         return /* Any */0;
@@ -77,7 +77,7 @@ function UI$App(Props) {
                           return Curry._1(setQuery, ExerciseQueryManager$Avocardo.appendFail(qm, e));
                         }
                       }),
-                    filter: React.createElement(UI$Filter, {
+                    filter: React.createElement(Index$Filter, {
                           filter: filter,
                           fails: qm.fails,
                           onChangeFilter: (function (f) {
@@ -93,7 +93,7 @@ function UI$App(Props) {
 }
 
 var App = {
-  make: UI$App
+  make: Index$App
 };
 
 exports.Filter = Filter;

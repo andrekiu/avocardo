@@ -2,7 +2,7 @@
 'use strict';
 
 var Js_dict = require("rescript/lib/js/js_dict.js");
-var ServerFingerprint$Avocardo = require("./auth/ServerFingerprint.bs.js");
+var ServerFingerprint$Avocardo = require("../auth/ServerFingerprint.bs.js");
 
 function getServerSideProps(ctx) {
   var cookies = ctx.req.cookies;

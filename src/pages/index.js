@@ -1,5 +1,5 @@
-import IndexRes from "../chrome_extension/IndexRes.bs.js";
-import { getServerSideProps as genProps } from "../chrome_extension/IndexResServer.bs.js";
+import IndexRes from "../chrome_extension/next_pages/IndexRes.bs.js";
+import { getServerSideProps as genProps } from "../chrome_extension/next_pages/IndexResServer.bs.js";
 
 export default function Index(props) {
   return <IndexRes {...props} />;
