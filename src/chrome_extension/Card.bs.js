@@ -40,7 +40,7 @@ function solution(exercise) {
 }
 
 function solved(selection, exercise) {
-  var tokens = $$String.split_on_char(/* ' ' */32, selection);
+  var tokens = $$String.split_on_char(/* ' ' */32, $$String.trim(selection));
   if (!tokens) {
     return false;
   }

@@ -31,7 +31,7 @@ module ExerciseSolver = {
   }
 
   let solved = (selection, exercise) => {
-    let tokens = String.split_on_char(' ', selection)
+    let tokens = String.trim(selection) |> String.split_on_char(' ')
     switch tokens {
     | list{p, c} => contains(exercise.pronouns, p) && contains(exercise.nouns, c)
     | _ => false
