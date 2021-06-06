@@ -20,6 +20,7 @@ let use = (~onChar, ~onEnter, ~onDelete) =>
       | "Backspace" => onDelete()
       | "Escape" => onDelete()
       | "Enter" => onEnter()
+      | t if String.length(t) > 1 => ignore()
       | _ => onChar(key)
       }
     addEventListener("keydown", listen)

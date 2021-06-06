@@ -22,7 +22,11 @@ function use(onChar, onEnter, onDelete) {
             case "Tab" :
                 return ;
             default:
-              return Curry._1(onChar, key);
+              if (key.length > 1) {
+                return ;
+              } else {
+                return Curry._1(onChar, key);
+              }
           }
         };
         window.addEventListener("keydown", listen);
