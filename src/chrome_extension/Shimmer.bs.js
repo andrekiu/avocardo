@@ -2,34 +2,20 @@
 'use strict';
 
 var React = require("react");
+var ShimmerModuleCss = require("./Shimmer.module.css");
 
-var app = {
-  display: "grid",
-  height: "200px",
-  width: "200px",
-  gridTemplateColumns: "repeat(3, 1fr)"
-};
-
-var center = {
-  gridColumn: "2 2",
-  gridRow: "2 2"
-};
-
-var Styles = {
-  app: app,
-  center: center
-};
+var style = ShimmerModuleCss;
 
 function Shimmer(Props) {
   return React.createElement("div", {
-              style: app
+              className: style.app
             }, React.createElement("span", {
-                  style: center
+                  className: style.shimmer
                 }, "Loading..."));
 }
 
 var make = Shimmer;
 
-exports.Styles = Styles;
+exports.style = style;
 exports.make = make;
-/* react Not a pure module */
+/* style Not a pure module */

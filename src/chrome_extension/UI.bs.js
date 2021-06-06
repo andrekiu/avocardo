@@ -5,14 +5,11 @@ var List = require("rescript/lib/js/list.js");
 var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var Card$Avocardo = require("./Card.bs.js");
+var UIModuleCss = require("./UI.module.css");
 var Shimmer$Avocardo = require("./Shimmer.bs.js");
 var ExerciseQueryManager$Avocardo = require("./ExerciseQueryManager.bs.js");
 
-var style = {
-  cursor: "pointer",
-  padding: "10px 15px",
-  textAlign: "right"
-};
+var style = UIModuleCss;
 
 function UI$Filter(Props) {
   var filter = Props.filter;
@@ -22,7 +19,7 @@ function UI$Filter(Props) {
     return null;
   } else {
     return React.createElement("div", {
-                style: style,
+                className: style.filter,
                 onClick: (function (param) {
                     if (filter === /* Any */0) {
                       return Curry._1(onChangeFilter, /* JustFails */1);
@@ -101,4 +98,4 @@ var App = {
 
 exports.Filter = Filter;
 exports.App = App;
-/* react Not a pure module */
+/* style Not a pure module */

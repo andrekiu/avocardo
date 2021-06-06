@@ -1,0 +1,8 @@
+.prompt {
+  height: 11px;
+  width: 6px;
+  background-color: currentColor;
+  display: inline-block;
+  margin-left: 1px;
+  vertical-align: middle;
+}

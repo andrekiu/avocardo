@@ -9,91 +9,10 @@ var Caml_array = require("rescript/lib/js/caml_array.js");
 var Token$Avocardo = require("./Token.bs.js");
 var Words$Avocardo = require("./Words.bs.js");
 var Prompt$Avocardo = require("./Prompt.bs.js");
+var CardModuleCss = require("./Card.module.css");
 var Keyboard$Avocardo = require("./hooks/Keyboard.bs.js");
 
-var app = {
-  border: "1px solid currentcolor",
-  display: "grid",
-  height: "200px",
-  width: "200px",
-  boxSizing: "border-box",
-  gridAutoRows: "minimax(20px, 20px)"
-};
-
-var input = {
-  textAlign: "center",
-  gridColumn: "1 / 4",
-  gridRow: "3 / 3"
-};
-
-var challenge = {
-  fontWeight: "bold",
-  textAlign: "center",
-  gridColumn: "1 / 4",
-  gridRow: "2 / 2"
-};
-
-var options = {
-  display: "flex",
-  justifyContent: "space-evenly",
-  gridColumn: "1 / 4",
-  gridRow: "4 / 10"
-};
-
-var column = {
-  display: "flex",
-  alignItems: "center",
-  flexDirection: "column",
-  justifyContent: "space-evenly"
-};
-
-var center = {
-  height: "80px",
-  gridColumn: "2 / 2",
-  gridRow: "5 / 7"
-};
-
-var correctResult = {
-  fontStyle: "italic",
-  fontWeight: "bold",
-  textAlign: "center",
-  gridColumn: "1 / 3",
-  gridRow: "2 / 2"
-};
-
-var bold = {
-  fontWeight: "bold"
-};
-
-var italic = {
-  fontStyle: "italic"
-};
-
-var result = {
-  textAlign: "center",
-  gridColumn: "1 / 3",
-  gridRow: "2 / 2"
-};
-
-var filter = {
-  textAlign: "center",
-  gridColumn: "3 / 3",
-  gridRow: "1 / 1"
-};
-
-var Styles = {
-  app: app,
-  input: input,
-  challenge: challenge,
-  options: options,
-  column: column,
-  center: center,
-  correctResult: correctResult,
-  bold: bold,
-  italic: italic,
-  result: result,
-  filter: filter
-};
+var style = CardModuleCss;
 
 function contains(translations, w) {
   return $$Array.exists((function (t) {
@@ -142,11 +61,11 @@ var ExerciseSolver = {
 function Card$Result(Props) {
   var exercise = Props.exercise;
   return React.createElement("div", {
-              style: result
+              className: style.result
             }, React.createElement("div", {
-                  style: bold
+                  className: style["result-quiz"]
                 }, exercise.quiz), React.createElement("div", {
-                  style: italic
+                  className: style["result-solution"]
                 }, solution(exercise)));
 }
 
@@ -158,16 +77,16 @@ function Card$Evaluation(Props) {
   var selection = Props.selection;
   var exercise = Props.exercise;
   return React.createElement("div", {
-              style: app
+              className: style.app
             }, solved(selection, exercise) ? React.createElement(React.Fragment, undefined, React.createElement("span", {
-                        style: correctResult
+                        className: style.result
                       }, "You got it!"), React.createElement("img", {
-                        style: center,
+                        className: style["result-avocado"],
                         src: "/img/success.jpg"
                       })) : React.createElement(React.Fragment, undefined, React.createElement(Card$Result, {
                         exercise: exercise
                       }), React.createElement("img", {
-                        style: center,
+                        className: style["result-avocado"],
                         src: "/img/failure.jpg"
                       })));
 }
@@ -232,7 +151,7 @@ function Card(Props) {
   var exercise = Props.exercise;
   var next = Props.next;
   var storeStatus = Props.storeStatus;
-  var filter$1 = Props.filter;
+  var filter = Props.filter;
   var match = React.useState(function () {
         return {
                 TAG: 0,
@@ -281,23 +200,23 @@ function Card(Props) {
   var selection = quiz._0;
   var match$1 = Token$Avocardo.StyledWords.style(selection, e.pronouns, e.nouns);
   return React.createElement("div", {
-              style: app
+              className: style.app
             }, React.createElement("div", {
-                  style: filter
-                }, filter$1), React.createElement("div", {
-                  style: challenge
+                  className: style.filter
+                }, filter), React.createElement("div", {
+                  className: style.challenge
                 }, e.quiz), React.createElement("div", {
-                  style: input
+                  className: style.input
                 }, selection, React.createElement(Prompt$Avocardo.make, {})), React.createElement("div", {
-                  style: options
+                  className: style.options
                 }, React.createElement("div", {
-                      style: column
+                      className: style.column
                     }, $$Array.map((function (tok) {
                             return React.createElement(Token$Avocardo.make, {
                                         tok: tok
                                       });
                           }), match$1[0])), React.createElement("div", {
-                      style: column
+                      className: style.column
                     }, $$Array.map((function (tok) {
                             return React.createElement(Token$Avocardo.make, {
                                         tok: tok
@@ -307,7 +226,7 @@ function Card(Props) {
 
 var make = Card;
 
-exports.Styles = Styles;
+exports.style = style;
 exports.ExerciseSolver = ExerciseSolver;
 exports.Result = Result;
 exports.Evaluation = Evaluation;
@@ -315,4 +234,4 @@ exports.reduce_quiz = reduce_quiz;
 exports.willRestartQuiz = willRestartQuiz;
 exports.willShowVeredict = willShowVeredict;
 exports.make = make;
-/* react Not a pure module */
+/* style Not a pure module */

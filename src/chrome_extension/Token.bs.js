@@ -6,7 +6,10 @@ var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var $$String = require("rescript/lib/js/string.js");
 var Words$Avocardo = require("./Words.bs.js");
+var TokenModuleCss = require("./Token.module.css");
 var PronounExercises$Avocardo = require("../server/exercises/PronounExercises.bs.js");
+
+var style = TokenModuleCss;
 
 var bold = {
   fontWeight: "bold"
@@ -15,7 +18,7 @@ var bold = {
 var noop = {};
 
 function token(pct) {
-  var begin_rbg = [
+  var begin_rgb = [
     223,
     223,
     226
@@ -34,16 +37,13 @@ function token(pct) {
             param[2] + param$1[2] * pct
           ];
   };
-  var match = scale(begin_rbg, get_delta(begin_rbg, [
+  var match = scale(begin_rgb, get_delta(begin_rgb, [
             180,
             206,
             141
           ]), pct);
   return {
-          backgroundColor: String(match[0] | 0) + " " + String(match[1] | 0) + " " + String(match[2] | 0),
-          border: "0px none currentcolor",
-          padding: "8px 12px",
-          borderRadius: "5px"
+          backgroundColor: "rgb(" + String(match[0] | 0) + ", " + String(match[1] | 0) + ", " + String(match[2] | 0) + ")"
         };
 }
 
@@ -83,14 +83,14 @@ function map(fn, tok) {
               }), tok.tokens);
 }
 
-function style(tok) {
+function style$1(tok) {
   return token(tok.pct_match);
 }
 
 var StyledToken = {
   create: create,
   map: map,
-  style: style
+  style: style$1
 };
 
 function match_(words, prefix) {
@@ -99,7 +99,7 @@ function match_(words, prefix) {
               }), $$Array.map(PronounExercises$Avocardo.toString, words));
 }
 
-function style$1(word, pronouns, candidates) {
+function style$2(word, pronouns, candidates) {
   var tokens = $$String.split_on_char(/* ' ' */32, word);
   if (!tokens) {
     return [
@@ -124,12 +124,13 @@ function style$1(word, pronouns, candidates) {
 
 var StyledWords = {
   match_: match_,
-  style: style$1
+  style: style$2
 };
 
 function Token(Props) {
   var tok = Props.tok;
   return React.createElement("button", {
+              className: style.token,
               style: token(tok.pct_match)
             }, map((function (str, style) {
                     return React.createElement("span", {
@@ -140,8 +141,9 @@ function Token(Props) {
 
 var make = Token;
 
+exports.style = style;
 exports.Styles = Styles;
 exports.StyledToken = StyledToken;
 exports.StyledWords = StyledWords;
 exports.make = make;
-/* react Not a pure module */
+/* style Not a pure module */

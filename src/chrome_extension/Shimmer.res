@@ -1,14 +1,7 @@
-module Styles = {
-  let app = ReactDOM.Style.make(
-    ~height="200px",
-    ~width="200px",
-    ~display="grid",
-    ~gridTemplateColumns="repeat(3, 1fr)",
-    (),
-  )
-  let center = ReactDOM.Style.make(~gridColumn="2 2", ~gridRow="2 2", ())
-}
+@module external style: {"app": string, "shimmer": string} = "./Shimmer.module.css"
 
 @react.component
 let make = () =>
-  <div style=Styles.app> <span style=Styles.center> {React.string("Loading...")} </span> </div>
+  <div className={style["app"]}>
+    <span className={style["shimmer"]}> {React.string("Loading...")} </span>
+  </div>

@@ -1,13 +1,5 @@
-let style = ReactDOM.Style.make(
-  ~height="11px",
-  ~width="6px",
-  ~backgroundColor="currentcolor",
-  ~display="inline-block",
-  ~marginLeft="1px",
-  ~verticalAlign="middle",
-  (),
-)
+@module external style: {"prompt": string} = "./Prompt.module.css"
 @react.component
 let make = () => {
-  <span style />
+  <span className={style["prompt"]} />
 }

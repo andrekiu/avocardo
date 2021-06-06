@@ -1,51 +1,16 @@
-module Styles = {
-  let app = ReactDOM.Style.make(
-    ~height="200px",
-    ~width="200px",
-    ~border="1px solid currentcolor",
-    ~display="grid",
-    ~gridAutoRows="minimax(20px, 20px)",
-    ~boxSizing="border-box",
-    (),
-  )
-  let input = ReactDOM.Style.make(~gridRow="3 / 3", ~gridColumn="1 / 4", ~textAlign="center", ())
-
-  let challenge = ReactDOM.Style.make(
-    ~gridRow="2 / 2",
-    ~gridColumn="1 / 4",
-    ~textAlign="center",
-    ~fontWeight="bold",
-    (),
-  )
-  let options = ReactDOM.Style.make(
-    ~gridRow="4 / 10",
-    ~gridColumn="1 / 4",
-    ~display="flex",
-    ~justifyContent="space-evenly",
-    (),
-  )
-  let column = ReactDOM.Style.make(
-    ~display="flex",
-    ~flexDirection="column",
-    ~justifyContent="space-evenly",
-    ~alignItems="center",
-    (),
-  )
-
-  let center = ReactDOM.Style.make(~gridColumn="2 / 2", ~gridRow="5 / 7", ~height="80px", ())
-  let correctResult = ReactDOM.Style.make(
-    ~gridColumn="1 / 3",
-    ~gridRow="2 / 2",
-    ~textAlign="center",
-    ~fontWeight="bold",
-    ~fontStyle="italic",
-    (),
-  )
-  let bold = ReactDOM.Style.make(~fontWeight="bold", ())
-  let italic = ReactDOMStyle.make(~fontStyle="italic", ())
-  let result = ReactDOM.Style.make(~gridRow="2 / 2", ~gridColumn="1 / 3", ~textAlign="center", ())
-  let filter = ReactDOM.Style.make(~gridColumn="3 / 3", ~gridRow="1 / 1", ~textAlign="center", ())
-}
+@module
+external style: {
+  "app": string,
+  "result": string,
+  "result-quiz": string,
+  "result-solution": string,
+  "result-avocado": string,
+  "challenge": string,
+  "filter": string,
+  "input": string,
+  "options": string,
+  "column": string,
+} = "./Card.module.css"
 
 module ExerciseSolver = {
   open PronounExercises
@@ -77,22 +42,26 @@ module ExerciseSolver = {
 module Result = {
   @react.component
   let make = (~exercise: PronounExercises.pronoun_exercise) =>
-    <div style={Styles.result}>
-      <div style=Styles.bold> {React.string(exercise.quiz)} </div>
-      <div style=Styles.italic> {ExerciseSolver.solution(exercise) |> React.string} </div>
+    <div className={style["result"]}>
+      <div className={style["result-quiz"]}> {React.string(exercise.quiz)} </div>
+      <div className={style["result-solution"]}>
+        {ExerciseSolver.solution(exercise) |> React.string}
+      </div>
     </div>
 }
 
 module Evaluation = {
   @react.component
   let make = (~selection, ~exercise: PronounExercises.pronoun_exercise) =>
-    <div style=Styles.app>
+    <div className={style["app"]}>
       {ExerciseSolver.solved(selection, exercise)
         ? <>
-            <span style=Styles.correctResult> {React.string("You got it!")} </span>
-            <img style=Styles.center src={"/img/success.jpg"} />
+            <span className={style["result"]}> {React.string("You got it!")} </span>
+            <img className={style["result-avocado"]} src={"/img/success.jpg"} />
           </>
-        : <> <Result exercise /> <img style=Styles.center src={"/img/failure.jpg"} /> </>}
+        : <>
+            <Result exercise /> <img className={style["result-avocado"]} src={"/img/failure.jpg"} />
+          </>}
     </div>
 }
 
@@ -151,15 +120,15 @@ let make = (
   switch quiz {
   | Solving(selection) =>
     let (styledPronouns, styledCandidates) = Token.StyledWords.style(selection, e.pronouns, e.nouns)
-    <div style=Styles.app>
-      <div style=Styles.filter> filter </div>
-      <div style=Styles.challenge> {React.string(e.quiz)} </div>
-      <div style=Styles.input> {React.string(selection)} <Prompt /> </div>
-      <div style=Styles.options>
-        <div style=Styles.column>
+    <div className={style["app"]}>
+      <div className={style["filter"]}> filter </div>
+      <div className={style["challenge"]}> {React.string(e.quiz)} </div>
+      <div className={style["input"]}> {React.string(selection)} <Prompt /> </div>
+      <div className={style["options"]}>
+        <div className={style["column"]}>
           {Array.map(tok => <Token tok />, styledPronouns) |> React.array}
         </div>
-        <div style=Styles.column>
+        <div className={style["column"]}>
           {Array.map(tok => <Token tok />, styledCandidates) |> React.array}
         </div>
       </div>

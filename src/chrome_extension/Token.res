@@ -1,20 +1,15 @@
+@module external style: {"token": string} = "./Token.module.css"
 module Styles = {
   let bold = ReactDOM.Style.make(~fontWeight="bold", ())
   let noop = ReactDOM.Style.make()
   let token = pct => {
-    let begin_rbg = (223., 223., 226.)
-    let end_rbg = (180., 206., 141.)
-    let get_delta = ((r1, b1, g1), (r2, b2, g2)) => (r2 -. r1, b2 -. b1, g2 -. g1)
-    let scale = ((r, b, g), (dr, db, dg), pct) => (r +. dr *. pct, b +. db *. pct, g +. dg *. pct)
-    let (r, b, g) = scale(begin_rbg, get_delta(begin_rbg, end_rbg), pct)
+    let begin_rgb = (223., 223., 226.)
+    let end_rgb = (180., 206., 141.)
+    let get_delta = ((r1, g1, b1), (r2, g2, b2)) => (r2 -. r1, g2 -. g1, b2 -. b1)
+    let scale = ((r, g, b), (dr, dg, db), pct) => (r +. dr *. pct, g +. dg *. pct, b +. db *. pct)
+    let (r, g, b) = scale(begin_rgb, get_delta(begin_rgb, end_rgb), pct)
     let to_str = e => e->int_of_float->string_of_int
-    ReactDOM.Style.make(
-      ~backgroundColor=`${r->to_str} ${b->to_str} ${g->to_str}`,
-      ~padding="8px 12px",
-      ~borderRadius="5px",
-      ~border="0px none currentcolor",
-      (),
-    )
+    ReactDOM.Style.make(~backgroundColor=`rgb(${r->to_str}, ${g->to_str}, ${b->to_str})`, ())
   }
 }
 
@@ -60,6 +55,6 @@ module StyledWords = {
 
 @react.component
 let make = (~tok) =>
-  <button style={StyledToken.style(tok)}>
+  <button className={style["token"]} style={StyledToken.style(tok)}>
     {StyledToken.map((str, style) => <span style> {React.string(str)} </span>, tok) |> React.array}
   </button>

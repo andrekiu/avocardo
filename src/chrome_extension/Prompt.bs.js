@@ -2,19 +2,13 @@
 'use strict';
 
 var React = require("react");
+var PromptModuleCss = require("./Prompt.module.css");
 
-var style = {
-  backgroundColor: "currentcolor",
-  display: "inline-block",
-  height: "11px",
-  marginLeft: "1px",
-  verticalAlign: "middle",
-  width: "6px"
-};
+var style = PromptModuleCss;
 
 function Prompt(Props) {
   return React.createElement("span", {
-              style: style
+              className: style.prompt
             });
 }
 
@@ -22,4 +16,4 @@ var make = Prompt;
 
 exports.style = style;
 exports.make = make;
-/* react Not a pure module */
+/* style Not a pure module */

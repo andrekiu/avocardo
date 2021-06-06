@@ -1,12 +1,14 @@
 module Filter = {
-  let style = ReactDOM.Style.make(~cursor="pointer", ~padding="10px 15px", ~textAlign="right", ())
+  @module external style: {"filter": string} = "./UI.module.css"
   open ExerciseQueryManager
   @react.component
   let make = (~filter, ~fails, ~onChangeFilter) =>
     if List.length(fails) == 0 {
       React.null
     } else {
-      <div style onClick={_ => filter == Any ? onChangeFilter(JustFails) : onChangeFilter(Any)}>
+      <div
+        className={style["filter"]}
+        onClick={_ => filter == Any ? onChangeFilter(JustFails) : onChangeFilter(Any)}>
         {filter == Any
           ? React.string(Js.String.fromCodePoint(0x1F525))
           : React.string(Js.String.fromCodePoint(0x1F648))}
