@@ -9,10 +9,11 @@ function use(onChar, onEnter, onDelete) {
         var listen = function (param) {
           var key = param.key;
           switch (key) {
-            case "Backspace" :
-                return Curry._1(onDelete, undefined);
             case "Enter" :
                 return Curry._1(onEnter, undefined);
+            case "Backspace" :
+            case "Escape" :
+                return Curry._1(onDelete, undefined);
             case "Alt" :
             case "Control" :
             case "Dead" :

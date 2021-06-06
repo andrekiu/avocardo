@@ -18,6 +18,7 @@ let use = (~onChar, ~onEnter, ~onDelete) =>
       | "Control" => ignore()
       | "Dead" => ignore()
       | "Backspace" => onDelete()
+      | "Escape" => onDelete()
       | "Enter" => onEnter()
       | _ => onChar(key)
       }
