@@ -7,12 +7,14 @@ module Decode = {
     question: string,
     answer: string,
     alternatives: array<string>,
+    variant: string,
   }
   let row = (json): t => {
     id: json |> field("id", int),
     question: json |> field("question", string),
     answer: json |> field("answer", string),
     alternatives: json |> field("alternatives", array(string)),
+    variant: json |> field("variant", string),
   }
 }
 
@@ -61,11 +63,67 @@ let randomQuestion = {
         e(tcol(tname("quizzes"), cname("question"))),
         e(tcol(tname("quizzes"), cname("answer"))),
         e(tcol(tname("quizzes"), cname("alternatives"))),
+        e(tcol(tname("quizzes"), cname("variant"))),
       } |> from(tableNamed("quizzes")),
     ) |> orderBy1(call(fname("RAND"), list{}), asc)
 }
 
-let genPronounExercices = () =>
+let genQuizzes = ids => {
+  let inStatement = String.concat(", ", Array.to_list(ids))
+  let query = `
+    select id, question, answer, alternatives 
+    from quizzes 
+    where id in (${inStatement})
+  `
+  Js.Promise.make((~resolve, ~reject) =>
+    DB.withConnection(conn =>
+      MySql2.execute(conn, query, None, msg => {
+        switch msg {
+        | #Error(e) => reject(. MySql2.Exn.toExn(e))
+        | #Select(select) => resolve(. MySql2.Select.rows(select))
+        | #Mutation(_) => reject(. Failure("UNEXPECTED_MUTATION"))
+        }
+      })
+    )
+  )
+}
+
+let genFailures = fingerprint => {
+  Js.Promise.make((~resolve, ~reject) =>
+    DB.withConnection(conn =>
+      MySql2.execute(
+        conn,
+        ` select distinct incorrect_answers.question_id as question_id
+          from (
+            select question_id, assesment 
+            from answers 
+            where 
+              fingerprint = "${fingerprint}"
+              and assesment='INCORRECT'
+          ) AS incorrect_answers 
+          left join (
+          select distinct question_id, assesment 
+            from answers 
+            where 
+              fingerprint = "${fingerprint}" 
+              and assesment='CORRECT' 
+          ) as correct_answers
+          on incorrect_answers.question_id = correct_answers.question_id
+          where correct_answers.assesment is NULL`,
+        None,
+        msg => {
+          switch msg {
+          | #Error(e) => reject(. MySql2.Exn.toExn(e))
+          | #Select(select) => resolve(. MySql2.Select.rows(select))
+          | #Mutation(_) => reject(. Failure("UNEXPECTED_MUTATION"))
+          }
+        },
+      )
+    )
+  )
+}
+
+let genPronounExercise = () =>
   Js.Promise.make((~resolve, ~reject) =>
     DB.withConnection(conn =>
       MySql2.execute(conn, randomQuestion() |> Requery.RenderQuery.Default.select, None, msg =>
@@ -76,9 +134,4 @@ let genPronounExercices = () =>
         }
       )
     )
-  )
-
-let genJsonResponse = () =>
-  genPronounExercices() |> Js.Promise.then_(row =>
-    format(row) |> Encode.exercise |> Js.Promise.resolve
   )

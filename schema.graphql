@@ -1,0 +1,41 @@
+type Quiz {
+  id: ID!
+  question: String!
+  alternatives: [String!]!
+  answer: String!
+  variant: String!
+}
+
+type FailedQuizzesEdge {
+  cursor: String!
+  node: Quiz
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+}
+
+type FailsConnection {
+  totalCount: Int!
+  edges: [FailedQuizzesEdge]
+  pageInfo: PageInfo!
+}
+
+type Profile {
+  id: ID!
+  nextQuiz(justFails: Boolean!): Quiz!
+  fails: FailsConnection!
+}
+
+type Query {
+  getProfile(fingerprint: String!): Profile!
+}
+
+type Mutation {
+  addAnswer(fingerprint: ID!, quiz_id: ID!, didSucceed: Boolean!): Profile!
+}
+
+schema {
+  query: Query
+  mutation: Mutation
+}

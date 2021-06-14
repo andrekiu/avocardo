@@ -1,11 +1,11 @@
-let genInsertAnswer = (answer: Answer.Decode.t) =>
+let genInsertAnswer = (answer: {"fingerprint": string, "quiz_id": string, "didSucceed": bool}) =>
   Js.Promise.make((~resolve, ~reject) => {
     let statement = {
       open Requery.QueryBuilder
-      (answer.fingerprint, answer.question_id, Answer.Encode.assesmentToStr(answer.assesment))
+      (answer["fingerprint"], answer["quiz_id"], answer["didSucceed"] ? "CORRECT" : "INCORRECT")
       |> insertOne(((fp, question_id, assesment)) => list{
         (cname("fingerprint"), string(fp)),
-        (cname("question_id"), int(question_id)),
+        (cname("question_id"), string(question_id)),
         (cname("assesment"), string(assesment)),
         (
           cname("answered_time"),
@@ -31,4 +31,4 @@ let genInsertAnswer = (answer: Answer.Decode.t) =>
     )
   })
 
-let genSave = json => Answer.Decode.answer(json) |> genInsertAnswer |> Js.Promise.resolve
+// let genSave = json => Answer.Decode.answer(json) |> genInsertAnswer |> Js.Promise.resolve

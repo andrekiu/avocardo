@@ -5,7 +5,6 @@ var Curry = require("rescript/lib/js/curry.js");
 var MySql2 = require("bs-mysql2/src/MySql2.bs.js");
 var Caml_array = require("rescript/lib/js/caml_array.js");
 var DB$Avocardo = require("../db/DB.bs.js");
-var Answer$Avocardo = require("./Answer.bs.js");
 var RenderQuery$Requery = require("@adnelson/requery/src/RenderQuery.bs.js");
 var QueryBuilder$Requery = require("@adnelson/requery/src/QueryBuilder.bs.js");
 
@@ -20,7 +19,7 @@ function genInsertAnswer(answer) {
                                         tl: {
                                           hd: [
                                             Curry._1(QueryBuilder$Requery.cname, "question_id"),
-                                            QueryBuilder$Requery.$$int(param[1])
+                                            QueryBuilder$Requery.string(param[1])
                                           ],
                                           tl: {
                                             hd: [
@@ -39,8 +38,8 @@ function genInsertAnswer(answer) {
                                       };
                               }), [
                               answer.fingerprint,
-                              answer.question_id,
-                              Answer$Avocardo.Encode.assesmentToStr(answer.assesment)
+                              answer.quiz_id,
+                              answer.didSucceed ? "CORRECT" : "INCORRECT"
                             ])));
                 return DB$Avocardo.withConnection(function (conn) {
                             return MySql2.execute(conn, statement, undefined, (function (msg) {
@@ -60,10 +59,5 @@ function genInsertAnswer(answer) {
               }));
 }
 
-function genSave(json) {
-  return Promise.resolve(genInsertAnswer(Answer$Avocardo.Decode.answer(json)));
-}
-
 exports.genInsertAnswer = genInsertAnswer;
-exports.genSave = genSave;
 /* MySql2 Not a pure module */

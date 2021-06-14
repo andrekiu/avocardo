@@ -8,10 +8,12 @@ module P = {
               return typeof window === 'undefined';
             }
           `)
-    isServer() ? React.null : <Index.App initialQM={ExerciseQueryManager.make(fingerprint)} />
+    isServer() ? React.null : <Index.App fingerprint />
   }
 }
 
 let default = (props: props) => {
-  <P fingerprint={props.fingerprint} />
+  <RescriptRelay.Context.Provider environment=RelayEnv.environment>
+    <P fingerprint={props.fingerprint} />
+  </RescriptRelay.Context.Provider>
 }

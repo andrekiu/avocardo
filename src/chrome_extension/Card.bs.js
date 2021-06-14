@@ -131,22 +131,6 @@ function reduce_quiz(state, action) {
   }
 }
 
-function willRestartQuiz(cur, next) {
-  if (cur.TAG === /* Solving */0 || next.TAG !== /* Solving */0) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-function willShowVeredict(cur, next) {
-  if (cur.TAG === /* Solving */0 && next.TAG !== /* Solving */0) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
 function Card(Props) {
   var exercise = Props.exercise;
   var next = Props.next;
@@ -161,7 +145,6 @@ function Card(Props) {
       });
   var setQuiz = match[1];
   var quiz = match[0];
-  var e = Curry._1(exercise.read, undefined);
   Keyboard$Avocardo.use(React.useCallback(function (c) {
             var a = {
               _0: c,
@@ -174,7 +157,7 @@ function Card(Props) {
               var match = reduce_quiz(quiz, /* Enter */0);
               if (quiz.TAG === /* Solving */0) {
                 if (match.TAG !== /* Solving */0) {
-                  Curry._2(storeStatus, e, solved(match._0, e));
+                  Curry._2(storeStatus, exercise, solved(match._0, exercise));
                 }
                 
               } else if (match.TAG === /* Solving */0) {
@@ -194,18 +177,18 @@ function Card(Props) {
   if (quiz.TAG !== /* Solving */0) {
     return React.createElement(Card$Evaluation, {
                 selection: quiz._0,
-                exercise: e
+                exercise: exercise
               });
   }
   var selection = quiz._0;
-  var match$1 = Token$Avocardo.StyledWords.style(selection, e.pronouns, e.nouns);
+  var match$1 = Token$Avocardo.StyledWords.style(selection, exercise.pronouns, exercise.nouns);
   return React.createElement("div", {
               className: style.app
             }, React.createElement("div", {
                   className: style.filter
                 }, filter), React.createElement("div", {
                   className: style.challenge
-                }, e.quiz), React.createElement("div", {
+                }, exercise.quiz), React.createElement("div", {
                   className: style.input
                 }, selection, React.createElement(Prompt$Avocardo.make, {})), React.createElement("div", {
                   className: style.options
@@ -231,7 +214,5 @@ exports.ExerciseSolver = ExerciseSolver;
 exports.Result = Result;
 exports.Evaluation = Evaluation;
 exports.reduce_quiz = reduce_quiz;
-exports.willRestartQuiz = willRestartQuiz;
-exports.willShowVeredict = willShowVeredict;
 exports.make = make;
 /* style Not a pure module */

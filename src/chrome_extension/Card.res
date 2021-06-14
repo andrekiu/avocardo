@@ -83,28 +83,16 @@ let reduce_quiz = (state: quiz_stage, action) =>
   | _ => state
   }
 
-let willRestartQuiz = (cur, next) =>
-  switch (cur, next) {
-  | (Veredict(_), Solving(_)) => true
-  | _ => false
-  }
-
-let willShowVeredict = (cur, next) =>
-  switch (cur, next) {
-  | (Solving(_), Veredict(_)) => true
-  | _ => false
-  }
-
 @react.component
 let make = (
-  ~exercise: Suspendable.t<PronounExercises.pronoun_exercise>,
+  ~exercise: PronounExercises.pronoun_exercise,
   ~next: unit => unit,
   ~storeStatus: (PronounExercises.pronoun_exercise, bool) => unit,
   ~filter,
 ) => {
   let (quiz, setQuiz) = React.useState(() => Solving(""))
   let dispatch = a => setQuiz(s => reduce_quiz(s, a))
-  let e = exercise.read()
+  let e = exercise
   Keyboard.use(
     ~onChar=React.useCallback(c => dispatch(Char(c))),
     ~onEnter=React.useCallback2(() => {

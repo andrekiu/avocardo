@@ -9,7 +9,9 @@
     "server-dev": "yarn run nodemon --watch ./src/server src/server/Server.bs.js",
     "server-debug": "node --inspect src/server/Server.bs.js",
     "react-dev": "yarn run react-devtools",
-    "prod": "yarn run bundle prod; yarn run client-prod"
+    "prod": "yarn run bundle prod; yarn run client-prod",
+    "relay": "rescript-relay-compiler",
+    "relay:watch": "rescript-relay-compiler --watch"
   },
   "devDependencies": {
     "bs-platform": "^8.2.0",
@@ -29,11 +31,19 @@
     "bs-mysql2": "https://github.com/andrekiu/bs-mysql2.git",
     "bs-webapi": "^0.19.1",
     "dotenv": "^8.2.0",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.5.0",
     "mysql": "^2.18.1",
     "next": "^10.2.0",
     "react": "^0.0.0-experimental-4ead6b530",
     "react-dom": "^0.0.0-experimental-4ead6b530",
+    "react-relay": "11.0.0",
+    "reason-promise": "^1.1.4",
     "reason-react": "^0.9.1",
-    "rescript": "^9.1.2"
+    "relay-compiler": "11.0.0",
+    "relay-config": "11.0.0",
+    "relay-runtime": "11.0.0",
+    "rescript": "^9.1.2",
+    "rescript-relay": "^0.20.1"
   }
 }

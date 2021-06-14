@@ -11,7 +11,6 @@ var DB$Avocardo = require("../db/DB.bs.js");
 var Json_decode = require("@glennsl/bs-json/src/Json_decode.bs.js");
 var RenderQuery$Requery = require("@adnelson/requery/src/RenderQuery.bs.js");
 var QueryBuilder$Requery = require("@adnelson/requery/src/QueryBuilder.bs.js");
-var PronounExercises$Avocardo = require("./PronounExercises.bs.js");
 
 function row(json) {
   return {
@@ -20,7 +19,8 @@ function row(json) {
           answer: Json_decode.field("answer", Json_decode.string, json),
           alternatives: Json_decode.field("alternatives", (function (param) {
                   return Json_decode.array(Json_decode.string, param);
-                }), json)
+                }), json),
+          variant: Json_decode.field("variant", Json_decode.string, json)
         };
 }
 
@@ -102,14 +102,59 @@ function randomQuestion(param) {
                           hd: QueryBuilder$Requery.e(undefined, QueryBuilder$Requery.tcol(Curry._1(QueryBuilder$Requery.tname, "quizzes"), Curry._1(QueryBuilder$Requery.cname, "answer"))),
                           tl: {
                             hd: QueryBuilder$Requery.e(undefined, QueryBuilder$Requery.tcol(Curry._1(QueryBuilder$Requery.tname, "quizzes"), Curry._1(QueryBuilder$Requery.cname, "alternatives"))),
-                            tl: /* [] */0
+                            tl: {
+                              hd: QueryBuilder$Requery.e(undefined, QueryBuilder$Requery.tcol(Curry._1(QueryBuilder$Requery.tname, "quizzes"), Curry._1(QueryBuilder$Requery.cname, "variant"))),
+                              tl: /* [] */0
+                            }
                           }
                         }
                       }
                     })));
 }
 
-function genPronounExercices(param) {
+function genQuizzes(ids) {
+  var inStatement = $$String.concat(", ", $$Array.to_list(ids));
+  var query = "\n    select id, question, answer, alternatives \n    from quizzes \n    where id in (" + inStatement + ")\n  ";
+  return new Promise((function (resolve, reject) {
+                return DB$Avocardo.withConnection(function (conn) {
+                            return MySql2.execute(conn, query, undefined, (function (msg) {
+                                          var variant = msg.NAME;
+                                          if (variant === "Select") {
+                                            return resolve(MySql2.Select.rows(msg.VAL));
+                                          } else if (variant === "Mutation") {
+                                            return reject({
+                                                        RE_EXN_ID: "Failure",
+                                                        _1: "UNEXPECTED_MUTATION"
+                                                      });
+                                          } else {
+                                            return reject(MySql2.Exn.toExn(msg.VAL));
+                                          }
+                                        }));
+                          });
+              }));
+}
+
+function genFailures(fingerprint) {
+  return new Promise((function (resolve, reject) {
+                return DB$Avocardo.withConnection(function (conn) {
+                            return MySql2.execute(conn, " select distinct incorrect_answers.question_id as question_id\n          from (\n            select question_id, assesment \n            from answers \n            where \n              fingerprint = \"" + fingerprint + "\"\n              and assesment='INCORRECT'\n          ) AS incorrect_answers \n          left join (\n          select distinct question_id, assesment \n            from answers \n            where \n              fingerprint = \"" + fingerprint + "\" \n              and assesment='CORRECT' \n          ) as correct_answers\n          on incorrect_answers.question_id = correct_answers.question_id\n          where correct_answers.assesment is NULL", undefined, (function (msg) {
+                                          var variant = msg.NAME;
+                                          if (variant === "Select") {
+                                            return resolve(MySql2.Select.rows(msg.VAL));
+                                          } else if (variant === "Mutation") {
+                                            return reject({
+                                                        RE_EXN_ID: "Failure",
+                                                        _1: "UNEXPECTED_MUTATION"
+                                                      });
+                                          } else {
+                                            return reject(MySql2.Exn.toExn(msg.VAL));
+                                          }
+                                        }));
+                          });
+              }));
+}
+
+function genPronounExercise(param) {
   return new Promise((function (resolve, reject) {
                 return DB$Avocardo.withConnection(function (conn) {
                             return MySql2.execute(conn, RenderQuery$Requery.Default.select(randomQuestion(undefined)), undefined, (function (msg) {
@@ -129,15 +174,10 @@ function genPronounExercices(param) {
               }));
 }
 
-function genJsonResponse(param) {
-  return genPronounExercices(undefined).then(function (row) {
-              return Promise.resolve(PronounExercises$Avocardo.Encode.exercise(format(row)));
-            });
-}
-
 exports.Decode = Decode;
 exports.format = format;
 exports.randomQuestion = randomQuestion;
-exports.genPronounExercices = genPronounExercices;
-exports.genJsonResponse = genJsonResponse;
+exports.genQuizzes = genQuizzes;
+exports.genFailures = genFailures;
+exports.genPronounExercise = genPronounExercise;
 /* MySql2 Not a pure module */

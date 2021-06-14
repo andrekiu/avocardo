@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "sources": [
     {
+      "dir": "src/__generated__",
+      "subdirs": true
+    },
+    {
       "dir": "src/chrome_extension",
       "subdirs": true
     },
@@ -29,7 +33,11 @@
   "reason": {
     "react-jsx": 3
   },
+  "ppx-flags": ["rescript-relay/ppx"],
   "bs-dependencies": [
+    "@rescript/react",
+    "rescript-relay",
+    "reason-promise",
     "@rescript/react",
     "bs-express",
     "bs-fetch",
@@ -41,9 +49,6 @@
   "warnings": {
     "error": "+101"
   },
-  "bsc-flags": [
-    "-bs-g"
-  ],
-  "ppx-flags": [],
+  "bsc-flags": ["-bs-g"],
   "namespace": true
 }
