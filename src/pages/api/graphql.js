@@ -68,7 +68,11 @@ const root = {
   },
 };
 
-const middleware = graphqlHTTP({ schema, rootValue: root, graphiql: true });
+const middleware = graphqlHTTP({
+  schema,
+  rootValue: root,
+  graphiql: !process.env.PROD,
+});
 
 export default function handler(req, res) {
   return middleware(req, res);

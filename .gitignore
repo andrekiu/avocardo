@@ -6,7 +6,7 @@ lib
 env
 bin
 mysql_options.cnf
-.env
+.env.local
 .env.production
 .DS_Store
 .vscode
