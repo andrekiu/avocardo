@@ -1,1 +1,1 @@
-iframe.focus();
+iframe.addEventListener("load", () => iframe.focus());

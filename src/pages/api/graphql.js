@@ -40,6 +40,9 @@ async function genNextQuiz({ fingerprint, justFails }) {
   if (justFails) {
     const rows = await genFailures(fingerprint);
     const quizzes = await genQuizzes([`${rows[0].question_id}`]);
+    if (quizzes.length === 0) {
+      return null;
+    }
     const q = quizzes[0];
     return {
       id: q.id,

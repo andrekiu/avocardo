@@ -6,11 +6,14 @@ var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var $$String = require("rescript/lib/js/string.js");
 var Caml_array = require("rescript/lib/js/caml_array.js");
+var Cx$Avocardo = require("./core/Cx.bs.js");
 var Token$Avocardo = require("./Token.bs.js");
 var Words$Avocardo = require("./Words.bs.js");
+var Filter$Avocardo = require("./Filter.bs.js");
 var Prompt$Avocardo = require("./Prompt.bs.js");
 var CardModuleCss = require("./Card.module.css");
 var Keyboard$Avocardo = require("./hooks/Keyboard.bs.js");
+var IndexModuleCss = require("./Index.module.css");
 
 var style = CardModuleCss;
 
@@ -77,7 +80,10 @@ function Card$Evaluation(Props) {
   var selection = Props.selection;
   var exercise = Props.exercise;
   return React.createElement("div", {
-              className: style.app
+              className: Cx$Avocardo.join([
+                    style.app,
+                    style.appgrid
+                  ])
             }, solved(selection, exercise) ? React.createElement(React.Fragment, undefined, React.createElement("span", {
                         className: style.result
                       }, "You got it!"), React.createElement("img", {
@@ -93,6 +99,26 @@ function Card$Evaluation(Props) {
 
 var Evaluation = {
   make: Card$Evaluation
+};
+
+function Card$FilterImpl(Props) {
+  var onChangeFilter = Props.onChangeFilter;
+  var filter = Props.filter;
+  var filterFragment = Props.filterFragment;
+  var className = Props.className;
+  return React.createElement(React.Suspense, {
+              children: React.createElement(Filter$Avocardo.make, {
+                    fails: filterFragment,
+                    filter: filter,
+                    onChangeFilter: onChangeFilter,
+                    className: className
+                  }),
+              fallback: React.createElement("span", undefined, "Loading...")
+            });
+}
+
+var FilterImpl = {
+  make: Card$FilterImpl
 };
 
 function reduce_quiz(state, action) {
@@ -131,11 +157,15 @@ function reduce_quiz(state, action) {
   }
 }
 
-function Card(Props) {
+var filterStyle = IndexModuleCss;
+
+function Card$CardImpl(Props) {
   var exercise = Props.exercise;
   var next = Props.next;
   var storeStatus = Props.storeStatus;
   var filter = Props.filter;
+  var onChangeFilter = Props.onChangeFilter;
+  var filterFragment = Props.filterFragment;
   var match = React.useState(function () {
         return {
                 TAG: 0,
@@ -183,10 +213,18 @@ function Card(Props) {
   var selection = quiz._0;
   var match$1 = Token$Avocardo.StyledWords.style(selection, exercise.pronouns, exercise.nouns);
   return React.createElement("div", {
-              className: style.app
+              className: Cx$Avocardo.join([
+                    style.app,
+                    style.appgrid
+                  ])
             }, React.createElement("div", {
                   className: style.filter
-                }, filter), React.createElement("div", {
+                }, React.createElement(Card$FilterImpl, {
+                      onChangeFilter: onChangeFilter,
+                      filter: filter,
+                      filterFragment: filterFragment,
+                      className: filterStyle.filter
+                    })), React.createElement("div", {
                   className: style.challenge
                 }, exercise.quiz), React.createElement("div", {
                   className: style.input
@@ -207,12 +245,70 @@ function Card(Props) {
                           }), match$1[1]))));
 }
 
+var CardImpl = {
+  filterStyle: filterStyle,
+  make: Card$CardImpl
+};
+
+function Card$OutOfExercises(Props) {
+  var filter = Props.filter;
+  var onChangeFilter = Props.onChangeFilter;
+  var filterFragment = Props.filterFragment;
+  return React.createElement("div", {
+              className: Cx$Avocardo.join([
+                    style.app,
+                    style.appflex
+                  ])
+            }, React.createElement("span", {
+                  className: style.emptyquiz
+                }, filter === /* Any */0 ? React.createElement("div", undefined, "There are no more exercises in the library, you are on fire!") : React.createElement(React.Fragment, undefined, React.createElement("div", undefined, "Congratulations!"), React.createElement("div", undefined, "You have cleared all your misses!"), React.createElement("div", {
+                            className: style["emptyquiz-calltoaction"]
+                          }, React.createElement(Card$FilterImpl, {
+                                onChangeFilter: onChangeFilter,
+                                filter: filter,
+                                filterFragment: filterFragment,
+                                className: style["emptyquiz-emoji"]
+                              })))));
+}
+
+var OutOfExercises = {
+  make: Card$OutOfExercises
+};
+
+function Card(Props) {
+  var exercise = Props.exercise;
+  var next = Props.next;
+  var storeStatus = Props.storeStatus;
+  var filter = Props.filter;
+  var onChangeFilter = Props.onChangeFilter;
+  var filterFragment = Props.filterFragment;
+  if (exercise !== undefined) {
+    return React.createElement(Card$CardImpl, {
+                exercise: exercise,
+                next: next,
+                storeStatus: storeStatus,
+                filter: filter,
+                onChangeFilter: onChangeFilter,
+                filterFragment: filterFragment
+              });
+  } else {
+    return React.createElement(Card$OutOfExercises, {
+                filter: filter,
+                onChangeFilter: onChangeFilter,
+                filterFragment: filterFragment
+              });
+  }
+}
+
 var make = Card;
 
 exports.style = style;
 exports.ExerciseSolver = ExerciseSolver;
 exports.Result = Result;
 exports.Evaluation = Evaluation;
+exports.FilterImpl = FilterImpl;
 exports.reduce_quiz = reduce_quiz;
+exports.CardImpl = CardImpl;
+exports.OutOfExercises = OutOfExercises;
 exports.make = make;
 /* style Not a pure module */

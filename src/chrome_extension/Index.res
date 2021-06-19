@@ -1,33 +1,3 @@
-module FilterFragment = %relay(`
-  fragment Index_filter on FailsConnection {
-    totalCount
-  }
-`)
-
-type filter = Any | JustFails
-
-module Filter = {
-  @module external style: {"filter": string} = "./Index.module.css"
-  @react.component
-  let make = (~fails, ~filter, ~onChangeFilter) => {
-    let fails = FilterFragment.use(fails)
-    let failsCount = fails.totalCount
-    if failsCount == 0 {
-      React.null
-    } else {
-      <div
-        className={style["filter"]}
-        onClick={_ => filter == Any ? onChangeFilter(JustFails) : onChangeFilter(Any)}>
-        {filter == Any
-          ? React.string(Js.String.fromCodePoint(0x1F525))
-          : React.string(Js.String.fromCodePoint(0x1F648))}
-        {React.string(" ")}
-        {React.int(failsCount)}
-      </div>
-    }
-  }
-}
-
 module Query = %relay(`
   query IndexQuery($fingerprint: String!, $justFails: Boolean!) {
     getProfile(fingerprint: $fingerprint) {
@@ -38,7 +8,7 @@ module Query = %relay(`
         answer
       }
       fails {
-        ...Index_filter
+        ...Filter
       }
     }
   }
@@ -97,7 +67,7 @@ let fromQuiz = (
 module AppImpl = {
   @react.component
   let make = (~fingerprint: string) => {
-    let (filter, setFilter) = React.useState(() => Any)
+    let (filter, setFilter) = React.useState(() => Filter.Any)
     let (fetchKey, setFetchKey) = React.useState(() => 0)
     let (addAnswer, _) = IndexAddAnswerMutation.use()
     let {getProfile} = Query.use(
@@ -108,7 +78,7 @@ module AppImpl = {
     )
     let {nextQuiz} = getProfile
     <Card
-      exercise={fromQuiz(nextQuiz)}
+      exercise={nextQuiz->Belt.Option.map(fromQuiz)}
       next={() => {
         setFetchKey(key => key + 1)
       }}
@@ -122,15 +92,9 @@ module AppImpl = {
           (),
         )->ignore
       }}
-      filter={<React.Suspense fallback={<span> {React.string("Loading...")} </span>}>
-        <Filter
-          fails={getProfile.fails.fragmentRefs}
-          filter
-          onChangeFilter={f => {
-            setFilter(_ => f)
-          }}
-        />
-      </React.Suspense>}
+      filter
+      onChangeFilter={f => setFilter(_ => f)}
+      filterFragment={getProfile.fails.fragmentRefs}
     />
   }
 }

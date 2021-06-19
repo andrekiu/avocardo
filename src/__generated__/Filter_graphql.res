@@ -26,7 +26,7 @@ module Internal = {
 type t
 type fragmentRef
 external getFragmentRef:
-  RescriptRelay.fragmentRefs<[> | #Index_filter]> => fragmentRef = "%identity"
+  RescriptRelay.fragmentRefs<[> | #Filter]> => fragmentRef = "%identity"
 
 
 module Utils = {
@@ -40,7 +40,7 @@ let node: operationType = %raw(json` {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "Index_filter",
+  "name": "Filter",
   "selections": [
     {
       "alias": null,

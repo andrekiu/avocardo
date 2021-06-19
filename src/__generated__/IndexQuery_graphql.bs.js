@@ -15,13 +15,13 @@ var Types = {
   makeRefetchVariables: makeRefetchVariables
 };
 
-var wrapResponseConverter = {"__root":{"getProfile_fails":{"f":""}}};
+var wrapResponseConverter = {"__root":{"getProfile_nextQuiz":{"n":""},"getProfile_fails":{"f":""}}};
 
 function convertWrapResponse(v) {
   return RescriptRelay.convertObj(v, wrapResponseConverter, undefined, null);
 }
 
-var responseConverter = {"__root":{"getProfile_fails":{"f":""}}};
+var responseConverter = {"__root":{"getProfile_nextQuiz":{"n":""},"getProfile_fails":{"f":""}}};
 
 function convertResponse(v) {
   return RescriptRelay.convertObj(v, responseConverter, undefined, undefined);
@@ -151,7 +151,7 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "Index_filter"
+                "name": "Filter"
               }
             ],
             "storageKey": null
@@ -203,12 +203,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "780c74c250069e5d89190cb6ee1dd9a1",
+    "cacheID": "a310a602f9978b540145206f050ab9c3",
     "id": null,
     "metadata": {},
     "name": "IndexQuery",
     "operationKind": "query",
-    "text": "query IndexQuery(\n  $fingerprint: String!\n  $justFails: Boolean!\n) {\n  getProfile(fingerprint: $fingerprint) {\n    nextQuiz(justFails: $justFails) {\n      id\n      question\n      alternatives\n      answer\n    }\n    fails {\n      ...Index_filter\n    }\n    id\n  }\n}\n\nfragment Index_filter on FailsConnection {\n  totalCount\n}\n"
+    "text": "query IndexQuery(\n  $fingerprint: String!\n  $justFails: Boolean!\n) {\n  getProfile(fingerprint: $fingerprint) {\n    nextQuiz(justFails: $justFails) {\n      id\n      question\n      alternatives\n      answer\n    }\n    fails {\n      ...Filter\n    }\n    id\n  }\n}\n\nfragment Filter on FailsConnection {\n  totalCount\n}\n"
   }
 };
 })());

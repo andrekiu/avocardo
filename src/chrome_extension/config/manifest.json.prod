@@ -7,7 +7,6 @@
     "http://avocardo.pepperavocado.com/*",
     "storage"
   ],
-  "content_security_policy": "script-src-elem 'self'",
   "background": {
     "scripts": [
       "background.js"

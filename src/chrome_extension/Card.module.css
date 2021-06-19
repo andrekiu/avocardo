@@ -2,9 +2,53 @@
   height: 200px;
   width: 200px;
   border: 1px solid currentColor;
+  box-sizing: border-box;
+}
+
+.appgrid {
   display: grid;
   grid-auto-rows: minmax(20px, 20px);
-  box-sizing: border-box;
+}
+
+.appflex {
+  display: flex;
+  align-items: center;
+}
+
+.emptyquiz {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.emptyquiz-emoji {
+  height: 15px;
+  width: 15px;
+  line-height: 15px;
+}
+
+.emptyquiz-calltoaction {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  animation: pulse-animation 2s infinite;
+  text-align: center;
+  margin: 20px;
+  cursor: pointer;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0px rgba(0, 0, 0, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(0, 0, 0, 0);
+  }
 }
 
 .result {

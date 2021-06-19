@@ -24,7 +24,7 @@ var node = {
   "argumentDefinitions": [],
   "kind": "Fragment",
   "metadata": null,
-  "name": "Index_filter",
+  "name": "Filter",
   "selections": [
     {
       "alias": null,

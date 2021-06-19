@@ -23,7 +23,7 @@ type FailsConnection {
 
 type Profile {
   id: ID!
-  nextQuiz(justFails: Boolean!): Quiz!
+  nextQuiz(justFails: Boolean!): Quiz
   fails: FailsConnection!
 }
 

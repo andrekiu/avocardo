@@ -4,7 +4,7 @@ module Types = {
   @@ocaml.warning("-30")
   
   type rec response_getProfile = {
-    nextQuiz: response_getProfile_nextQuiz,
+    nextQuiz: option<response_getProfile_nextQuiz>,
     fails: response_getProfile_fails,
   }
    and response_getProfile_nextQuiz = {
@@ -14,7 +14,7 @@ module Types = {
     answer: string,
   }
    and response_getProfile_fails = {
-    fragmentRefs: RescriptRelay.fragmentRefs<[ | #Index_filter]>
+    fragmentRefs: RescriptRelay.fragmentRefs<[ | #Filter]>
   }
   
   
@@ -46,7 +46,7 @@ module Internal = {
   let wrapResponseConverter: 
     Js.Dict.t<Js.Dict.t<Js.Dict.t<string>>> = 
     %raw(
-      json`{"__root":{"getProfile_fails":{"f":""}}}`
+      json`{"__root":{"getProfile_nextQuiz":{"n":""},"getProfile_fails":{"f":""}}}`
     )
   
   let wrapResponseConverterMap = ()
@@ -59,7 +59,7 @@ module Internal = {
   let responseConverter: 
     Js.Dict.t<Js.Dict.t<Js.Dict.t<string>>> = 
     %raw(
-      json`{"__root":{"getProfile_fails":{"f":""}}}`
+      json`{"__root":{"getProfile_nextQuiz":{"n":""},"getProfile_fails":{"f":""}}}`
     )
   
   let responseConverterMap = ()
@@ -196,7 +196,7 @@ return {
               {
                 "args": null,
                 "kind": "FragmentSpread",
-                "name": "Index_filter"
+                "name": "Filter"
               }
             ],
             "storageKey": null
@@ -248,12 +248,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "780c74c250069e5d89190cb6ee1dd9a1",
+    "cacheID": "a310a602f9978b540145206f050ab9c3",
     "id": null,
     "metadata": {},
     "name": "IndexQuery",
     "operationKind": "query",
-    "text": "query IndexQuery(\n  $fingerprint: String!\n  $justFails: Boolean!\n) {\n  getProfile(fingerprint: $fingerprint) {\n    nextQuiz(justFails: $justFails) {\n      id\n      question\n      alternatives\n      answer\n    }\n    fails {\n      ...Index_filter\n    }\n    id\n  }\n}\n\nfragment Index_filter on FailsConnection {\n  totalCount\n}\n"
+    "text": "query IndexQuery(\n  $fingerprint: String!\n  $justFails: Boolean!\n) {\n  getProfile(fingerprint: $fingerprint) {\n    nextQuiz(justFails: $justFails) {\n      id\n      question\n      alternatives\n      answer\n    }\n    fails {\n      ...Filter\n    }\n    id\n  }\n}\n\nfragment Filter on FailsConnection {\n  totalCount\n}\n"
   }
 };
 })() `)

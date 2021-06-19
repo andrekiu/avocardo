@@ -8,73 +8,19 @@ var React = require("react");
 var $$String = require("rescript/lib/js/string.js");
 var $$Promise = require("reason-promise/src/js/promise.bs.js");
 var Caml_array = require("rescript/lib/js/caml_array.js");
+var Belt_Option = require("rescript/lib/js/belt_Option.js");
 var Caml_format = require("rescript/lib/js/caml_format.js");
 var Caml_option = require("rescript/lib/js/caml_option.js");
 var Card$Avocardo = require("./Card.bs.js");
 var RescriptRelay = require("rescript-relay/src/RescriptRelay.bs.js");
 var RelayRuntime = require("relay-runtime");
 var Shimmer$Avocardo = require("./Shimmer.bs.js");
-var Js_null_undefined = require("rescript/lib/js/js_null_undefined.js");
 var Hooks = require("react-relay/hooks");
-var IndexModuleCss = require("./Index.module.css");
 var RescriptRelay_Internal = require("rescript-relay/src/RescriptRelay_Internal.bs.js");
 var IndexQuery_graphql$Avocardo = require("../__generated__/IndexQuery_graphql.bs.js");
-var Index_filter_graphql$Avocardo = require("../__generated__/Index_filter_graphql.bs.js");
 var IndexAddAnswerMutation_graphql$Avocardo = require("../__generated__/IndexAddAnswerMutation_graphql.bs.js");
 
-function use(fRef) {
-  var data = Hooks.useFragment(Index_filter_graphql$Avocardo.node, fRef);
-  return RescriptRelay_Internal.internal_useConvertedValue(Index_filter_graphql$Avocardo.Internal.convertFragment, data);
-}
-
-function useOpt(opt_fRef) {
-  var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(Index_filter_graphql$Avocardo.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
-  var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
-  return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
-                if (rawFragment !== undefined) {
-                  return Index_filter_graphql$Avocardo.Internal.convertFragment(rawFragment);
-                }
-                
-              }), data);
-}
-
-var FilterFragment = {
-  Types: undefined,
-  use: use,
-  useOpt: useOpt
-};
-
-var style = IndexModuleCss;
-
-function Index$Filter(Props) {
-  var fails = Props.fails;
-  var filter = Props.filter;
-  var onChangeFilter = Props.onChangeFilter;
-  var fails$1 = use(fails);
-  var failsCount = fails$1.totalCount;
-  if (failsCount === 0) {
-    return null;
-  } else {
-    return React.createElement("div", {
-                className: style.filter,
-                onClick: (function (param) {
-                    if (filter === /* Any */0) {
-                      return Curry._1(onChangeFilter, /* JustFails */1);
-                    } else {
-                      return Curry._1(onChangeFilter, /* Any */0);
-                    }
-                  })
-              }, filter === /* Any */0 ? String.fromCodePoint(128293) : String.fromCodePoint(128584), " ", failsCount);
-  }
-}
-
-var Filter = {
-  style: style,
-  make: Index$Filter
-};
-
-function use$1(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
+function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
   var data = Hooks.useLazyLoadQuery(IndexQuery_graphql$Avocardo.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(IndexQuery_graphql$Avocardo.Internal.convertVariables(variables)), {
         fetchKey: fetchKey,
         fetchPolicy: RescriptRelay.mapFetchPolicy(fetchPolicy),
@@ -148,7 +94,7 @@ var Query_makeVariables = IndexQuery_graphql$Avocardo.Utils.makeVariables;
 var Query = {
   makeVariables: Query_makeVariables,
   Types: undefined,
-  use: use$1,
+  use: use,
   useLoader: useLoader,
   $$fetch: $$fetch,
   fetchPromised: fetchPromised,
@@ -181,7 +127,7 @@ function commitMutation(environment, variables, optimisticUpdater, optimisticRes
             });
 }
 
-function use$2(param) {
+function use$1(param) {
   var match = Hooks.useMutation(IndexAddAnswerMutation_graphql$Avocardo.node);
   var mutate = match[0];
   return [
@@ -222,7 +168,7 @@ var IndexAddAnswerMutation = {
   makeOptimisticResponse: IndexAddAnswerMutation_makeOptimisticResponse,
   Types: undefined,
   commitMutation: commitMutation,
-  use: use$2
+  use: use$1
 };
 
 function fromQuiz(param) {
@@ -301,15 +247,15 @@ function Index$AppImpl(Props) {
         return 0;
       });
   var setFetchKey = match$1[1];
-  var match$2 = use$2(undefined);
+  var match$2 = use$1(undefined);
   var addAnswer = match$2[0];
-  var match$3 = use$1({
+  var match$3 = use({
         fingerprint: fingerprint,
         justFails: filter === /* JustFails */1
       }, /* NetworkOnly */3, String(match$1[0]), undefined, undefined);
   var getProfile = match$3.getProfile;
   return React.createElement(Card$Avocardo.make, {
-              exercise: fromQuiz(getProfile.nextQuiz),
+              exercise: Belt_Option.map(getProfile.nextQuiz, fromQuiz),
               next: (function (param) {
                   return Curry._1(setFetchKey, (function (key) {
                                 return key + 1 | 0;
@@ -333,18 +279,13 @@ function Index$AppImpl(Props) {
                       ]);
                   
                 }),
-              filter: React.createElement(React.Suspense, {
-                    children: React.createElement(Index$Filter, {
-                          fails: getProfile.fails.fragmentRefs,
-                          filter: filter,
-                          onChangeFilter: (function (f) {
-                              return Curry._1(setFilter, (function (param) {
-                                            return f;
-                                          }));
-                            })
-                        }),
-                    fallback: React.createElement("span", undefined, "Loading...")
-                  })
+              filter: filter,
+              onChangeFilter: (function (f) {
+                  return Curry._1(setFilter, (function (param) {
+                                return f;
+                              }));
+                }),
+              filterFragment: getProfile.fails.fragmentRefs
             });
 }
 
@@ -366,11 +307,9 @@ var App = {
   make: Index$App
 };
 
-exports.FilterFragment = FilterFragment;
-exports.Filter = Filter;
 exports.Query = Query;
 exports.IndexAddAnswerMutation = IndexAddAnswerMutation;
 exports.fromQuiz = fromQuiz;
 exports.AppImpl = AppImpl;
 exports.App = App;
-/* style Not a pure module */
+/* react Not a pure module */
