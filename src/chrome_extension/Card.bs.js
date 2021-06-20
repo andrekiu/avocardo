@@ -85,7 +85,8 @@ function Card$Evaluation(Props) {
                     style.appgrid
                   ])
             }, solved(selection, exercise) ? React.createElement(React.Fragment, undefined, React.createElement("span", {
-                        className: style.result
+                        className: style.result,
+                        id: "correct"
                       }, "You got it!"), React.createElement("img", {
                         className: style["result-avocado"],
                         src: "/img/success.jpg"
@@ -93,6 +94,7 @@ function Card$Evaluation(Props) {
                         exercise: exercise
                       }), React.createElement("img", {
                         className: style["result-avocado"],
+                        id: "incorrect",
                         src: "/img/failure.jpg"
                       })));
 }
@@ -225,7 +227,8 @@ function Card$CardImpl(Props) {
                       filterFragment: filterFragment,
                       className: filterStyle.filter
                     })), React.createElement("div", {
-                  className: style.challenge
+                  className: style.challenge,
+                  id: "challenge"
                 }, exercise.quiz), React.createElement("div", {
                   className: style.input
                 }, selection, React.createElement(Prompt$Avocardo.make, {})), React.createElement("div", {

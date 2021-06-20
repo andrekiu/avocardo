@@ -51,7 +51,9 @@ function Filter(Props) {
                       return Curry._1(onChangeFilter, /* Any */0);
                     }
                   })
-              }, filter === /* Any */0 ? String.fromCodePoint(128293) : String.fromCodePoint(128584), failsCount === 0 ? null : " " + String(failsCount));
+              }, React.createElement("span", {
+                    id: filter === /* Any */0 ? "filter-to-fail" : "filter-to-any"
+                  }, filter === /* Any */0 ? String.fromCodePoint(128293) : String.fromCodePoint(128584), failsCount === 0 ? null : " " + String(failsCount)));
   }
 }
 

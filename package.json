@@ -1,11 +1,13 @@
 {
   "scripts": {
+    "e2e": "cypress run --spec \"cypress/integration/avocardo/*\"",
     "bundle": "sh ./scripts/bundle_client.sh",
     "relay": "rescript-relay-compiler"
   },
   "devDependencies": {
     "bs-platform": "^8.2.0",
     "bsb-js": "^1.1.7",
+    "cypress": "^7.5.0",
     "nodemon": "^2.0.6",
     "parcel-bundler": "^1.12.4",
     "prettier": "2.1.1",

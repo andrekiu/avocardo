@@ -61,11 +61,12 @@ module Evaluation = {
     <div className={Cx.join([style["app"], style["appgrid"]])}>
       {ExerciseSolver.solved(selection, exercise)
         ? <>
-            <span className={style["result"]}> {React.string("You got it!")} </span>
+            <span id="correct" className={style["result"]}> {React.string("You got it!")} </span>
             <img className={style["result-avocado"]} src={"/img/success.jpg"} />
           </>
         : <>
-            <Result exercise /> <img className={style["result-avocado"]} src={"/img/failure.jpg"} />
+            <Result exercise />
+            <img id="incorrect" className={style["result-avocado"]} src={"/img/failure.jpg"} />
           </>}
     </div>
 }
@@ -133,7 +134,7 @@ module CardImpl = {
         <div className={style["filter"]}>
           <FilterImpl className={filterStyle["filter"]} filter onChangeFilter filterFragment />
         </div>
-        <div className={style["challenge"]}> {React.string(e.quiz)} </div>
+        <div id="challenge" className={style["challenge"]}> {React.string(e.quiz)} </div>
         <div className={style["input"]}> {React.string(selection)} <Prompt /> </div>
         <div className={style["options"]}>
           <div className={style["column"]}>

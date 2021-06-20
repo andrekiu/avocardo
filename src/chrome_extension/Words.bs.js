@@ -22,11 +22,17 @@ function max_prefix_iterator(a, b, _idx) {
 }
 
 function max_prefix(a, b) {
-  return max_prefix_iterator(normalize(a), b, 0);
+  return max_prefix_iterator(normalize(a), normalize(b), 0);
 }
 
 function is_match(a, b) {
-  return max_prefix(a, b) === a.length;
+  var match = normalize(a);
+  var match$1 = normalize(b);
+  if (match.length === match$1.length) {
+    return max_prefix(match, match$1) === match.length;
+  } else {
+    return false;
+  }
 }
 
 exports.normalize = normalize;

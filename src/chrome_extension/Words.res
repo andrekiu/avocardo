@@ -9,6 +9,9 @@ let rec max_prefix_iterator = (a, b, idx) =>
   | idx => idx
   }
 
-let max_prefix = (a, b) => max_prefix_iterator(normalize(a), b, 0)
+let max_prefix = (a, b) => max_prefix_iterator(normalize(a), normalize(b), 0)
 
-let is_match = (a, b) => max_prefix(a, b) == String.length(a)
+let is_match = (a, b) =>
+  switch (normalize(a), normalize(b)) {
+  | (a, b) => String.length(a) == String.length(b) && max_prefix(a, b) == String.length(a)
+  }
