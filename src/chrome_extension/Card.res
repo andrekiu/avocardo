@@ -183,6 +183,6 @@ let make = (
 ) => {
   switch exercise {
   | None => <OutOfExercises filter onChangeFilter filterFragment />
-  | Some(e) => <CardImpl exercise={e} next storeStatus filter onChangeFilter filterFragment />
+  | Some(exercise) => <CardImpl exercise next storeStatus filter onChangeFilter filterFragment />
   }
 }
