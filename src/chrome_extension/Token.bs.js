@@ -55,6 +55,7 @@ var Styles = {
 
 function create(word, matchedPrefix) {
   return {
+          word: word,
           tokens: matchedPrefix !== 0 ? (
               matchedPrefix >= word.length ? [[
                     word,
@@ -129,9 +130,13 @@ var StyledWords = {
 
 function Token(Props) {
   var tok = Props.tok;
+  var onClick = Props.onClick;
   return React.createElement("button", {
               className: style.token,
-              style: token(tok.pct_match)
+              style: token(tok.pct_match),
+              onClick: (function (param) {
+                  return Curry._1(onClick, undefined);
+                })
             }, map((function (str, style) {
                     return React.createElement("span", {
                                 style: style

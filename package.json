@@ -9,9 +9,7 @@
     "bsb-js": "^1.1.7",
     "cypress": "^7.5.0",
     "nodemon": "^2.0.6",
-    "parcel-bundler": "^1.12.4",
-    "prettier": "2.1.1",
-    "react-devtools": "^4.9.0"
+    "prettier": "2.1.1"
   },
   "license": "MIT",
   "dependencies": {
@@ -22,7 +20,6 @@
     "bs-fetch": "^0.6.2",
     "bs-mysql2": "https://github.com/andrekiu/bs-mysql2.git",
     "bs-webapi": "^0.19.1",
-    "dotenv": "^8.2.0",
     "express-graphql": "^0.12.0",
     "graphql": "^15.5.0",
     "mysql": "^2.18.1",

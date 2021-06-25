@@ -79,11 +79,15 @@ var Result = {
 function Card$Evaluation(Props) {
   var selection = Props.selection;
   var exercise = Props.exercise;
+  var onClick = Props.onClick;
   return React.createElement("div", {
               className: Cx$Avocardo.join([
                     style.app,
                     style.appgrid
-                  ])
+                  ]),
+              onClick: (function (param) {
+                  return Curry._1(onClick, undefined);
+                })
             }, solved(selection, exercise) ? React.createElement(React.Fragment, undefined, React.createElement("span", {
                         className: style.result,
                         id: "correct"
@@ -125,38 +129,51 @@ var FilterImpl = {
 
 function reduce_quiz(state, action) {
   if (typeof action === "number") {
-    if (action !== 0) {
+    if (action === /* Enter */0) {
       if (state.TAG === /* Solving */0) {
+        return {
+                TAG: 1,
+                _0: state._0,
+                [Symbol.for("name")]: "Veredict"
+              };
+      } else {
         return {
                 TAG: 0,
                 _0: "",
                 [Symbol.for("name")]: "Solving"
               };
-      } else {
-        return state;
       }
     } else if (state.TAG === /* Solving */0) {
-      return {
-              TAG: 1,
-              _0: state._0,
-              [Symbol.for("name")]: "Veredict"
-            };
-    } else {
       return {
               TAG: 0,
               _0: "",
               [Symbol.for("name")]: "Solving"
             };
+    } else {
+      return state;
     }
-  } else if (state.TAG === /* Solving */0) {
-    return {
-            TAG: 0,
-            _0: state._0 + action._0,
-            [Symbol.for("name")]: "Solving"
-          };
-  } else {
+  }
+  if (action.TAG === /* Char */0) {
+    if (state.TAG === /* Solving */0) {
+      return {
+              TAG: 0,
+              _0: state._0 + action._0,
+              [Symbol.for("name")]: "Solving"
+            };
+    } else {
+      return state;
+    }
+  }
+  var w = action._0;
+  if (state.TAG !== /* Solving */0) {
     return state;
   }
+  var str = state._0;
+  return {
+          TAG: 0,
+          _0: str.length === 0 ? w : str + " " + w,
+          [Symbol.for("name")]: "Solving"
+        };
 }
 
 var filterStyle = IndexModuleCss;
@@ -177,31 +194,33 @@ function Card$CardImpl(Props) {
       });
   var setQuiz = match[1];
   var quiz = match[0];
+  var onEnter = React.useCallback((function (param) {
+          var match = reduce_quiz(quiz, /* Enter */0);
+          if (quiz.TAG === /* Solving */0) {
+            if (match.TAG !== /* Solving */0) {
+              Curry._2(storeStatus, exercise, solved(match._0, exercise));
+            }
+            
+          } else if (match.TAG === /* Solving */0) {
+            Curry._1(next, undefined);
+          }
+          return Curry._1(setQuiz, (function (s) {
+                        return reduce_quiz(s, /* Enter */0);
+                      }));
+        }), [
+        quiz,
+        next
+      ]);
   Keyboard$Avocardo.use(React.useCallback(function (c) {
             var a = {
+              TAG: 0,
               _0: c,
               [Symbol.for("name")]: "Char"
             };
             return Curry._1(setQuiz, (function (s) {
                           return reduce_quiz(s, a);
                         }));
-          }), React.useCallback((function (param) {
-              var match = reduce_quiz(quiz, /* Enter */0);
-              if (quiz.TAG === /* Solving */0) {
-                if (match.TAG !== /* Solving */0) {
-                  Curry._2(storeStatus, exercise, solved(match._0, exercise));
-                }
-                
-              } else if (match.TAG === /* Solving */0) {
-                Curry._1(next, undefined);
-              }
-              return Curry._1(setQuiz, (function (s) {
-                            return reduce_quiz(s, /* Enter */0);
-                          }));
-            }), [
-            quiz,
-            next
-          ]), React.useCallback(function (param) {
+          }), onEnter, React.useCallback(function (param) {
             return Curry._1(setQuiz, (function (s) {
                           return reduce_quiz(s, /* Delete */1);
                         }));
@@ -209,7 +228,8 @@ function Card$CardImpl(Props) {
   if (quiz.TAG !== /* Solving */0) {
     return React.createElement(Card$Evaluation, {
                 selection: quiz._0,
-                exercise: exercise
+                exercise: exercise,
+                onClick: onEnter
               });
   }
   var selection = quiz._0;
@@ -228,22 +248,50 @@ function Card$CardImpl(Props) {
                       className: filterStyle.filter
                     })), React.createElement("div", {
                   className: style.challenge,
-                  id: "challenge"
+                  id: "challenge",
+                  onClick: (function (param) {
+                      return Curry._1(onEnter, undefined);
+                    })
                 }, exercise.quiz), React.createElement("div", {
-                  className: style.input
+                  className: style.input,
+                  onClick: (function (param) {
+                      return Curry._1(setQuiz, (function (s) {
+                                    return reduce_quiz(s, /* Delete */1);
+                                  }));
+                    })
                 }, selection, React.createElement(Prompt$Avocardo.make, {})), React.createElement("div", {
                   className: style.options
                 }, React.createElement("div", {
                       className: style.column
                     }, $$Array.map((function (tok) {
                             return React.createElement(Token$Avocardo.make, {
-                                        tok: tok
+                                        tok: tok,
+                                        onClick: (function (param) {
+                                            var a = {
+                                              TAG: 1,
+                                              _0: tok.word,
+                                              [Symbol.for("name")]: "Word"
+                                            };
+                                            return Curry._1(setQuiz, (function (s) {
+                                                          return reduce_quiz(s, a);
+                                                        }));
+                                          })
                                       });
                           }), match$1[0])), React.createElement("div", {
                       className: style.column
                     }, $$Array.map((function (tok) {
                             return React.createElement(Token$Avocardo.make, {
-                                        tok: tok
+                                        tok: tok,
+                                        onClick: (function (param) {
+                                            var a = {
+                                              TAG: 1,
+                                              _0: tok.word,
+                                              [Symbol.for("name")]: "Word"
+                                            };
+                                            return Curry._1(setQuiz, (function (s) {
+                                                          return reduce_quiz(s, a);
+                                                        }));
+                                          })
                                       });
                           }), match$1[1]))));
 }

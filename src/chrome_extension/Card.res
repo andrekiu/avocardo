@@ -57,8 +57,8 @@ module Result = {
 
 module Evaluation = {
   @react.component
-  let make = (~selection, ~exercise: PronounExercises.pronoun_exercise) =>
-    <div className={Cx.join([style["app"], style["appgrid"]])}>
+  let make = (~selection, ~exercise: PronounExercises.pronoun_exercise, ~onClick) =>
+    <div className={Cx.join([style["app"], style["appgrid"]])} onClick={_ => onClick()}>
       {ExerciseSolver.solved(selection, exercise)
         ? <>
             <span id="correct" className={style["result"]}> {React.string("You got it!")} </span>
@@ -87,12 +87,14 @@ type quiz_actions =
   | Enter
   | Delete
   | Char(string)
+  | Word(string)
 
 let reduce_quiz = (state: quiz_stage, action) =>
   switch (action, state) {
   | (Enter, Solving(str)) => Veredict(str)
   | (Enter, Veredict(_)) => Solving("")
   | (Char(c), Solving(str)) => Solving(str ++ c)
+  | (Word(w), Solving(str)) => Solving(String.length(str) == 0 ? w : str ++ " " ++ w)
   | (Delete, Solving(_)) => Solving("")
   | _ => state
   }
@@ -111,16 +113,17 @@ module CardImpl = {
     let (quiz, setQuiz) = React.useState(() => Solving(""))
     let dispatch = a => setQuiz(s => reduce_quiz(s, a))
     let e = exercise
+    let onEnter = React.useCallback2(() => {
+      switch (quiz, reduce_quiz(quiz, Enter)) {
+      | (Veredict(_), Solving(_)) => next()
+      | (Solving(_), Veredict(s)) => storeStatus(e, ExerciseSolver.solved(s, e))
+      | _ => ignore()
+      }
+      dispatch(Enter)
+    }, (quiz, next))
     Keyboard.use(
       ~onChar=React.useCallback(c => dispatch(Char(c))),
-      ~onEnter=React.useCallback2(() => {
-        switch (quiz, reduce_quiz(quiz, Enter)) {
-        | (Veredict(_), Solving(_)) => next()
-        | (Solving(_), Veredict(s)) => storeStatus(e, ExerciseSolver.solved(s, e))
-        | _ => ignore()
-        }
-        dispatch(Enter)
-      }, (quiz, next)),
+      ~onEnter,
       ~onDelete=React.useCallback(() => dispatch(Delete)),
     )
     switch quiz {
@@ -134,18 +137,28 @@ module CardImpl = {
         <div className={style["filter"]}>
           <FilterImpl className={filterStyle["filter"]} filter onChangeFilter filterFragment />
         </div>
-        <div id="challenge" className={style["challenge"]}> {React.string(e.quiz)} </div>
-        <div className={style["input"]}> {React.string(selection)} <Prompt /> </div>
+        <div id="challenge" className={style["challenge"]} onClick={_ => onEnter()}>
+          {React.string(e.quiz)}
+        </div>
+        <div className={style["input"]} onClick={_ => dispatch(Delete)}>
+          {React.string(selection)} <Prompt />
+        </div>
         <div className={style["options"]}>
           <div className={style["column"]}>
-            {Array.map(tok => <Token tok />, styledPronouns) |> React.array}
+            {Array.map(
+              (tok: Token.StyledToken.t) => <Token tok onClick={() => dispatch(Word(tok.word))} />,
+              styledPronouns,
+            ) |> React.array}
           </div>
           <div className={style["column"]}>
-            {Array.map(tok => <Token tok />, styledCandidates) |> React.array}
+            {Array.map(
+              (tok: Token.StyledToken.t) => <Token tok onClick={() => dispatch(Word(tok.word))} />,
+              styledCandidates,
+            ) |> React.array}
           </div>
         </div>
       </div>
-    | Veredict(selection) => <Evaluation selection exercise=e />
+    | Veredict(selection) => <Evaluation selection exercise=e onClick={onEnter} />
     }
   }
 }

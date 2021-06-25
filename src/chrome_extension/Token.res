@@ -16,11 +16,13 @@ module Styles = {
 module StyledToken = {
   type styled = (string, bool)
   type t = {
+    word: string,
     tokens: array<styled>,
     pct_match: float,
   }
 
   let create = (word: string, matchedPrefix: int): t => {
+    word: word,
     tokens: switch matchedPrefix {
     | 0 => [(word, false)]
     | t if t >= String.length(word) => [(word, true)]
@@ -54,7 +56,7 @@ module StyledWords = {
 }
 
 @react.component
-let make = (~tok) =>
-  <button className={style["token"]} style={StyledToken.style(tok)}>
+let make = (~tok, ~onClick) =>
+  <button className={style["token"]} style={StyledToken.style(tok)} onClick={_ => onClick()}>
     {StyledToken.map((str, style) => <span style> {React.string(str)} </span>, tok) |> React.array}
   </button>
