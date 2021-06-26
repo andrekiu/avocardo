@@ -1,14 +1,15 @@
 import { aliasQuery } from "../../utils/graphql-test-utils";
+import { setup } from "../../utils/setup";
 
 context("Avocardo exercise tests ", () => {
   beforeEach(() => {
     cy.intercept("POST", "api/graphql", (req) => {
       aliasQuery(req, "Index");
     });
+    setup(cy);
   });
 
   it("should succeed when typing the answer", () => {
-    cy.visit("127.0.0.1:3000");
     cy.wait("@gqlIndexQuery")
       .its("response.body.data.getProfile.nextQuiz.answer")
       .then((answer) => {
@@ -19,7 +20,6 @@ context("Avocardo exercise tests ", () => {
   });
 
   it("should succeed when typing an incorrect answer", () => {
-    cy.visit("127.0.0.1:3000");
     cy.wait("@gqlIndexQuery")
       .its("response.body.data.getProfile.nextQuiz.answer")
       .then((answer) => {
@@ -31,7 +31,6 @@ context("Avocardo exercise tests ", () => {
   });
 
   it("should show a message after clearing all misses", () => {
-    cy.visit("127.0.0.1:3000");
     cy.get("#challenge");
     cy.get("body").type(" {enter}");
     cy.get("#incorrect");

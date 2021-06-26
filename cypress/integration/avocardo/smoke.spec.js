@@ -1,6 +1,8 @@
+import { setup } from "../../utils/setup";
+
 context("Avocardo smoke tests ", () => {
   beforeEach(() => {
-    cy.visit("127.0.0.1:3000");
+    setup(cy);
     cy.get("#challenge");
     cy.get("body").type(" ");
   });
