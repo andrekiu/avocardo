@@ -6,7 +6,9 @@ orbs:
 jobs:
   build-and-test:
     docker:
-      - image: cimg/node:15.1
+      - image: cypress/base:10
+        environment:
+          TERM: xterm kkk
     steps:
       - checkout
       - node/install-packages:
@@ -16,6 +18,6 @@ jobs:
           name: Run YARN tests
 
 workflows:
-  sample:
+  e2e-tests:
     jobs:
       - build-and-test
