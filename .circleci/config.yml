@@ -12,7 +12,7 @@ jobs:
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          command: yarn test
+          command: yarn run e2e --env server=127.0.0.1:3001
           name: Run YARN tests
 
 workflows:
