@@ -11,6 +11,8 @@ jobs:
           TERM: xterm kkk
     steps:
       - checkout
+      - node/install:
+          node-version: 14.17.0
       - node/install-packages:
           pkg-manager: yarn
       - run:
