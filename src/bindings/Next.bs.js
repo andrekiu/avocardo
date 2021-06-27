@@ -17,6 +17,8 @@ var GetStaticPaths = {};
 
 var Link = {};
 
+var $$Image = {};
+
 var Events = {};
 
 var Router = {
@@ -33,6 +35,7 @@ exports.GetServerSideProps = GetServerSideProps;
 exports.GetStaticProps = GetStaticProps;
 exports.GetStaticPaths = GetStaticPaths;
 exports.Link = Link;
+exports.$$Image = $$Image;
 exports.Router = Router;
 exports.Head = Head;
 exports.$$Error = $$Error;

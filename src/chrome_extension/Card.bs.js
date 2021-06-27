@@ -6,6 +6,7 @@ var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var $$String = require("rescript/lib/js/string.js");
 var Caml_array = require("rescript/lib/js/caml_array.js");
+var $$Image = require("next/image").default;
 var Cx$Avocardo = require("./core/Cx.bs.js");
 var Token$Avocardo = require("./Token.bs.js");
 var Words$Avocardo = require("./Words.bs.js");
@@ -83,7 +84,7 @@ function Card$Evaluation(Props) {
   return React.createElement("div", {
               className: Cx$Avocardo.join([
                     style.app,
-                    style.appgrid
+                    style.appflexcolumns
                   ]),
               onClick: (function (param) {
                   return Curry._1(onClick, undefined);
@@ -91,16 +92,22 @@ function Card$Evaluation(Props) {
             }, solved(selection, exercise) ? React.createElement(React.Fragment, undefined, React.createElement("span", {
                         className: style.result,
                         id: "correct"
-                      }, "You got it!"), React.createElement("img", {
-                        className: style["result-avocado"],
-                        src: "/img/success.jpg"
-                      })) : React.createElement(React.Fragment, undefined, React.createElement(Card$Result, {
+                      }, "You got it!"), React.createElement("div", {
+                        className: style["result-avocado"]
+                      }, React.createElement($$Image, {
+                            src: "/img/success.jpg",
+                            width: 90,
+                            height: 80
+                          }))) : React.createElement(React.Fragment, undefined, React.createElement(Card$Result, {
                         exercise: exercise
-                      }), React.createElement("img", {
-                        className: style["result-avocado"],
-                        id: "incorrect",
-                        src: "/img/failure.jpg"
-                      })));
+                      }), React.createElement("div", {
+                        className: style["result-avocado"]
+                      }, React.createElement($$Image, {
+                            id: "incorrect",
+                            src: "/img/failure.jpg",
+                            width: 90,
+                            height: 80
+                          }))));
 }
 
 var Evaluation = {
@@ -308,7 +315,7 @@ function Card$OutOfExercises(Props) {
   return React.createElement("div", {
               className: Cx$Avocardo.join([
                     style.app,
-                    style.appflex
+                    style.appflexcolumns
                   ])
             }, React.createElement("span", {
                   className: style.emptyquiz

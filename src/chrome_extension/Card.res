@@ -2,6 +2,7 @@
 external style: {
   "app": string,
   "appflex": string,
+  "appflexcolumns": string,
   "appgrid": string,
   "result": string,
   "emptyquiz": string,
@@ -58,15 +59,19 @@ module Result = {
 module Evaluation = {
   @react.component
   let make = (~selection, ~exercise: PronounExercises.pronoun_exercise, ~onClick) =>
-    <div className={Cx.join([style["app"], style["appgrid"]])} onClick={_ => onClick()}>
+    <div className={Cx.join([style["app"], style["appflexcolumns"]])} onClick={_ => onClick()}>
       {ExerciseSolver.solved(selection, exercise)
         ? <>
             <span id="correct" className={style["result"]}> {React.string("You got it!")} </span>
-            <img className={style["result-avocado"]} src={"/img/success.jpg"} />
+            <div className={style["result-avocado"]}>
+              <Next.Image width={90} height={80} src={"/img/success.jpg"} />
+            </div>
           </>
         : <>
             <Result exercise />
-            <img id="incorrect" className={style["result-avocado"]} src={"/img/failure.jpg"} />
+            <div className={style["result-avocado"]}>
+              <Next.Image id="incorrect" width={90} height={80} src={"/img/failure.jpg"} />
+            </div>
           </>}
     </div>
 }
@@ -166,7 +171,7 @@ module CardImpl = {
 module OutOfExercises = {
   @react.component
   let make = (~filter, ~onChangeFilter, ~filterFragment) => {
-    <div className={Cx.join([style["app"], style["appflex"]])}>
+    <div className={Cx.join([style["app"], style["appflexcolumns"]])}>
       <span className={style["emptyquiz"]}>
         {filter == Filter.Any
           ? <div>
