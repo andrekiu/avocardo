@@ -15,6 +15,12 @@ class MyDocument extends Document {
             margin: "0",
             padding: "0",
             fontFamily: "Arial, Helvetica, sans-serif",
+            display: "flex",
+            position: "absolute",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100%",
+            width: "100%",
           }}
         >
           <Main />
