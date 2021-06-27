@@ -1,6 +1,7 @@
 .filter {
   cursor: pointer;
-  padding: 10px 15px;
-  text-align: right;
-  border-radius: 50%;
+  width: 33%;
+  float: right;
+  text-align: center;
+  padding-top: 4px;
 }

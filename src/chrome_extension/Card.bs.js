@@ -244,7 +244,7 @@ function Card$CardImpl(Props) {
   return React.createElement("div", {
               className: Cx$Avocardo.join([
                     style.app,
-                    style.appgrid
+                    style.cardquestion
                   ])
             }, React.createElement("div", {
                   className: style.filter
@@ -255,11 +255,13 @@ function Card$CardImpl(Props) {
                       className: filterStyle.filter
                     })), React.createElement("div", {
                   className: style.challenge,
-                  id: "challenge",
-                  onClick: (function (param) {
-                      return Curry._1(onEnter, undefined);
-                    })
-                }, exercise.quiz), React.createElement("div", {
+                  id: "challenge"
+                }, React.createElement("span", {
+                      className: style["challenge-text"],
+                      onClick: (function (param) {
+                          return Curry._1(onEnter, undefined);
+                        })
+                    }, exercise.quiz)), React.createElement("div", {
                   className: style.input,
                   onClick: (function (param) {
                       return Curry._1(setQuiz, (function (s) {

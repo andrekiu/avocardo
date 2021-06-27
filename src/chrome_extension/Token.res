@@ -3,8 +3,8 @@ module Styles = {
   let bold = ReactDOM.Style.make(~fontWeight="bold", ())
   let noop = ReactDOM.Style.make()
   let token = pct => {
-    let begin_rgb = (223., 223., 226.)
-    let end_rgb = (180., 206., 141.)
+    let end_rgb = (214., 234., 212.)
+    let begin_rgb = (236., 232., 228.)
     let get_delta = ((r1, g1, b1), (r2, g2, b2)) => (r2 -. r1, g2 -. g1, b2 -. b1)
     let scale = ((r, g, b), (dr, dg, db), pct) => (r +. dr *. pct, g +. dg *. pct, b +. db *. pct)
     let (r, g, b) = scale(begin_rgb, get_delta(begin_rgb, end_rgb), pct)

@@ -4,6 +4,7 @@ external style: {
   "appflex": string,
   "appflexcolumns": string,
   "appgrid": string,
+  "cardquestion": string,
   "result": string,
   "emptyquiz": string,
   "emptyquiz-emoji": string,
@@ -12,8 +13,9 @@ external style: {
   "result-solution": string,
   "result-avocado": string,
   "challenge": string,
-  "filter": string,
+  "challenge-text": string,
   "input": string,
+  "filter": string,
   "options": string,
   "column": string,
 } = "./Card.module.css"
@@ -138,12 +140,14 @@ module CardImpl = {
         e.pronouns,
         e.nouns,
       )
-      <div className={Cx.join([style["app"], style["appgrid"]])}>
+      <div className={Cx.join([style["app"], style["cardquestion"]])}>
         <div className={style["filter"]}>
           <FilterImpl className={filterStyle["filter"]} filter onChangeFilter filterFragment />
         </div>
-        <div id="challenge" className={style["challenge"]} onClick={_ => onEnter()}>
-          {React.string(e.quiz)}
+        <div id="challenge" className={style["challenge"]}>
+          <span onClick={_ => onEnter()} className={style["challenge-text"]}>
+            {React.string(e.quiz)}
+          </span>
         </div>
         <div className={style["input"]} onClick={_ => dispatch(Delete)}>
           {React.string(selection)} <Prompt />

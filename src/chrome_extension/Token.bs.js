@@ -19,9 +19,9 @@ var noop = {};
 
 function token(pct) {
   var begin_rgb = [
-    223,
-    223,
-    226
+    236,
+    232,
+    228
   ];
   var get_delta = function (param, param$1) {
     return [
@@ -38,9 +38,9 @@ function token(pct) {
           ];
   };
   var match = scale(begin_rgb, get_delta(begin_rgb, [
-            180,
-            206,
-            141
+            214,
+            234,
+            212
           ]), pct);
   return {
           backgroundColor: "rgb(" + String(match[0] | 0) + ", " + String(match[1] | 0) + ", " + String(match[2] | 0) + ")"

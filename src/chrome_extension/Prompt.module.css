@@ -1,8 +1,24 @@
 .prompt {
-  height: 11px;
+  height: 15px;
   width: 6px;
-  background-color: currentColor;
+  background-color: rgb(46, 46, 46);
   display: inline-block;
   margin-left: 1px;
   vertical-align: middle;
+  animation: flicker 1.5s infinite;
+}
+
+@keyframes flicker {
+  0% {
+    background-color: white;
+  }
+  25% {
+    background-color: white;
+  }
+  75% {
+    background-color: rgb(71, 71, 71);
+  }
+  100% {
+    background-color: rgb(46, 46, 46);
+  }
 }
