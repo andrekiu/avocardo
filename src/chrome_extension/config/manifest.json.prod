@@ -4,7 +4,7 @@
   "description": "Avocado cards to test your spanish!",
   "permissions": [
     "declarativeContent",
-    "http://avocardo.pepperavocado.com/*",
+    "https://avocardo.pepperavocado.com/*",
     "storage"
   ],
   "background": {

@@ -12,7 +12,7 @@ function getServerSideProps(ctx) {
     fingerprint = fp;
   } else {
     var fp$1 = ServerFingerprint$Avocardo.gen(undefined);
-    ctx.res.setHeader("Set-Cookie", "fingerprint=" + fp$1 + "; SameSite=Strict; Expires=Wed, 21 Oct 2021 07:28:00 GMT");
+    ctx.res.setHeader("Set-Cookie", "fingerprint=" + fp$1 + "; SameSite=None; Secure; Expires=Wed, 21 Oct 2021 07:28:00 GMT");
     fingerprint = fp$1;
   }
   return Promise.resolve({

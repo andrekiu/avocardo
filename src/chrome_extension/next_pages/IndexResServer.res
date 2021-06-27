@@ -8,7 +8,7 @@ let getServerSideProps: Next.GetServerSideProps.t<props, unit, unit> = ctx => {
       Next.GetServerSideProps.Res.setHeader(
         ctx.res,
         "Set-Cookie",
-        "fingerprint=" ++ fp ++ "; SameSite=Strict; Expires=Wed, 21 Oct 2021 07:28:00 GMT",
+        "fingerprint=" ++ fp ++ "; SameSite=None; Secure; Expires=Wed, 21 Oct 2021 07:28:00 GMT",
       )
       fp
     }
