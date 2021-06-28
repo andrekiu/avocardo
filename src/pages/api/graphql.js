@@ -54,21 +54,23 @@ async function genNextQuiz({ fingerprint, justFails }) {
   return genPronounExercise();
 }
 
+function getProfile({ fingerprint }) {
+  return {
+    id: fingerprint,
+    nextQuiz: ({ justFails }) => genNextQuiz({ fingerprint, justFails }),
+    fails: () => genFails(fingerprint),
+  };
+}
+
 const root = {
+  addFeedback: async ({ fingerprint, quiz_id, feedback }) => {
+    return getProfile({ fingerprint });
+  },
   addAnswer: async ({ fingerprint, quiz_id, didSucceed }) => {
     await genInsertAnswer({ fingerprint, quiz_id, didSucceed });
-    return {
-      id: fingerprint,
-      fails: () => genFails(fingerprint),
-    };
+    return getProfile({ fingerprint });
   },
-  getProfile: ({ fingerprint }) => {
-    return {
-      id: fingerprint,
-      nextQuiz: ({ justFails }) => genNextQuiz({ fingerprint, justFails }),
-      fails: () => genFails(fingerprint),
-    };
-  },
+  getProfile,
 };
 
 const middleware = graphqlHTTP({

@@ -255,6 +255,7 @@ function Index$AppImpl(Props) {
       }, /* NetworkOnly */3, String(match$1[0]), undefined, undefined);
   var getProfile = match$3.getProfile;
   return React.createElement(Card$Avocardo.make, {
+              fingerprint: fingerprint,
               exercise: Belt_Option.map(getProfile.nextQuiz, fromQuiz),
               next: (function (param) {
                   return Curry._1(setFetchKey, (function (key) {

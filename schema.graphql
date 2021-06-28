@@ -31,8 +31,19 @@ type Query {
   getProfile(fingerprint: String!): Profile!
 }
 
+enum QuestionFeedback {
+  FAULTY_QUIZ
+  FAULTY_OPTIONS
+  APP_BROKEN
+}
+
 type Mutation {
   addAnswer(fingerprint: ID!, quiz_id: ID!, didSucceed: Boolean!): Profile!
+  addFeedback(
+    fingerprint: ID!
+    quiz_id: ID!
+    feedback: [QuestionFeedback!]!
+  ): Profile!
 }
 
 schema {

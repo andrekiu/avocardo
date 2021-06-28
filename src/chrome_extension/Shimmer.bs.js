@@ -2,20 +2,18 @@
 'use strict';
 
 var React = require("react");
-var ShimmerModuleCss = require("./Shimmer.module.css");
-
-var style = ShimmerModuleCss;
+var Cx$Avocardo = require("./core/Cx.bs.js");
 
 function Shimmer(Props) {
   return React.createElement("div", {
-              className: style.app
-            }, React.createElement("span", {
-                  className: style.shimmer
-                }, "Loading..."));
+              className: Cx$Avocardo.join([
+                    Cx$Avocardo.index.app,
+                    Cx$Avocardo.index.shimmer
+                  ])
+            }, React.createElement("span", undefined, "Loading..."));
 }
 
 var make = Shimmer;
 
-exports.style = style;
 exports.make = make;
-/* style Not a pure module */
+/* react Not a pure module */

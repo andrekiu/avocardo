@@ -8,13 +8,14 @@ var $$String = require("rescript/lib/js/string.js");
 var Caml_array = require("rescript/lib/js/caml_array.js");
 var $$Image = require("next/image").default;
 var Cx$Avocardo = require("./core/Cx.bs.js");
+var Glyph$Avocardo = require("./core/Glyph.bs.js");
 var Token$Avocardo = require("./Token.bs.js");
 var Words$Avocardo = require("./Words.bs.js");
 var Filter$Avocardo = require("./Filter.bs.js");
 var Prompt$Avocardo = require("./Prompt.bs.js");
 var CardModuleCss = require("./Card.module.css");
+var Feedback$Avocardo = require("./Feedback.bs.js");
 var Keyboard$Avocardo = require("./hooks/Keyboard.bs.js");
-var IndexModuleCss = require("./Index.module.css");
 
 var style = CardModuleCss;
 
@@ -83,7 +84,7 @@ function Card$Evaluation(Props) {
   var onClick = Props.onClick;
   return React.createElement("div", {
               className: Cx$Avocardo.join([
-                    style.app,
+                    Cx$Avocardo.index.app,
                     style.appflexcolumns
                   ]),
               onClick: (function (param) {
@@ -136,56 +137,109 @@ var FilterImpl = {
 
 function reduce_quiz(state, action) {
   if (typeof action === "number") {
-    if (action === /* Enter */0) {
-      if (state.TAG === /* Solving */0) {
-        return {
-                TAG: 1,
-                _0: state._0,
-                [Symbol.for("name")]: "Veredict"
-              };
-      } else {
-        return {
-                TAG: 0,
-                _0: "",
-                [Symbol.for("name")]: "Solving"
-              };
-      }
-    } else if (state.TAG === /* Solving */0) {
-      return {
-              TAG: 0,
-              _0: "",
-              [Symbol.for("name")]: "Solving"
-            };
-    } else {
-      return state;
+    switch (action) {
+      case /* Enter */0 :
+          switch (state.TAG | 0) {
+            case /* Solving */0 :
+                return {
+                        TAG: 1,
+                        _0: state._0,
+                        [Symbol.for("name")]: "Veredict"
+                      };
+            case /* Veredict */1 :
+                return {
+                        TAG: 0,
+                        _0: "",
+                        [Symbol.for("name")]: "Solving"
+                      };
+            case /* Feedback */2 :
+                return state;
+            
+          }
+      case /* Delete */1 :
+          switch (state.TAG | 0) {
+            case /* Solving */0 :
+                return {
+                        TAG: 0,
+                        _0: "",
+                        [Symbol.for("name")]: "Solving"
+                      };
+            case /* Veredict */1 :
+            case /* Feedback */2 :
+                return state;
+            
+          }
+      case /* BackToSolving */2 :
+          return {
+                  TAG: 0,
+                  _0: "",
+                  [Symbol.for("name")]: "Solving"
+                };
+      case /* ContinueToSolving */3 :
+          switch (state.TAG | 0) {
+            case /* Solving */0 :
+            case /* Veredict */1 :
+                return state;
+            case /* Feedback */2 :
+                return {
+                        TAG: 0,
+                        _0: "",
+                        [Symbol.for("name")]: "Solving"
+                      };
+            
+          }
+      
+    }
+  } else {
+    switch (action.TAG | 0) {
+      case /* Char */0 :
+          switch (state.TAG | 0) {
+            case /* Solving */0 :
+                return {
+                        TAG: 0,
+                        _0: state._0 + action._0,
+                        [Symbol.for("name")]: "Solving"
+                      };
+            case /* Veredict */1 :
+            case /* Feedback */2 :
+                return state;
+            
+          }
+      case /* Word */1 :
+          var w = action._0;
+          switch (state.TAG | 0) {
+            case /* Solving */0 :
+                var str = state._0;
+                return {
+                        TAG: 0,
+                        _0: str.length === 0 ? w : str + " " + w,
+                        [Symbol.for("name")]: "Solving"
+                      };
+            case /* Veredict */1 :
+            case /* Feedback */2 :
+                return state;
+            
+          }
+      case /* GetFeedback */2 :
+          switch (state.TAG | 0) {
+            case /* Solving */0 :
+                return {
+                        TAG: 2,
+                        _0: action._0,
+                        [Symbol.for("name")]: "Feedback"
+                      };
+            case /* Veredict */1 :
+            case /* Feedback */2 :
+                return state;
+            
+          }
+      
     }
   }
-  if (action.TAG === /* Char */0) {
-    if (state.TAG === /* Solving */0) {
-      return {
-              TAG: 0,
-              _0: state._0 + action._0,
-              [Symbol.for("name")]: "Solving"
-            };
-    } else {
-      return state;
-    }
-  }
-  var w = action._0;
-  if (state.TAG !== /* Solving */0) {
-    return state;
-  }
-  var str = state._0;
-  return {
-          TAG: 0,
-          _0: str.length === 0 ? w : str + " " + w,
-          [Symbol.for("name")]: "Solving"
-        };
 }
 
-var filterStyle = IndexModuleCss;
-
 function Card$CardImpl(Props) {
+  var fingerprint = Props.fingerprint;
   var exercise = Props.exercise;
   var next = Props.next;
   var storeStatus = Props.storeStatus;
@@ -203,13 +257,32 @@ function Card$CardImpl(Props) {
   var quiz = match[0];
   var onEnter = React.useCallback((function (param) {
           var match = reduce_quiz(quiz, /* Enter */0);
-          if (quiz.TAG === /* Solving */0) {
-            if (match.TAG !== /* Solving */0) {
-              Curry._2(storeStatus, exercise, solved(match._0, exercise));
-            }
+          switch (quiz.TAG | 0) {
+            case /* Solving */0 :
+                switch (match.TAG | 0) {
+                  case /* Veredict */1 :
+                      Curry._2(storeStatus, exercise, solved(match._0, exercise));
+                      break;
+                  case /* Solving */0 :
+                  case /* Feedback */2 :
+                      break;
+                  
+                }
+                break;
+            case /* Veredict */1 :
+                switch (match.TAG | 0) {
+                  case /* Solving */0 :
+                      Curry._1(next, undefined);
+                      break;
+                  case /* Veredict */1 :
+                  case /* Feedback */2 :
+                      break;
+                  
+                }
+                break;
+            case /* Feedback */2 :
+                break;
             
-          } else if (match.TAG === /* Solving */0) {
-            Curry._1(next, undefined);
           }
           return Curry._1(setQuiz, (function (s) {
                         return reduce_quiz(s, /* Enter */0);
@@ -232,81 +305,116 @@ function Card$CardImpl(Props) {
                           return reduce_quiz(s, /* Delete */1);
                         }));
           }));
-  if (quiz.TAG !== /* Solving */0) {
-    return React.createElement(Card$Evaluation, {
-                selection: quiz._0,
-                exercise: exercise,
-                onClick: onEnter
-              });
+  switch (quiz.TAG | 0) {
+    case /* Solving */0 :
+        var selection = quiz._0;
+        var match$1 = Token$Avocardo.StyledWords.style(selection, exercise.pronouns, exercise.nouns);
+        return React.createElement("div", {
+                    className: Cx$Avocardo.join([
+                          Cx$Avocardo.index.app,
+                          style.cardquestion
+                        ])
+                  }, React.createElement("div", {
+                        className: style.filter
+                      }, React.createElement(Card$FilterImpl, {
+                            onChangeFilter: onChangeFilter,
+                            filter: filter,
+                            filterFragment: filterFragment,
+                            className: Cx$Avocardo.index.filter
+                          })), React.createElement("div", {
+                        className: style.challenge,
+                        id: "challenge"
+                      }, React.createElement("span", {
+                            className: style["challenge-text"],
+                            onClick: (function (param) {
+                                return Curry._1(onEnter, undefined);
+                              })
+                          }, exercise.quiz)), React.createElement("div", {
+                        className: style.input,
+                        onClick: (function (param) {
+                            return Curry._1(setQuiz, (function (s) {
+                                          return reduce_quiz(s, /* Delete */1);
+                                        }));
+                          })
+                      }, selection, React.createElement(Prompt$Avocardo.make, {})), React.createElement("div", {
+                        className: style.options
+                      }, React.createElement("div", {
+                            className: style.column
+                          }, $$Array.map((function (tok) {
+                                  return React.createElement(Token$Avocardo.make, {
+                                              tok: tok,
+                                              onClick: (function (param) {
+                                                  var a = {
+                                                    TAG: 1,
+                                                    _0: tok.word,
+                                                    [Symbol.for("name")]: "Word"
+                                                  };
+                                                  return Curry._1(setQuiz, (function (s) {
+                                                                return reduce_quiz(s, a);
+                                                              }));
+                                                })
+                                            });
+                                }), match$1[0])), React.createElement("div", {
+                            className: style.column
+                          }, $$Array.map((function (tok) {
+                                  return React.createElement(Token$Avocardo.make, {
+                                              tok: tok,
+                                              onClick: (function (param) {
+                                                  var a = {
+                                                    TAG: 1,
+                                                    _0: tok.word,
+                                                    [Symbol.for("name")]: "Word"
+                                                  };
+                                                  return Curry._1(setQuiz, (function (s) {
+                                                                return reduce_quiz(s, a);
+                                                              }));
+                                                })
+                                            });
+                                }), match$1[1]))), React.createElement("div", {
+                        className: style.skip
+                      }, React.createElement("span", {
+                            className: style["skip-button"],
+                            id: "skip-question",
+                            onClick: (function (param) {
+                                var a = {
+                                  TAG: 2,
+                                  _0: exercise,
+                                  [Symbol.for("name")]: "GetFeedback"
+                                };
+                                return Curry._1(setQuiz, (function (s) {
+                                              return reduce_quiz(s, a);
+                                            }));
+                              })
+                          }, React.createElement(Glyph$Avocardo.make, {
+                                variant: /* Skip */2
+                              }))));
+    case /* Veredict */1 :
+        return React.createElement(Card$Evaluation, {
+                    selection: quiz._0,
+                    exercise: exercise,
+                    onClick: onEnter
+                  });
+    case /* Feedback */2 :
+        return React.createElement(Feedback$Avocardo.make, {
+                    fingerprint: fingerprint,
+                    exercise: quiz._0,
+                    onBack: (function (param) {
+                        return Curry._1(setQuiz, (function (s) {
+                                      return reduce_quiz(s, /* BackToSolving */2);
+                                    }));
+                      }),
+                    onContinue: (function (param) {
+                        Curry._1(next, undefined);
+                        return Curry._1(setQuiz, (function (s) {
+                                      return reduce_quiz(s, /* ContinueToSolving */3);
+                                    }));
+                      })
+                  });
+    
   }
-  var selection = quiz._0;
-  var match$1 = Token$Avocardo.StyledWords.style(selection, exercise.pronouns, exercise.nouns);
-  return React.createElement("div", {
-              className: Cx$Avocardo.join([
-                    style.app,
-                    style.cardquestion
-                  ])
-            }, React.createElement("div", {
-                  className: style.filter
-                }, React.createElement(Card$FilterImpl, {
-                      onChangeFilter: onChangeFilter,
-                      filter: filter,
-                      filterFragment: filterFragment,
-                      className: filterStyle.filter
-                    })), React.createElement("div", {
-                  className: style.challenge,
-                  id: "challenge"
-                }, React.createElement("span", {
-                      className: style["challenge-text"],
-                      onClick: (function (param) {
-                          return Curry._1(onEnter, undefined);
-                        })
-                    }, exercise.quiz)), React.createElement("div", {
-                  className: style.input,
-                  onClick: (function (param) {
-                      return Curry._1(setQuiz, (function (s) {
-                                    return reduce_quiz(s, /* Delete */1);
-                                  }));
-                    })
-                }, selection, React.createElement(Prompt$Avocardo.make, {})), React.createElement("div", {
-                  className: style.options
-                }, React.createElement("div", {
-                      className: style.column
-                    }, $$Array.map((function (tok) {
-                            return React.createElement(Token$Avocardo.make, {
-                                        tok: tok,
-                                        onClick: (function (param) {
-                                            var a = {
-                                              TAG: 1,
-                                              _0: tok.word,
-                                              [Symbol.for("name")]: "Word"
-                                            };
-                                            return Curry._1(setQuiz, (function (s) {
-                                                          return reduce_quiz(s, a);
-                                                        }));
-                                          })
-                                      });
-                          }), match$1[0])), React.createElement("div", {
-                      className: style.column
-                    }, $$Array.map((function (tok) {
-                            return React.createElement(Token$Avocardo.make, {
-                                        tok: tok,
-                                        onClick: (function (param) {
-                                            var a = {
-                                              TAG: 1,
-                                              _0: tok.word,
-                                              [Symbol.for("name")]: "Word"
-                                            };
-                                            return Curry._1(setQuiz, (function (s) {
-                                                          return reduce_quiz(s, a);
-                                                        }));
-                                          })
-                                      });
-                          }), match$1[1]))));
 }
 
 var CardImpl = {
-  filterStyle: filterStyle,
   make: Card$CardImpl
 };
 
@@ -316,7 +424,7 @@ function Card$OutOfExercises(Props) {
   var filterFragment = Props.filterFragment;
   return React.createElement("div", {
               className: Cx$Avocardo.join([
-                    style.app,
+                    Cx$Avocardo.index.app,
                     style.appflexcolumns
                   ])
             }, React.createElement("span", {
@@ -336,6 +444,7 @@ var OutOfExercises = {
 };
 
 function Card(Props) {
+  var fingerprint = Props.fingerprint;
   var exercise = Props.exercise;
   var next = Props.next;
   var storeStatus = Props.storeStatus;
@@ -344,6 +453,7 @@ function Card(Props) {
   var filterFragment = Props.filterFragment;
   if (exercise !== undefined) {
     return React.createElement(Card$CardImpl, {
+                fingerprint: fingerprint,
                 exercise: exercise,
                 next: next,
                 storeStatus: storeStatus,

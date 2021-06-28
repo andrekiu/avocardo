@@ -78,6 +78,7 @@ module AppImpl = {
     )
     let {nextQuiz} = getProfile
     <Card
+      fingerprint
       exercise={nextQuiz->Belt.Option.map(fromQuiz)}
       next={() => {
         setFetchKey(key => key + 1)

@@ -3,6 +3,9 @@
 
 var $$Array = require("rescript/lib/js/array.js");
 var $$String = require("rescript/lib/js/string.js");
+var CoreModuleCss = require("./Core.module.css");
+
+var index = CoreModuleCss;
 
 function join(classNames) {
   return $$String.concat(" ", $$Array.to_list(classNames));
@@ -10,6 +13,7 @@ function join(classNames) {
 
 var noop = "noop";
 
+exports.index = index;
 exports.join = join;
 exports.noop = noop;
-/* No side effect */
+/* index Not a pure module */

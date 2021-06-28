@@ -1,9 +1,6 @@
 @module
 external style: {
-  "app": string,
-  "appflex": string,
   "appflexcolumns": string,
-  "appgrid": string,
   "cardquestion": string,
   "result": string,
   "emptyquiz": string,
@@ -11,6 +8,8 @@ external style: {
   "emptyquiz-calltoaction": string,
   "result-quiz": string,
   "result-solution": string,
+  "skip": string,
+  "skip-button": string,
   "result-avocado": string,
   "challenge": string,
   "challenge-text": string,
@@ -61,7 +60,7 @@ module Result = {
 module Evaluation = {
   @react.component
   let make = (~selection, ~exercise: PronounExercises.pronoun_exercise, ~onClick) =>
-    <div className={Cx.join([style["app"], style["appflexcolumns"]])} onClick={_ => onClick()}>
+    <div className={Cx.join([Cx.index["app"], style["appflexcolumns"]])} onClick={_ => onClick()}>
       {ExerciseSolver.solved(selection, exercise)
         ? <>
             <span id="correct" className={style["result"]}> {React.string("You got it!")} </span>
@@ -89,15 +88,22 @@ module FilterImpl = {
 type quiz_stage =
   | Solving(string)
   | Veredict(string)
+  | Feedback(PronounExercises.pronoun_exercise)
 
 type quiz_actions =
   | Enter
   | Delete
   | Char(string)
   | Word(string)
+  | GetFeedback(PronounExercises.pronoun_exercise)
+  | BackToSolving
+  | ContinueToSolving
 
 let reduce_quiz = (state: quiz_stage, action) =>
   switch (action, state) {
+  | (BackToSolving, _) => Solving("")
+  | (GetFeedback(e), Solving(_)) => Feedback(e)
+  | (ContinueToSolving, Feedback(_)) => Solving("")
   | (Enter, Solving(str)) => Veredict(str)
   | (Enter, Veredict(_)) => Solving("")
   | (Char(c), Solving(str)) => Solving(str ++ c)
@@ -107,9 +113,9 @@ let reduce_quiz = (state: quiz_stage, action) =>
   }
 
 module CardImpl = {
-  @module external filterStyle: {"filter": string} = "./Index.module.css"
   @react.component
   let make = (
+    ~fingerprint,
     ~exercise: PronounExercises.pronoun_exercise,
     ~next: unit => unit,
     ~storeStatus: (PronounExercises.pronoun_exercise, bool) => unit,
@@ -134,15 +140,25 @@ module CardImpl = {
       ~onDelete=React.useCallback(() => dispatch(Delete)),
     )
     switch quiz {
+    | Feedback(exercise) =>
+      <Feedback
+        fingerprint
+        exercise
+        onBack={() => dispatch(BackToSolving)}
+        onContinue={() => {
+          next()
+          dispatch(ContinueToSolving)
+        }}
+      />
     | Solving(selection) =>
       let (styledPronouns, styledCandidates) = Token.StyledWords.style(
         selection,
         e.pronouns,
         e.nouns,
       )
-      <div className={Cx.join([style["app"], style["cardquestion"]])}>
+      <div className={Cx.join([Cx.index["app"], style["cardquestion"]])}>
         <div className={style["filter"]}>
-          <FilterImpl className={filterStyle["filter"]} filter onChangeFilter filterFragment />
+          <FilterImpl className={Cx.index["filter"]} filter onChangeFilter filterFragment />
         </div>
         <div id="challenge" className={style["challenge"]}>
           <span onClick={_ => onEnter()} className={style["challenge-text"]}>
@@ -166,6 +182,14 @@ module CardImpl = {
             ) |> React.array}
           </div>
         </div>
+        <div className={style["skip"]}>
+          <span
+            className={style["skip-button"]}
+            id="skip-question"
+            onClick={_ => dispatch(GetFeedback(e))}>
+            <Glyph variant={Skip} />
+          </span>
+        </div>
       </div>
     | Veredict(selection) => <Evaluation selection exercise=e onClick={onEnter} />
     }
@@ -175,7 +199,7 @@ module CardImpl = {
 module OutOfExercises = {
   @react.component
   let make = (~filter, ~onChangeFilter, ~filterFragment) => {
-    <div className={Cx.join([style["app"], style["appflexcolumns"]])}>
+    <div className={Cx.join([Cx.index["app"], style["appflexcolumns"]])}>
       <span className={style["emptyquiz"]}>
         {filter == Filter.Any
           ? <div>
@@ -197,6 +221,7 @@ module OutOfExercises = {
 
 @react.component
 let make = (
+  ~fingerprint,
   ~exercise: option<PronounExercises.pronoun_exercise>,
   ~next: unit => unit,
   ~storeStatus: (PronounExercises.pronoun_exercise, bool) => unit,
@@ -206,6 +231,7 @@ let make = (
 ) => {
   switch exercise {
   | None => <OutOfExercises filter onChangeFilter filterFragment />
-  | Some(exercise) => <CardImpl exercise next storeStatus filter onChangeFilter filterFragment />
+  | Some(exercise) =>
+    <CardImpl fingerprint exercise next storeStatus filter onChangeFilter filterFragment />
   }
 }

@@ -1,6 +1,5 @@
 REMOVE_LAST=$(rm build/chrome_extension/*)
 SRC="
-  src/chrome_extension/config/background.js
   src/chrome_extension/config/script.js
   public/img/favicon.png
 "

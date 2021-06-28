@@ -4,6 +4,7 @@
 var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var Caml_option = require("rescript/lib/js/caml_option.js");
+var Glyph$Avocardo = require("./core/Glyph.bs.js");
 var Js_null_undefined = require("rescript/lib/js/js_null_undefined.js");
 var Hooks = require("react-relay/hooks");
 var RescriptRelay_Internal = require("rescript-relay/src/RescriptRelay_Internal.bs.js");
@@ -53,7 +54,11 @@ function Filter(Props) {
                   })
               }, React.createElement("span", {
                     id: filter === /* Any */0 ? "filter-to-fail" : "filter-to-any"
-                  }, filter === /* Any */0 ? String.fromCodePoint(128293) : String.fromCodePoint(128584), failsCount === 0 ? null : " " + String(failsCount)));
+                  }, filter === /* Any */0 ? React.createElement(Glyph$Avocardo.make, {
+                          variant: /* Fire */0
+                        }) : React.createElement(Glyph$Avocardo.make, {
+                          variant: /* Monkey */1
+                        }), failsCount === 0 ? null : " " + String(failsCount)));
   }
 }
 
