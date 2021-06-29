@@ -19,5 +19,3 @@ let genInsertAnswer = (answer: {"fingerprint": string, "quiz_id": string, "didSu
       )
     )
   })
-
-// let genSave = json => Answer.Decode.answer(json) |> genInsertAnswer |> Js.Promise.resolve
