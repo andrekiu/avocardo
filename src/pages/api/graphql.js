@@ -5,8 +5,8 @@ import {
   genPronounExercise,
   genFailures,
   genQuizzes,
-} from "../../server/exercises/PronounController.bs.js";
-import { genInsertAnswer } from "../../server/answers/AnswerController.bs.js";
+} from "../../server/queries/PronounController.bs.js";
+import { genInsertAnswer } from "../../server/queries/AnswerController.bs.js";
 
 const schema = buildSchema(
   fs.readFileSync(process.cwd() + "/schema.graphql", "utf8")

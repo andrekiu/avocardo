@@ -7,7 +7,7 @@ var React = require("react");
 var $$String = require("rescript/lib/js/string.js");
 var Words$Avocardo = require("./Words.bs.js");
 var TokenModuleCss = require("./Token.module.css");
-var PronounExercises$Avocardo = require("../server/exercises/PronounExercises.bs.js");
+var PronounExercises$Avocardo = require("./PronounExercises.bs.js");
 
 var style = TokenModuleCss;
 
