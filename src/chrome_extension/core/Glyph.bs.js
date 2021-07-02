@@ -13,6 +13,8 @@ function getContent(v) {
         return String.fromCodePoint(128584);
     case /* Skip */2 :
         return String.fromCodePoint(9197);
+    case /* Avocado */3 :
+        return String.fromCodePoint(129361);
     
   }
 }

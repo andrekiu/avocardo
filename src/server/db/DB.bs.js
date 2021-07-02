@@ -3,15 +3,13 @@
 
 var Curry = require("rescript/lib/js/curry.js");
 var MySql2 = require("bs-mysql2/src/MySql2.bs.js");
-var Dotenv = require("dotenv");
-var Js_dict = require("rescript/lib/js/js_dict.js");
-var Process = require("process");
-var Belt_Option = require("rescript/lib/js/belt_Option.js");
 
-Dotenv.config();
+var getPWD = (function() {
+    return process.env.MYSQL_PWD;
+  });
 
 function conn(param) {
-  return MySql2.Connection.connect(undefined, undefined, "root", Belt_Option.getExn(Js_dict.get(Process.env, "MYSQL_PWD")), "avocardo", undefined);
+  return MySql2.Connection.connect(undefined, undefined, "root", Curry._1(getPWD, undefined), "avocardo", undefined);
 }
 
 function withConnection(cb) {
@@ -20,6 +18,7 @@ function withConnection(cb) {
   return MySql2.Connection.close(conn$1);
 }
 
+exports.getPWD = getPWD;
 exports.conn = conn;
 exports.withConnection = withConnection;
-/*  Not a pure module */
+/* MySql2 Not a pure module */

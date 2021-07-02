@@ -2,7 +2,7 @@
 'use strict';
 
 var React = require("react");
-var Cx$Avocardo = require("./core/Cx.bs.js");
+var Cx$Avocardo = require("../core/Cx.bs.js");
 
 function Shimmer(Props) {
   return React.createElement("div", {

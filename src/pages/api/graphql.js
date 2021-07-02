@@ -1,3 +1,4 @@
+import { withAdminSession } from "../../chrome_extension/auth/Session.js";
 import { graphqlHTTP } from "express-graphql";
 import { buildSchema } from "graphql";
 import fs from "fs";
@@ -8,6 +9,7 @@ import {
 } from "../../server/queries/PronounController.bs.js";
 import { genInsertAnswer } from "../../server/queries/AnswerController.bs.js";
 import { genInsertFeedback } from "../../server/queries/FeedbackController.bs.js";
+import { genAnswersOverTime } from "../../server/queries/AdminController.bs.js";
 
 const schema = buildSchema(
   fs.readFileSync(process.cwd() + "/schema.graphql", "utf8")
@@ -63,6 +65,21 @@ function getProfile({ fingerprint }) {
   };
 }
 
+async function getAdminProfile(_, ctx) {
+  if (!ctx.session.get("admin_auth_token")) {
+    throw new Error("NOT AUTHENTICATED");
+  }
+  const data = await genAnswersOverTime();
+  return {
+    answersOverTime() {
+      return data.map((e) => ({
+        ds: e.ds.toLocaleDateString("en-CA"),
+        value: e.value,
+      }));
+    },
+  };
+}
+
 const root = {
   addFeedback: async ({ fingerprint, quiz_id, feedback: feedbackList }) => {
     await Promise.all(
@@ -77,6 +94,7 @@ const root = {
     return getProfile({ fingerprint });
   },
   getProfile,
+  getAdminProfile,
 };
 
 const middleware = graphqlHTTP({
@@ -85,6 +103,6 @@ const middleware = graphqlHTTP({
   graphiql: !process.env.PROD,
 });
 
-export default function handler(req, res) {
+export default withAdminSession((req, res) => {
   return middleware(req, res);
-}
+});

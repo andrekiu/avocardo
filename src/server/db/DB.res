@@ -1,13 +1,11 @@
-@module("dotenv") external config: unit => unit = "config"
+let getPWD = %raw(`
+  function() {
+    return process.env.MYSQL_PWD;
+  }
+`)
 
-config()
 let conn = () =>
-  MySql2.Connection.connect(
-    ~database="avocardo",
-    ~user="root",
-    ~password=Node.Process.process["env"]->Js.Dict.get("MYSQL_PWD") |> Belt.Option.getExn,
-    (),
-  )
+  MySql2.Connection.connect(~database="avocardo", ~user="root", ~password=getPWD(), ())
 
 let withConnection = cb => {
   let conn = conn()

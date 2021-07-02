@@ -7,15 +7,15 @@ var React = require("react");
 var $$String = require("rescript/lib/js/string.js");
 var Caml_array = require("rescript/lib/js/caml_array.js");
 var $$Image = require("next/image").default;
-var Cx$Avocardo = require("./core/Cx.bs.js");
-var Glyph$Avocardo = require("./core/Glyph.bs.js");
+var Cx$Avocardo = require("../core/Cx.bs.js");
+var Glyph$Avocardo = require("../core/Glyph.bs.js");
 var Token$Avocardo = require("./Token.bs.js");
 var Words$Avocardo = require("./Words.bs.js");
 var Filter$Avocardo = require("./Filter.bs.js");
 var Prompt$Avocardo = require("./Prompt.bs.js");
 var CardModuleCss = require("./Card.module.css");
 var Feedback$Avocardo = require("./Feedback.bs.js");
-var Keyboard$Avocardo = require("./hooks/Keyboard.bs.js");
+var Keyboard$Avocardo = require("../hooks/Keyboard.bs.js");
 
 var style = CardModuleCss;
 

@@ -6,11 +6,11 @@ var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var Belt_Option = require("rescript/lib/js/belt_Option.js");
 var Caml_option = require("rescript/lib/js/caml_option.js");
-var Cx$Avocardo = require("./core/Cx.bs.js");
+var Cx$Avocardo = require("../core/Cx.bs.js");
 var RelayRuntime = require("relay-runtime");
 var Hooks = require("react-relay/hooks");
 var FeedbackModuleCss = require("./Feedback.module.css");
-var FeedbackAddFeedbackMutation_graphql$Avocardo = require("../__generated__/FeedbackAddFeedbackMutation_graphql.bs.js");
+var FeedbackAddFeedbackMutation_graphql$Avocardo = require("../../__generated__/FeedbackAddFeedbackMutation_graphql.bs.js");
 
 var style = FeedbackModuleCss;
 

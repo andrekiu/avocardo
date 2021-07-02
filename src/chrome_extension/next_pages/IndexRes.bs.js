@@ -4,8 +4,8 @@
 var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var RescriptRelay = require("rescript-relay/src/RescriptRelay.bs.js");
-var Index$Avocardo = require("../Index.bs.js");
-var RelayEnv$Avocardo = require("../RelayEnv.bs.js");
+var Index$Avocardo = require("../avocardo/Index.bs.js");
+var RelayEnv$Avocardo = require("../avocardo/RelayEnv.bs.js");
 
 function IndexRes$P(Props) {
   var fingerprint = Props.fingerprint;

@@ -27,8 +27,18 @@ type Profile {
   fails: FailsConnection!
 }
 
+type DatePoint {
+  ds: String!
+  value: Int!
+}
+
+type AdminProfile {
+  answersOverTime: [DatePoint!]!
+}
+
 type Query {
   getProfile(fingerprint: String!): Profile!
+  getAdminProfile: AdminProfile!
 }
 
 enum QuestionFeedback {

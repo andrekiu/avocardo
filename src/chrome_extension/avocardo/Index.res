@@ -103,6 +103,8 @@ module AppImpl = {
 module App = {
   @react.component
   let make = (~fingerprint: string) => {
-    <React.Suspense fallback={<Shimmer />}> <AppImpl fingerprint /> </React.Suspense>
+    <div className={Cx.index["root"]}>
+      <React.Suspense fallback={<Shimmer />}> <AppImpl fingerprint /> </React.Suspense>
+    </div>
   }
 }

@@ -4,11 +4,11 @@
 var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var Caml_option = require("rescript/lib/js/caml_option.js");
-var Glyph$Avocardo = require("./core/Glyph.bs.js");
+var Glyph$Avocardo = require("../core/Glyph.bs.js");
 var Js_null_undefined = require("rescript/lib/js/js_null_undefined.js");
 var Hooks = require("react-relay/hooks");
 var RescriptRelay_Internal = require("rescript-relay/src/RescriptRelay_Internal.bs.js");
-var Filter_graphql$Avocardo = require("../__generated__/Filter_graphql.bs.js");
+var Filter_graphql$Avocardo = require("../../__generated__/Filter_graphql.bs.js");
 
 function use(fRef) {
   var data = Hooks.useFragment(Filter_graphql$Avocardo.node, fRef);

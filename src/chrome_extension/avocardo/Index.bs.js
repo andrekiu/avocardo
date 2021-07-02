@@ -11,14 +11,15 @@ var Caml_array = require("rescript/lib/js/caml_array.js");
 var Belt_Option = require("rescript/lib/js/belt_Option.js");
 var Caml_format = require("rescript/lib/js/caml_format.js");
 var Caml_option = require("rescript/lib/js/caml_option.js");
+var Cx$Avocardo = require("../core/Cx.bs.js");
 var Card$Avocardo = require("./Card.bs.js");
 var RescriptRelay = require("rescript-relay/src/RescriptRelay.bs.js");
 var RelayRuntime = require("relay-runtime");
 var Shimmer$Avocardo = require("./Shimmer.bs.js");
 var Hooks = require("react-relay/hooks");
 var RescriptRelay_Internal = require("rescript-relay/src/RescriptRelay_Internal.bs.js");
-var IndexQuery_graphql$Avocardo = require("../__generated__/IndexQuery_graphql.bs.js");
-var IndexAddAnswerMutation_graphql$Avocardo = require("../__generated__/IndexAddAnswerMutation_graphql.bs.js");
+var IndexQuery_graphql$Avocardo = require("../../__generated__/IndexQuery_graphql.bs.js");
+var IndexAddAnswerMutation_graphql$Avocardo = require("../../__generated__/IndexAddAnswerMutation_graphql.bs.js");
 
 function use(variables, fetchPolicy, fetchKey, networkCacheConfig, param) {
   var data = Hooks.useLazyLoadQuery(IndexQuery_graphql$Avocardo.node, RescriptRelay_Internal.internal_cleanObjectFromUndefinedRaw(IndexQuery_graphql$Avocardo.Internal.convertVariables(variables)), {
@@ -296,12 +297,14 @@ var AppImpl = {
 
 function Index$App(Props) {
   var fingerprint = Props.fingerprint;
-  return React.createElement(React.Suspense, {
-              children: React.createElement(Index$AppImpl, {
-                    fingerprint: fingerprint
-                  }),
-              fallback: React.createElement(Shimmer$Avocardo.make, {})
-            });
+  return React.createElement("div", {
+              className: Cx$Avocardo.index.root
+            }, React.createElement(React.Suspense, {
+                  children: React.createElement(Index$AppImpl, {
+                        fingerprint: fingerprint
+                      }),
+                  fallback: React.createElement(Shimmer$Avocardo.make, {})
+                }));
 }
 
 var App = {
