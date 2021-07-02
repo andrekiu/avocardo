@@ -7,6 +7,7 @@ import {
   genQuizzes,
 } from "../../server/queries/PronounController.bs.js";
 import { genInsertAnswer } from "../../server/queries/AnswerController.bs.js";
+import { genInsertFeedback } from "../../server/queries/FeedbackController.bs.js";
 
 const schema = buildSchema(
   fs.readFileSync(process.cwd() + "/schema.graphql", "utf8")
@@ -63,7 +64,12 @@ function getProfile({ fingerprint }) {
 }
 
 const root = {
-  addFeedback: async ({ fingerprint, quiz_id, feedback }) => {
+  addFeedback: async ({ fingerprint, quiz_id, feedback: feedbackList }) => {
+    await Promise.all(
+      feedbackList.map((feedback) =>
+        genInsertFeedback({ fingerprint, quiz_id, feedback })
+      )
+    );
     return getProfile({ fingerprint });
   },
   addAnswer: async ({ fingerprint, quiz_id, didSucceed }) => {
