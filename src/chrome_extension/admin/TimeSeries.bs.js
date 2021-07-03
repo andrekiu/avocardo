@@ -3,30 +3,27 @@
 
 var Caml = require("rescript/lib/js/caml.js");
 var $$Array = require("rescript/lib/js/array.js");
-var $$String = require("rescript/lib/js/string.js");
 var Js_dict = require("rescript/lib/js/js_dict.js");
 var Caml_array = require("rescript/lib/js/caml_array.js");
 
-function nextDate(dsStr) {
-  var ds = new Date(dsStr);
-  var tokens = $$String.split_on_char(/* 'T' */84, new Date(ds.setDate(ds.getDate() + 1)).toISOString());
-  if (tokens) {
-    return tokens.hd;
-  } else {
-    return dsStr;
-  }
+function getStr(ds) {
+  return ds.toISOString().substr(0, 10);
+}
+
+function nextDate(ds) {
+  return new Date(ds.setDate(ds.getDate() + 1));
 }
 
 function iterate(_current, end, _sum) {
   while(true) {
     var sum = _sum;
     var current = _current;
-    if (current === end) {
+    if (current.getTime() > end.getTime()) {
       return sum;
     }
-    var match = Js_dict.get(sum, current);
-    _sum = match !== undefined ? sum : (sum[current] = {
-          date: current,
+    var match = Js_dict.get(sum, getStr(current));
+    _sum = match !== undefined ? sum : (sum[getStr(current)] = {
+          date: getStr(current),
           val: 0
         }, sum);
     _current = nextDate(current);
@@ -44,8 +41,8 @@ function fillRows(entries) {
   if (entries.length === 0) {
     return [];
   }
-  var first = Caml_array.get(entries, 0).date;
-  var last = Caml_array.get(entries, entries.length - 1 | 0).date;
+  var first = new Date(Caml_array.get(entries, 0).date);
+  var last = new Date(Caml_array.get(entries, entries.length - 1 | 0).date);
   var filled = Js_dict.values(iterate(first, last, entriesByDS));
   $$Array.stable_sort((function (a, b) {
           return Caml.caml_string_compare(a.date, b.date);
@@ -53,6 +50,7 @@ function fillRows(entries) {
   return filled;
 }
 
+exports.getStr = getStr;
 exports.nextDate = nextDate;
 exports.iterate = iterate;
 exports.fillRows = fillRows;
