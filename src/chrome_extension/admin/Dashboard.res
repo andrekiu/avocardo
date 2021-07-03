@@ -12,6 +12,7 @@ module Query = %relay(`
   query DashboardQuery {
     getAdminProfile {
       ...AnswersOverTime
+      ...SessionsOverTime
     }
   }
 `)
@@ -37,6 +38,11 @@ let make = () => {
     <Card title="Answers over time">
       <React.Suspense fallback={React.null}>
         <AnswersOverTime fragmentRef={getAdminProfile.fragmentRefs} />
+      </React.Suspense>
+    </Card>
+    <Card title="Sessions over time">
+      <React.Suspense fallback={React.null}>
+        <SessionsOverTime fragmentRef={getAdminProfile.fragmentRefs} />
       </React.Suspense>
     </Card>
   </div>

@@ -9,7 +9,10 @@ import {
 } from "../../server/queries/PronounController.bs.js";
 import { genInsertAnswer } from "../../server/queries/AnswerController.bs.js";
 import { genInsertFeedback } from "../../server/queries/FeedbackController.bs.js";
-import { genAnswersOverTime } from "../../server/queries/AdminController.bs.js";
+import {
+  genAnswersOverTime,
+  genSessionsOverTime,
+} from "../../server/queries/AdminController.bs.js";
 
 const schema = buildSchema(
   fs.readFileSync(process.cwd() + "/schema.graphql", "utf8")
@@ -69,9 +72,16 @@ async function getAdminProfile(_, ctx) {
   if (!ctx.session.get("admin_auth_token")) {
     throw new Error("NOT AUTHENTICATED");
   }
-  const data = await genAnswersOverTime();
   return {
-    answersOverTime() {
+    async answersOverTime() {
+      const data = await genAnswersOverTime();
+      return data.map((e) => ({
+        ds: e.ds.toLocaleDateString("en-CA"),
+        value: e.value,
+      }));
+    },
+    async sessionsOverTime() {
+      const data = await genSessionsOverTime();
       return data.map((e) => ({
         ds: e.ds.toLocaleDateString("en-CA"),
         value: e.value,

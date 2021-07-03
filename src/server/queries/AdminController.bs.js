@@ -24,5 +24,26 @@ function genAnswersOverTime(param) {
               }));
 }
 
+function genSessionsOverTime(param) {
+  return new Promise((function (resolve, reject) {
+                return DB$Avocardo.withConnection(function (conn) {
+                            return MySql2.execute(conn, "\n        select DATE(answered_time) as ds, COUNT(DISTINCT fingerprint) as value\n          from answers \n          group by ds\n          order by ds asc\n        ", undefined, (function (msg) {
+                                          var variant = msg.NAME;
+                                          if (variant === "Select") {
+                                            return resolve(MySql2.Select.rows(msg.VAL));
+                                          } else if (variant === "Mutation") {
+                                            return reject({
+                                                        RE_EXN_ID: "Failure",
+                                                        _1: "UNEXPECTED_MUTATION"
+                                                      });
+                                          } else {
+                                            return reject(MySql2.Exn.toExn(msg.VAL));
+                                          }
+                                        }));
+                          });
+              }));
+}
+
 exports.genAnswersOverTime = genAnswersOverTime;
+exports.genSessionsOverTime = genSessionsOverTime;
 /* MySql2 Not a pure module */

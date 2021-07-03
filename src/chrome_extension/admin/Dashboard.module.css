@@ -10,6 +10,7 @@
   border: 1px solid;
   border-radius: 5px;
   box-shadow: 0 0.5em 0.5em gray;
+  margin-bottom: 2em;
 }
 
 .card-title {

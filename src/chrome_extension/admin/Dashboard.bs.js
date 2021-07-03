@@ -12,6 +12,7 @@ var Hooks = require("react-relay/hooks");
 var DashboardModuleCss = require("./Dashboard.module.css");
 var RescriptRelay_Internal = require("rescript-relay/src/RescriptRelay_Internal.bs.js");
 var AnswersOverTime$Avocardo = require("./AnswersOverTime.bs.js");
+var SessionsOverTime$Avocardo = require("./SessionsOverTime.bs.js");
 var DashboardQuery_graphql$Avocardo = require("../../__generated__/DashboardQuery_graphql.bs.js");
 
 var styles = DashboardModuleCss;
@@ -113,6 +114,7 @@ var Card = {
 
 function Dashboard(Props) {
   var match = use(undefined, undefined, undefined, undefined, undefined);
+  var getAdminProfile = match.getAdminProfile;
   return React.createElement("div", {
               className: styles.root
             }, React.createElement("div", {
@@ -124,11 +126,19 @@ function Dashboard(Props) {
                         })), "Avocardo Admin / Dashboard"), React.createElement(Dashboard$Card, {
                   children: React.createElement(React.Suspense, {
                         children: React.createElement(AnswersOverTime$Avocardo.make, {
-                              fragmentRef: match.getAdminProfile.fragmentRefs
+                              fragmentRef: getAdminProfile.fragmentRefs
                             }),
                         fallback: null
                       }),
                   title: "Answers over time"
+                }), React.createElement(Dashboard$Card, {
+                  children: React.createElement(React.Suspense, {
+                        children: React.createElement(SessionsOverTime$Avocardo.make, {
+                              fragmentRef: getAdminProfile.fragmentRefs
+                            }),
+                        fallback: null
+                      }),
+                  title: "Sessions over time"
                 }));
 }
 

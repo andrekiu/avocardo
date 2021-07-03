@@ -46,7 +46,24 @@ var Internal = {
 
 var Utils = {};
 
-var node = {
+var node = ((function(){
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "ds",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "value",
+    "storageKey": null
+  }
+];
+return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -65,6 +82,11 @@ var node = {
             "args": null,
             "kind": "FragmentSpread",
             "name": "AnswersOverTime"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SessionsOverTime"
           }
         ],
         "storageKey": null
@@ -94,22 +116,17 @@ var node = {
             "kind": "LinkedField",
             "name": "answersOverTime",
             "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "ds",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "value",
-                "storageKey": null
-              }
-            ],
+            "selections": (v0/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "DatePoint",
+            "kind": "LinkedField",
+            "name": "sessionsOverTime",
+            "plural": true,
+            "selections": (v0/*: any*/),
             "storageKey": null
           }
         ],
@@ -118,14 +135,15 @@ var node = {
     ]
   },
   "params": {
-    "cacheID": "af24af0255461199951d5ed57ee9b55d",
+    "cacheID": "ff3407e2d068bd8f340c7d1db5cc2646",
     "id": null,
     "metadata": {},
     "name": "DashboardQuery",
     "operationKind": "query",
-    "text": "query DashboardQuery {\n  getAdminProfile {\n    ...AnswersOverTime\n  }\n}\n\nfragment AnswersOverTime on AdminProfile {\n  answersOverTime {\n    ds\n    value\n  }\n}\n"
+    "text": "query DashboardQuery {\n  getAdminProfile {\n    ...AnswersOverTime\n    ...SessionsOverTime\n  }\n}\n\nfragment AnswersOverTime on AdminProfile {\n  answersOverTime {\n    ds\n    value\n  }\n}\n\nfragment SessionsOverTime on AdminProfile {\n  sessionsOverTime {\n    ds\n    value\n  }\n}\n"
   }
 };
+})());
 
 var include = RescriptRelay.MakeLoadQuery({
       query: node,
@@ -145,4 +163,4 @@ exports.node = node;
 exports.load = load;
 exports.queryRefToObservable = queryRefToObservable;
 exports.queryRefToPromise = queryRefToPromise;
-/* include Not a pure module */
+/* node Not a pure module */

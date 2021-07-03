@@ -4,7 +4,7 @@ module Types = {
   @@ocaml.warning("-30")
   
   type rec response_getAdminProfile = {
-    fragmentRefs: RescriptRelay.fragmentRefs<[ | #AnswersOverTime]>
+    fragmentRefs: RescriptRelay.fragmentRefs<[ | #AnswersOverTime | #SessionsOverTime]>
   }
   type response = {
     getAdminProfile: response_getAdminProfile,
@@ -71,7 +71,24 @@ type relayOperationNode
 type operationType = RescriptRelay.queryNode<relayOperationNode>
 
 
-let node: operationType = %raw(json` {
+let node: operationType = %raw(json` (function(){
+var v0 = [
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "ds",
+    "storageKey": null
+  },
+  {
+    "alias": null,
+    "args": null,
+    "kind": "ScalarField",
+    "name": "value",
+    "storageKey": null
+  }
+];
+return {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
@@ -90,6 +107,11 @@ let node: operationType = %raw(json` {
             "args": null,
             "kind": "FragmentSpread",
             "name": "AnswersOverTime"
+          },
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "SessionsOverTime"
           }
         ],
         "storageKey": null
@@ -119,22 +141,17 @@ let node: operationType = %raw(json` {
             "kind": "LinkedField",
             "name": "answersOverTime",
             "plural": true,
-            "selections": [
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "ds",
-                "storageKey": null
-              },
-              {
-                "alias": null,
-                "args": null,
-                "kind": "ScalarField",
-                "name": "value",
-                "storageKey": null
-              }
-            ],
+            "selections": (v0/*: any*/),
+            "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "DatePoint",
+            "kind": "LinkedField",
+            "name": "sessionsOverTime",
+            "plural": true,
+            "selections": (v0/*: any*/),
             "storageKey": null
           }
         ],
@@ -143,14 +160,15 @@ let node: operationType = %raw(json` {
     ]
   },
   "params": {
-    "cacheID": "af24af0255461199951d5ed57ee9b55d",
+    "cacheID": "ff3407e2d068bd8f340c7d1db5cc2646",
     "id": null,
     "metadata": {},
     "name": "DashboardQuery",
     "operationKind": "query",
-    "text": "query DashboardQuery {\n  getAdminProfile {\n    ...AnswersOverTime\n  }\n}\n\nfragment AnswersOverTime on AdminProfile {\n  answersOverTime {\n    ds\n    value\n  }\n}\n"
+    "text": "query DashboardQuery {\n  getAdminProfile {\n    ...AnswersOverTime\n    ...SessionsOverTime\n  }\n}\n\nfragment AnswersOverTime on AdminProfile {\n  answersOverTime {\n    ds\n    value\n  }\n}\n\nfragment SessionsOverTime on AdminProfile {\n  sessionsOverTime {\n    ds\n    value\n  }\n}\n"
   }
-} `)
+};
+})() `)
 
 include RescriptRelay.MakeLoadQuery({
     type variables = Types.variables

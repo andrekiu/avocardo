@@ -10,34 +10,34 @@ var Hooks = require("react-relay/hooks");
 var ChartsModuleCss = require("./Charts.module.css");
 var TimeSeries$Avocardo = require("./TimeSeries.bs.js");
 var RescriptRelay_Internal = require("rescript-relay/src/RescriptRelay_Internal.bs.js");
-var AnswersOverTime_graphql$Avocardo = require("../../__generated__/AnswersOverTime_graphql.bs.js");
+var SessionsOverTime_graphql$Avocardo = require("../../__generated__/SessionsOverTime_graphql.bs.js");
 
 var styles = ChartsModuleCss;
 
 function use(fRef) {
-  var data = Hooks.useFragment(AnswersOverTime_graphql$Avocardo.node, fRef);
-  return RescriptRelay_Internal.internal_useConvertedValue(AnswersOverTime_graphql$Avocardo.Internal.convertFragment, data);
+  var data = Hooks.useFragment(SessionsOverTime_graphql$Avocardo.node, fRef);
+  return RescriptRelay_Internal.internal_useConvertedValue(SessionsOverTime_graphql$Avocardo.Internal.convertFragment, data);
 }
 
 function useOpt(opt_fRef) {
   var fr = opt_fRef !== undefined ? Caml_option.some(Caml_option.valFromOption(opt_fRef)) : undefined;
-  var nullableFragmentData = Hooks.useFragment(AnswersOverTime_graphql$Avocardo.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
+  var nullableFragmentData = Hooks.useFragment(SessionsOverTime_graphql$Avocardo.node, fr !== undefined ? Js_null_undefined.fromOption(Caml_option.some(Caml_option.valFromOption(fr))) : null);
   var data = (nullableFragmentData == null) ? undefined : Caml_option.some(nullableFragmentData);
   return RescriptRelay_Internal.internal_useConvertedValue((function (rawFragment) {
                 if (rawFragment !== undefined) {
-                  return AnswersOverTime_graphql$Avocardo.Internal.convertFragment(rawFragment);
+                  return SessionsOverTime_graphql$Avocardo.Internal.convertFragment(rawFragment);
                 }
                 
               }), data);
 }
 
-var AnswersOverTimeFragment = {
+var SessionsOverTimeFragment = {
   Types: undefined,
   use: use,
   useOpt: useOpt
 };
 
-function AnswersOverTime(Props) {
+function SessionsOverTime(Props) {
   var fragmentRef = Props.fragmentRef;
   var fragment = use(fragmentRef);
   var data = $$Array.map((function (row) {
@@ -50,7 +50,7 @@ function AnswersOverTime(Props) {
                           date: row.ds,
                           val: row.value
                         };
-                }), fragment.answersOverTime)));
+                }), fragment.sessionsOverTime)));
   return React.createElement("div", {
               className: styles.answers
             }, React.createElement(Recharts.ResponsiveContainer, {
@@ -70,9 +70,9 @@ function AnswersOverTime(Props) {
                 }));
 }
 
-var make = AnswersOverTime;
+var make = SessionsOverTime;
 
 exports.styles = styles;
-exports.AnswersOverTimeFragment = AnswersOverTimeFragment;
+exports.SessionsOverTimeFragment = SessionsOverTimeFragment;
 exports.make = make;
 /* styles Not a pure module */

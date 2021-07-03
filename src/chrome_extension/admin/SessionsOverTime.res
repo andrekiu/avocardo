@@ -1,21 +1,21 @@
 @module
 external styles: {"answers": string} = "./Charts.module.css"
 
-module AnswersOverTimeFragment = %relay(`
-  fragment AnswersOverTime on AdminProfile {
-      answersOverTime {
+module SessionsOverTimeFragment = %relay(`
+  fragment SessionsOverTime on AdminProfile {
+      sessionsOverTime {
       ds
       value
     }
   }
 `)
 
-open Avocardo.AnswersOverTime_graphql.Types
+open Avocardo.SessionsOverTime_graphql.Types
 @react.component
 let make = (~fragmentRef) => {
-  let fragment = AnswersOverTimeFragment.use(fragmentRef)
+  let fragment = SessionsOverTimeFragment.use(fragmentRef)
   let data =
-    fragment.answersOverTime
+    fragment.sessionsOverTime
     |> Array.map((row): TimeSeries.dt => {date: row.ds, val: row.value})
     |> TimeSeries.fillRows
     |> Array.map((row: TimeSeries.dt) => {ds: row.date, value: row.val})
