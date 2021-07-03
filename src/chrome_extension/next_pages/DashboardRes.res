@@ -11,7 +11,9 @@ module P = {
 }
 
 let default = () => {
-  <RescriptRelay.Context.Provider environment=RelayEnv.environment>
-    <P />
-  </RescriptRelay.Context.Provider>
+  <React.Suspense fallback={React.string("Loading...")}>
+    <RescriptRelay.Context.Provider environment=RelayEnv.environment>
+      <P />
+    </RescriptRelay.Context.Provider>
+  </React.Suspense>
 }

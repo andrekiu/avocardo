@@ -4,14 +4,8 @@ module Types = {
   @@ocaml.warning("-30")
   
   type rec response_getAdminProfile = {
-    answersOverTime: array<response_getAdminProfile_answersOverTime>,
+    fragmentRefs: RescriptRelay.fragmentRefs<[ | #AnswersOverTime]>
   }
-   and response_getAdminProfile_answersOverTime = {
-    ds: string,
-    value: int,
-  }
-  
-  
   type response = {
     getAdminProfile: response_getAdminProfile,
   }
@@ -28,7 +22,7 @@ module Internal = {
   let wrapResponseConverter: 
     Js.Dict.t<Js.Dict.t<Js.Dict.t<string>>> = 
     %raw(
-      json`{}`
+      json`{"__root":{"getAdminProfile":{"f":""}}}`
     )
   
   let wrapResponseConverterMap = ()
@@ -41,7 +35,7 @@ module Internal = {
   let responseConverter: 
     Js.Dict.t<Js.Dict.t<Js.Dict.t<string>>> = 
     %raw(
-      json`{}`
+      json`{"__root":{"getAdminProfile":{"f":""}}}`
     )
   
   let responseConverterMap = ()
@@ -77,52 +71,30 @@ type relayOperationNode
 type operationType = RescriptRelay.queryNode<relayOperationNode>
 
 
-let node: operationType = %raw(json` (function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "AdminProfile",
-    "kind": "LinkedField",
-    "name": "getAdminProfile",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "DatePoint",
-        "kind": "LinkedField",
-        "name": "answersOverTime",
-        "plural": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "ds",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "value",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
-return {
+let node: operationType = %raw(json` {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "DashboardQuery",
-    "selections": (v0/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "AdminProfile",
+        "kind": "LinkedField",
+        "name": "getAdminProfile",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AnswersOverTime"
+          }
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Query",
     "abstractKey": null
   },
@@ -131,18 +103,54 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "DashboardQuery",
-    "selections": (v0/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "AdminProfile",
+        "kind": "LinkedField",
+        "name": "getAdminProfile",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "DatePoint",
+            "kind": "LinkedField",
+            "name": "answersOverTime",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "ds",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "value",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "cacheID": "2e72254aa36f7ad273745ab048815c3c",
+    "cacheID": "af24af0255461199951d5ed57ee9b55d",
     "id": null,
     "metadata": {},
     "name": "DashboardQuery",
     "operationKind": "query",
-    "text": "query DashboardQuery {\n  getAdminProfile {\n    answersOverTime {\n      ds\n      value\n    }\n  }\n}\n"
+    "text": "query DashboardQuery {\n  getAdminProfile {\n    ...AnswersOverTime\n  }\n}\n\nfragment AnswersOverTime on AdminProfile {\n  answersOverTime {\n    ds\n    value\n  }\n}\n"
   }
-};
-})() `)
+} `)
 
 include RescriptRelay.MakeLoadQuery({
     type variables = Types.variables

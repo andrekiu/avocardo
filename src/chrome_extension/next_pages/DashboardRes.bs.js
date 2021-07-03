@@ -23,9 +23,12 @@ var P = {
 };
 
 function $$default(param) {
-  return React.createElement(RescriptRelay.Context.Provider.make, {
-              environment: RelayEnv$Avocardo.environment,
-              children: React.createElement(DashboardRes$P, {})
+  return React.createElement(React.Suspense, {
+              children: React.createElement(RescriptRelay.Context.Provider.make, {
+                    environment: RelayEnv$Avocardo.environment,
+                    children: React.createElement(DashboardRes$P, {})
+                  }),
+              fallback: "Loading..."
             });
 }
 

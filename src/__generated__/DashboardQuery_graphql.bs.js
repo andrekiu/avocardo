@@ -12,13 +12,13 @@ var Types = {
   makeRefetchVariables: makeRefetchVariables
 };
 
-var wrapResponseConverter = {};
+var wrapResponseConverter = {"__root":{"getAdminProfile":{"f":""}}};
 
 function convertWrapResponse(v) {
   return RescriptRelay.convertObj(v, wrapResponseConverter, undefined, null);
 }
 
-var responseConverter = {};
+var responseConverter = {"__root":{"getAdminProfile":{"f":""}}};
 
 function convertResponse(v) {
   return RescriptRelay.convertObj(v, responseConverter, undefined, undefined);
@@ -46,52 +46,30 @@ var Internal = {
 
 var Utils = {};
 
-var node = ((function(){
-var v0 = [
-  {
-    "alias": null,
-    "args": null,
-    "concreteType": "AdminProfile",
-    "kind": "LinkedField",
-    "name": "getAdminProfile",
-    "plural": false,
-    "selections": [
-      {
-        "alias": null,
-        "args": null,
-        "concreteType": "DatePoint",
-        "kind": "LinkedField",
-        "name": "answersOverTime",
-        "plural": true,
-        "selections": [
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "ds",
-            "storageKey": null
-          },
-          {
-            "alias": null,
-            "args": null,
-            "kind": "ScalarField",
-            "name": "value",
-            "storageKey": null
-          }
-        ],
-        "storageKey": null
-      }
-    ],
-    "storageKey": null
-  }
-];
-return {
+var node = {
   "fragment": {
     "argumentDefinitions": [],
     "kind": "Fragment",
     "metadata": null,
     "name": "DashboardQuery",
-    "selections": (v0/*: any*/),
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "AdminProfile",
+        "kind": "LinkedField",
+        "name": "getAdminProfile",
+        "plural": false,
+        "selections": [
+          {
+            "args": null,
+            "kind": "FragmentSpread",
+            "name": "AnswersOverTime"
+          }
+        ],
+        "storageKey": null
+      }
+    ],
     "type": "Query",
     "abstractKey": null
   },
@@ -100,18 +78,54 @@ return {
     "argumentDefinitions": [],
     "kind": "Operation",
     "name": "DashboardQuery",
-    "selections": (v0/*: any*/)
+    "selections": [
+      {
+        "alias": null,
+        "args": null,
+        "concreteType": "AdminProfile",
+        "kind": "LinkedField",
+        "name": "getAdminProfile",
+        "plural": false,
+        "selections": [
+          {
+            "alias": null,
+            "args": null,
+            "concreteType": "DatePoint",
+            "kind": "LinkedField",
+            "name": "answersOverTime",
+            "plural": true,
+            "selections": [
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "ds",
+                "storageKey": null
+              },
+              {
+                "alias": null,
+                "args": null,
+                "kind": "ScalarField",
+                "name": "value",
+                "storageKey": null
+              }
+            ],
+            "storageKey": null
+          }
+        ],
+        "storageKey": null
+      }
+    ]
   },
   "params": {
-    "cacheID": "2e72254aa36f7ad273745ab048815c3c",
+    "cacheID": "af24af0255461199951d5ed57ee9b55d",
     "id": null,
     "metadata": {},
     "name": "DashboardQuery",
     "operationKind": "query",
-    "text": "query DashboardQuery {\n  getAdminProfile {\n    answersOverTime {\n      ds\n      value\n    }\n  }\n}\n"
+    "text": "query DashboardQuery {\n  getAdminProfile {\n    ...AnswersOverTime\n  }\n}\n\nfragment AnswersOverTime on AdminProfile {\n  answersOverTime {\n    ds\n    value\n  }\n}\n"
   }
 };
-})());
 
 var include = RescriptRelay.MakeLoadQuery({
       query: node,
@@ -131,4 +145,4 @@ exports.node = node;
 exports.load = load;
 exports.queryRefToObservable = queryRefToObservable;
 exports.queryRefToPromise = queryRefToPromise;
-/* node Not a pure module */
+/* include Not a pure module */
