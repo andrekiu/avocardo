@@ -1,7 +1,12 @@
 module P = {
   @react.component
   let make = () => {
-    <Dashboard />
+    let isServer = %raw(`
+            function isServer() {
+              return typeof window === 'undefined';
+            }
+          `)
+    isServer() ? React.null : <Dashboard />
   }
 }
 
