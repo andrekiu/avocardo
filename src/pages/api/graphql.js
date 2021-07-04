@@ -12,6 +12,7 @@ import { genInsertFeedback } from "../../server/queries/FeedbackController.bs.js
 import {
   genAnswersOverTime,
   genSessionsOverTime,
+  genFeedbackOverTime,
 } from "../../server/queries/AdminController.bs.js";
 
 const schema = buildSchema(
@@ -82,6 +83,13 @@ async function getAdminProfile(_, ctx) {
     },
     async sessionsOverTime({ range }) {
       const data = await genSessionsOverTime(range);
+      return data.map((e) => ({
+        ds: e.ds.toLocaleDateString("en-CA"),
+        value: e.value,
+      }));
+    },
+    async feedbackOverTime({ range }) {
+      const data = await genFeedbackOverTime(range);
       return data.map((e) => ({
         ds: e.ds.toLocaleDateString("en-CA"),
         value: e.value,

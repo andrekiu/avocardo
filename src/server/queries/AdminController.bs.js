@@ -46,6 +46,28 @@ function genSessionsOverTime(range) {
               }));
 }
 
+function genFeedbackOverTime(range) {
+  var where = range === "LAST_30_DAYS" ? "where created_time between now() - interval 30 day and now()" : "";
+  return new Promise((function (resolve, reject) {
+                return DB$Avocardo.withConnection(function (conn) {
+                            return MySql2.execute(conn, "\n        select DATE(created_time) as ds, COUNT(created_time) as value\n          from feedback \n          " + where + "\n          group by ds\n          order by ds asc\n        ", undefined, (function (msg) {
+                                          var variant = msg.NAME;
+                                          if (variant === "Select") {
+                                            return resolve(MySql2.Select.rows(msg.VAL));
+                                          } else if (variant === "Mutation") {
+                                            return reject({
+                                                        RE_EXN_ID: "Failure",
+                                                        _1: "UNEXPECTED_MUTATION"
+                                                      });
+                                          } else {
+                                            return reject(MySql2.Exn.toExn(msg.VAL));
+                                          }
+                                        }));
+                          });
+              }));
+}
+
 exports.genAnswersOverTime = genAnswersOverTime;
 exports.genSessionsOverTime = genSessionsOverTime;
+exports.genFeedbackOverTime = genFeedbackOverTime;
 /* MySql2 Not a pure module */

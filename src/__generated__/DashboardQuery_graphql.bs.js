@@ -111,6 +111,11 @@ return {
             "args": (v1/*: any*/),
             "kind": "FragmentSpread",
             "name": "SessionsOverTime"
+          },
+          {
+            "args": (v1/*: any*/),
+            "kind": "FragmentSpread",
+            "name": "FeedbackOverTime"
           }
         ],
         "storageKey": null
@@ -152,6 +157,16 @@ return {
             "plural": true,
             "selections": (v2/*: any*/),
             "storageKey": null
+          },
+          {
+            "alias": null,
+            "args": (v1/*: any*/),
+            "concreteType": "DatePoint",
+            "kind": "LinkedField",
+            "name": "feedbackOverTime",
+            "plural": true,
+            "selections": (v2/*: any*/),
+            "storageKey": null
           }
         ],
         "storageKey": null
@@ -159,12 +174,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "af6da357346b2697ead3b4f1e5669806",
+    "cacheID": "92772bcd75f76eae30bd16234226e288",
     "id": null,
     "metadata": {},
     "name": "DashboardQuery",
     "operationKind": "query",
-    "text": "query DashboardQuery(\n  $range: ChartTimeRange!\n) {\n  getAdminProfile {\n    ...AnswersOverTime_1W2ebt\n    ...SessionsOverTime_1W2ebt\n  }\n}\n\nfragment AnswersOverTime_1W2ebt on AdminProfile {\n  answersOverTime(range: $range) {\n    ds\n    value\n  }\n}\n\nfragment SessionsOverTime_1W2ebt on AdminProfile {\n  sessionsOverTime(range: $range) {\n    ds\n    value\n  }\n}\n"
+    "text": "query DashboardQuery(\n  $range: ChartTimeRange!\n) {\n  getAdminProfile {\n    ...AnswersOverTime_1W2ebt\n    ...SessionsOverTime_1W2ebt\n    ...FeedbackOverTime_1W2ebt\n  }\n}\n\nfragment AnswersOverTime_1W2ebt on AdminProfile {\n  answersOverTime(range: $range) {\n    ds\n    value\n  }\n}\n\nfragment FeedbackOverTime_1W2ebt on AdminProfile {\n  feedbackOverTime(range: $range) {\n    ds\n    value\n  }\n}\n\nfragment SessionsOverTime_1W2ebt on AdminProfile {\n  sessionsOverTime(range: $range) {\n    ds\n    value\n  }\n}\n"
   }
 };
 })());

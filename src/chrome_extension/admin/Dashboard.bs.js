@@ -13,6 +13,7 @@ var Hooks = require("react-relay/hooks");
 var DashboardModuleCss = require("./Dashboard.module.css");
 var RescriptRelay_Internal = require("rescript-relay/src/RescriptRelay_Internal.bs.js");
 var AnswersOverTime$Avocardo = require("./AnswersOverTime.bs.js");
+var FeedbackOverTime$Avocardo = require("./FeedbackOverTime.bs.js");
 var SessionsOverTime$Avocardo = require("./SessionsOverTime.bs.js");
 var DashboardQuery_graphql$Avocardo = require("../../__generated__/DashboardQuery_graphql.bs.js");
 
@@ -180,6 +181,14 @@ function Dashboard(Props) {
                             fallback: null
                           }),
                       title: "Answers"
+                    }), React.createElement(Dashboard$Card, {
+                      children: React.createElement(React.Suspense, {
+                            children: React.createElement(FeedbackOverTime$Avocardo.make, {
+                                  fragmentRef: getAdminProfile.fragmentRefs
+                                }),
+                            fallback: null
+                          }),
+                      title: "Feedback"
                     })));
 }
 

@@ -16,6 +16,7 @@ module Query = %relay(`
     getAdminProfile {
       ...AnswersOverTime @arguments(range: $range)
       ...SessionsOverTime @arguments(range: $range)
+      ...FeedbackOverTime @arguments(range: $range)
     }
   }
 `)
@@ -69,6 +70,11 @@ let make = () => {
       <Card title="Answers">
         <React.Suspense fallback={React.null}>
           <AnswersOverTime fragmentRef={getAdminProfile.fragmentRefs} />
+        </React.Suspense>
+      </Card>
+      <Card title="Feedback">
+        <React.Suspense fallback={React.null}>
+          <FeedbackOverTime fragmentRef={getAdminProfile.fragmentRefs} />
         </React.Suspense>
       </Card>
     </section>

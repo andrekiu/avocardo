@@ -53,3 +53,31 @@ let genSessionsOverTime = range => {
     )
   )
 }
+
+let genFeedbackOverTime = range => {
+  let where = switch range {
+  | #LAST_30_DAYS => "where created_time between now() - interval 30 day and now()"
+  | _ => ""
+  }
+  Js.Promise.make((~resolve, ~reject) =>
+    DB.withConnection(conn =>
+      MySql2.execute(
+        conn,
+        `
+        select DATE(created_time) as ds, COUNT(created_time) as value
+          from feedback 
+          ${where}
+          group by ds
+          order by ds asc
+        `,
+        None,
+        msg =>
+          switch msg {
+          | #Error(e) => reject(. MySql2.Exn.toExn(e))
+          | #Select(select) => resolve(. MySql2.Select.rows(select))
+          | #Mutation(_) => reject(. Failure("UNEXPECTED_MUTATION"))
+          },
+      )
+    )
+  )
+}
