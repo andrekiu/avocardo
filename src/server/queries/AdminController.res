@@ -1,4 +1,8 @@
-let genAnswersOverTime = () =>
+let genAnswersOverTime = range => {
+  let where = switch range {
+  | #LAST_30_DAYS => "where answered_time between now() - interval 30 day and now()"
+  | _ => ""
+  }
   Js.Promise.make((~resolve, ~reject) =>
     DB.withConnection(conn =>
       MySql2.execute(
@@ -6,6 +10,7 @@ let genAnswersOverTime = () =>
         `
         select DATE(answered_time) as ds, COUNT(answered_time) as value
           from answers 
+          ${where}
           group by ds
           order by ds asc
         `,
@@ -19,8 +24,13 @@ let genAnswersOverTime = () =>
       )
     )
   )
+}
 
-let genSessionsOverTime = () =>
+let genSessionsOverTime = range => {
+  let where = switch range {
+  | #LAST_30_DAYS => "where answered_time between now() - interval 30 day and now()"
+  | _ => ""
+  }
   Js.Promise.make((~resolve, ~reject) =>
     DB.withConnection(conn =>
       MySql2.execute(
@@ -28,6 +38,7 @@ let genSessionsOverTime = () =>
         `
         select DATE(answered_time) as ds, COUNT(DISTINCT fingerprint) as value
           from answers 
+          ${where}
           group by ds
           order by ds asc
         `,
@@ -41,3 +52,4 @@ let genSessionsOverTime = () =>
       )
     )
   )
+}

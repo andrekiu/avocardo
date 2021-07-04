@@ -2,12 +2,13 @@
 external styles: {"answers": string} = "./Charts.module.css"
 
 module SessionsOverTimeFragment = %relay(`
-  fragment SessionsOverTime on AdminProfile {
-      sessionsOverTime {
-      ds
-      value
+  fragment SessionsOverTime on AdminProfile 
+    @argumentDefinitions(range: {type: "ChartTimeRange!"}) {
+      sessionsOverTime(range: $range) {
+        ds
+        value
+      }
     }
-  }
 `)
 
 open Avocardo.SessionsOverTime_graphql.Types

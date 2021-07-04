@@ -5,6 +5,7 @@ var Curry = require("rescript/lib/js/curry.js");
 var React = require("react");
 var $$Promise = require("reason-promise/src/js/promise.bs.js");
 var Caml_option = require("rescript/lib/js/caml_option.js");
+var Cx$Avocardo = require("../core/Cx.bs.js");
 var RescriptRelay = require("rescript-relay/src/RescriptRelay.bs.js");
 var RelayRuntime = require("relay-runtime");
 var Glyph$Avocardo = require("../core/Glyph.bs.js");
@@ -86,7 +87,10 @@ function retain(environment, variables) {
   return environment.retain(operationDescriptor);
 }
 
+var Query_makeVariables = DashboardQuery_graphql$Avocardo.Utils.makeVariables;
+
 var Query = {
+  makeVariables: Query_makeVariables,
   Types: undefined,
   use: use,
   useLoader: useLoader,
@@ -112,9 +116,41 @@ var Card = {
   make: Dashboard$Card
 };
 
+function Dashboard$Controls(Props) {
+  var timeRange = Props.timeRange;
+  var setTimeRange = Props.setTimeRange;
+  return React.createElement("div", {
+              className: styles["charts-controls"]
+            }, React.createElement("a", {
+                  className: timeRange === "LIFETIME" ? styles["charts-controls-selected"] : Cx$Avocardo.noop,
+                  onClick: (function (param) {
+                      return Curry._1(setTimeRange, (function (param) {
+                                    return "LIFETIME";
+                                  }));
+                    })
+                }, "Lifetime"), React.createElement("a", {
+                  className: timeRange === "LAST_30_DAYS" ? styles["charts-controls-selected"] : Cx$Avocardo.noop,
+                  onClick: (function (param) {
+                      return Curry._1(setTimeRange, (function (param) {
+                                    return "LAST_30_DAYS";
+                                  }));
+                    })
+                }, "Last 30d"));
+}
+
+var Controls = {
+  make: Dashboard$Controls
+};
+
 function Dashboard(Props) {
-  var match = use(undefined, undefined, undefined, undefined, undefined);
-  var getAdminProfile = match.getAdminProfile;
+  var match = React.useState(function () {
+        return "LAST_30_DAYS";
+      });
+  var timeRange = match[0];
+  var match$1 = use({
+        range: timeRange
+      }, undefined, undefined, undefined, undefined);
+  var getAdminProfile = match$1.getAdminProfile;
   return React.createElement("div", {
               className: styles.root
             }, React.createElement("div", {
@@ -123,23 +159,28 @@ function Dashboard(Props) {
                       className: styles["header-glyph"]
                     }, React.createElement(Glyph$Avocardo.make, {
                           variant: /* Avocado */3
-                        })), "Avocardo Admin / Dashboard"), React.createElement(Dashboard$Card, {
-                  children: React.createElement(React.Suspense, {
-                        children: React.createElement(AnswersOverTime$Avocardo.make, {
-                              fragmentRef: getAdminProfile.fragmentRefs
-                            }),
-                        fallback: null
-                      }),
-                  title: "Answers over time"
-                }), React.createElement(Dashboard$Card, {
-                  children: React.createElement(React.Suspense, {
-                        children: React.createElement(SessionsOverTime$Avocardo.make, {
-                              fragmentRef: getAdminProfile.fragmentRefs
-                            }),
-                        fallback: null
-                      }),
-                  title: "Sessions over time"
-                }));
+                        })), "Avocardo Admin / Dashboard"), React.createElement("section", {
+                  className: styles.charts
+                }, React.createElement(Dashboard$Controls, {
+                      timeRange: timeRange,
+                      setTimeRange: match[1]
+                    }), React.createElement(Dashboard$Card, {
+                      children: React.createElement(React.Suspense, {
+                            children: React.createElement(SessionsOverTime$Avocardo.make, {
+                                  fragmentRef: getAdminProfile.fragmentRefs
+                                }),
+                            fallback: null
+                          }),
+                      title: "Sessions"
+                    }), React.createElement(Dashboard$Card, {
+                      children: React.createElement(React.Suspense, {
+                            children: React.createElement(AnswersOverTime$Avocardo.make, {
+                                  fragmentRef: getAdminProfile.fragmentRefs
+                                }),
+                            fallback: null
+                          }),
+                      title: "Answers"
+                    })));
 }
 
 var make = Dashboard;
@@ -147,5 +188,6 @@ var make = Dashboard;
 exports.styles = styles;
 exports.Query = Query;
 exports.Card = Card;
+exports.Controls = Controls;
 exports.make = make;
 /* styles Not a pure module */

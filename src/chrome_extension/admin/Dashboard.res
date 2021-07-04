@@ -6,13 +6,16 @@ external styles: {
   "header-glyph": string,
   "card-title": string,
   "card-body": string,
+  "charts": string,
+  "charts-controls": string,
+  "charts-controls-selected": string,
 } = "./Dashboard.module.css"
 
 module Query = %relay(`
-  query DashboardQuery {
+  query DashboardQuery($range: ChartTimeRange!) {
     getAdminProfile {
-      ...AnswersOverTime
-      ...SessionsOverTime
+      ...AnswersOverTime @arguments(range: $range)
+      ...SessionsOverTime @arguments(range: $range)
     }
   }
 `)
@@ -27,23 +30,47 @@ module Card = {
   }
 }
 
+open Query.Types
+
+module Controls = {
+  @react.component
+  let make = (~timeRange, ~setTimeRange) => {
+    <div className={styles["charts-controls"]}>
+      <a
+        className={timeRange == #LIFETIME ? styles["charts-controls-selected"] : Cx.noop}
+        onClick={_ => setTimeRange(_ => #LIFETIME)}>
+        {React.string("Lifetime")}
+      </a>
+      <a
+        className={timeRange == #LAST_30_DAYS ? styles["charts-controls-selected"] : Cx.noop}
+        onClick={_ => setTimeRange(_ => #LAST_30_DAYS)}>
+        {React.string("Last 30d")}
+      </a>
+    </div>
+  }
+}
+
 @react.component
 let make = () => {
-  let {getAdminProfile} = Query.use(~variables=ignore(), ())
+  let (timeRange, setTimeRange) = React.useState(() => #LAST_30_DAYS)
+  let {getAdminProfile} = Query.use(~variables={{range: timeRange}}, ())
   <div className={styles["root"]}>
     <div className={styles["header"]}>
       <span className={styles["header-glyph"]}> <Glyph variant={Glyph.Avocado} /> </span>
       {React.string("Avocardo Admin / Dashboard")}
     </div>
-    <Card title="Answers over time">
-      <React.Suspense fallback={React.null}>
-        <AnswersOverTime fragmentRef={getAdminProfile.fragmentRefs} />
-      </React.Suspense>
-    </Card>
-    <Card title="Sessions over time">
-      <React.Suspense fallback={React.null}>
-        <SessionsOverTime fragmentRef={getAdminProfile.fragmentRefs} />
-      </React.Suspense>
-    </Card>
+    <section className={styles["charts"]}>
+      <Controls timeRange setTimeRange />
+      <Card title="Sessions">
+        <React.Suspense fallback={React.null}>
+          <SessionsOverTime fragmentRef={getAdminProfile.fragmentRefs} />
+        </React.Suspense>
+      </Card>
+      <Card title="Answers">
+        <React.Suspense fallback={React.null}>
+          <AnswersOverTime fragmentRef={getAdminProfile.fragmentRefs} />
+        </React.Suspense>
+      </Card>
+    </section>
   </div>
 }

@@ -2,12 +2,13 @@
 external styles: {"answers": string} = "./Charts.module.css"
 
 module AnswersOverTimeFragment = %relay(`
-  fragment AnswersOverTime on AdminProfile {
-      answersOverTime {
-      ds
-      value
+  fragment AnswersOverTime on AdminProfile 
+    @argumentDefinitions(range: {type: "ChartTimeRange!"}){
+        answersOverTime(range: $range) {
+        ds
+        value
+      }
     }
-  }
 `)
 
 open Avocardo.AnswersOverTime_graphql.Types

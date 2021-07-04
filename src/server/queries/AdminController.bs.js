@@ -4,10 +4,11 @@
 var MySql2 = require("bs-mysql2/src/MySql2.bs.js");
 var DB$Avocardo = require("../db/DB.bs.js");
 
-function genAnswersOverTime(param) {
+function genAnswersOverTime(range) {
+  var where = range === "LAST_30_DAYS" ? "where answered_time between now() - interval 30 day and now()" : "";
   return new Promise((function (resolve, reject) {
                 return DB$Avocardo.withConnection(function (conn) {
-                            return MySql2.execute(conn, "\n        select DATE(answered_time) as ds, COUNT(answered_time) as value\n          from answers \n          group by ds\n          order by ds asc\n        ", undefined, (function (msg) {
+                            return MySql2.execute(conn, "\n        select DATE(answered_time) as ds, COUNT(answered_time) as value\n          from answers \n          " + where + "\n          group by ds\n          order by ds asc\n        ", undefined, (function (msg) {
                                           var variant = msg.NAME;
                                           if (variant === "Select") {
                                             return resolve(MySql2.Select.rows(msg.VAL));
@@ -24,10 +25,11 @@ function genAnswersOverTime(param) {
               }));
 }
 
-function genSessionsOverTime(param) {
+function genSessionsOverTime(range) {
+  var where = range === "LAST_30_DAYS" ? "where answered_time between now() - interval 30 day and now()" : "";
   return new Promise((function (resolve, reject) {
                 return DB$Avocardo.withConnection(function (conn) {
-                            return MySql2.execute(conn, "\n        select DATE(answered_time) as ds, COUNT(DISTINCT fingerprint) as value\n          from answers \n          group by ds\n          order by ds asc\n        ", undefined, (function (msg) {
+                            return MySql2.execute(conn, "\n        select DATE(answered_time) as ds, COUNT(DISTINCT fingerprint) as value\n          from answers \n          " + where + "\n          group by ds\n          order by ds asc\n        ", undefined, (function (msg) {
                                           var variant = msg.NAME;
                                           if (variant === "Select") {
                                             return resolve(MySql2.Select.rows(msg.VAL));

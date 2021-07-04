@@ -73,15 +73,15 @@ async function getAdminProfile(_, ctx) {
     throw new Error("NOT AUTHENTICATED");
   }
   return {
-    async answersOverTime() {
-      const data = await genAnswersOverTime();
+    async answersOverTime({ range }) {
+      const data = await genAnswersOverTime(range);
       return data.map((e) => ({
         ds: e.ds.toLocaleDateString("en-CA"),
         value: e.value,
       }));
     },
-    async sessionsOverTime() {
-      const data = await genSessionsOverTime();
+    async sessionsOverTime({ range }) {
+      const data = await genSessionsOverTime(range);
       return data.map((e) => ({
         ds: e.ds.toLocaleDateString("en-CA"),
         value: e.value,

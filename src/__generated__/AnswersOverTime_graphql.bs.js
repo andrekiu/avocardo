@@ -21,14 +21,26 @@ var Internal = {
 var Utils = {};
 
 var node = {
-  "argumentDefinitions": [],
+  "argumentDefinitions": [
+    {
+      "defaultValue": null,
+      "kind": "LocalArgument",
+      "name": "range"
+    }
+  ],
   "kind": "Fragment",
   "metadata": null,
   "name": "AnswersOverTime",
   "selections": [
     {
       "alias": null,
-      "args": null,
+      "args": [
+        {
+          "kind": "Variable",
+          "name": "range",
+          "variableName": "range"
+        }
+      ],
       "concreteType": "DatePoint",
       "kind": "LinkedField",
       "name": "answersOverTime",

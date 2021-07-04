@@ -32,9 +32,14 @@ type DatePoint {
   value: Int!
 }
 
+enum ChartTimeRange {
+  LAST_30_DAYS
+  LIFETIME
+}
+
 type AdminProfile {
-  answersOverTime: [DatePoint!]!
-  sessionsOverTime: [DatePoint!]!
+  answersOverTime(range: ChartTimeRange!): [DatePoint!]!
+  sessionsOverTime(range: ChartTimeRange!): [DatePoint!]!
 }
 
 type Query {

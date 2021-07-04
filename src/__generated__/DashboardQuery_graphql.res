@@ -3,6 +3,16 @@
 module Types = {
   @@ocaml.warning("-30")
   
+  type enum_ChartTimeRange = private [>
+    | #LAST_30_DAYS
+    | #LIFETIME
+    ]
+  
+  type enum_ChartTimeRange_input = [
+    | #LAST_30_DAYS
+    | #LIFETIME
+    ]
+  
   type rec response_getAdminProfile = {
     fragmentRefs: RescriptRelay.fragmentRefs<[ | #AnswersOverTime | #SessionsOverTime]>
   }
@@ -10,11 +20,25 @@ module Types = {
     getAdminProfile: response_getAdminProfile,
   }
   type rawResponse = response
-  type refetchVariables = unit
+  type refetchVariables = {
+    range: option<[
+    | #LAST_30_DAYS
+    | #LIFETIME
+    ]>,
+  }
   let makeRefetchVariables = (
-  ) => ()
+    ~range=?,
+    ()
+  ): refetchVariables => {
+    range: range
+  }
   
-  type variables = unit
+  type variables = {
+    range: [
+    | #LAST_30_DAYS
+    | #LIFETIME
+    ],
+  }
 }
 
 module Internal = {
@@ -65,7 +89,17 @@ module Internal = {
 type queryRef
 
 module Utils = {
-
+  @@ocaml.warning("-33")
+  open Types
+  external chartTimeRange_toString:
+  enum_ChartTimeRange => string = "%identity"
+  external chartTimeRange_input_toString:
+  enum_ChartTimeRange_input => string = "%identity"
+  let makeVariables = (
+    ~range
+  ): variables => {
+    range: range
+  }
 }
 type relayOperationNode
 type operationType = RescriptRelay.queryNode<relayOperationNode>
@@ -73,6 +107,20 @@ type operationType = RescriptRelay.queryNode<relayOperationNode>
 
 let node: operationType = %raw(json` (function(){
 var v0 = [
+  {
+    "defaultValue": null,
+    "kind": "LocalArgument",
+    "name": "range"
+  }
+],
+v1 = [
+  {
+    "kind": "Variable",
+    "name": "range",
+    "variableName": "range"
+  }
+],
+v2 = [
   {
     "alias": null,
     "args": null,
@@ -90,7 +138,7 @@ var v0 = [
 ];
 return {
   "fragment": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Fragment",
     "metadata": null,
     "name": "DashboardQuery",
@@ -104,12 +152,12 @@ return {
         "plural": false,
         "selections": [
           {
-            "args": null,
+            "args": (v1/*: any*/),
             "kind": "FragmentSpread",
             "name": "AnswersOverTime"
           },
           {
-            "args": null,
+            "args": (v1/*: any*/),
             "kind": "FragmentSpread",
             "name": "SessionsOverTime"
           }
@@ -122,7 +170,7 @@ return {
   },
   "kind": "Request",
   "operation": {
-    "argumentDefinitions": [],
+    "argumentDefinitions": (v0/*: any*/),
     "kind": "Operation",
     "name": "DashboardQuery",
     "selections": [
@@ -136,22 +184,22 @@ return {
         "selections": [
           {
             "alias": null,
-            "args": null,
+            "args": (v1/*: any*/),
             "concreteType": "DatePoint",
             "kind": "LinkedField",
             "name": "answersOverTime",
             "plural": true,
-            "selections": (v0/*: any*/),
+            "selections": (v2/*: any*/),
             "storageKey": null
           },
           {
             "alias": null,
-            "args": null,
+            "args": (v1/*: any*/),
             "concreteType": "DatePoint",
             "kind": "LinkedField",
             "name": "sessionsOverTime",
             "plural": true,
-            "selections": (v0/*: any*/),
+            "selections": (v2/*: any*/),
             "storageKey": null
           }
         ],
@@ -160,12 +208,12 @@ return {
     ]
   },
   "params": {
-    "cacheID": "ff3407e2d068bd8f340c7d1db5cc2646",
+    "cacheID": "af6da357346b2697ead3b4f1e5669806",
     "id": null,
     "metadata": {},
     "name": "DashboardQuery",
     "operationKind": "query",
-    "text": "query DashboardQuery {\n  getAdminProfile {\n    ...AnswersOverTime\n    ...SessionsOverTime\n  }\n}\n\nfragment AnswersOverTime on AdminProfile {\n  answersOverTime {\n    ds\n    value\n  }\n}\n\nfragment SessionsOverTime on AdminProfile {\n  sessionsOverTime {\n    ds\n    value\n  }\n}\n"
+    "text": "query DashboardQuery(\n  $range: ChartTimeRange!\n) {\n  getAdminProfile {\n    ...AnswersOverTime_1W2ebt\n    ...SessionsOverTime_1W2ebt\n  }\n}\n\nfragment AnswersOverTime_1W2ebt on AdminProfile {\n  answersOverTime(range: $range) {\n    ds\n    value\n  }\n}\n\nfragment SessionsOverTime_1W2ebt on AdminProfile {\n  sessionsOverTime(range: $range) {\n    ds\n    value\n  }\n}\n"
   }
 };
 })() `)

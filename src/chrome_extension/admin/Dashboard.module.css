@@ -3,8 +3,6 @@
 }
 
 .card {
-  width: 80%;
-  margin: auto;
   padding-top: 1em;
   box-sizing: border-box;
   border: 1px solid;
@@ -32,4 +30,32 @@
 
 .header-glyph {
   margin: 0.5em;
+}
+
+.charts {
+  margin: auto;
+  width: 80%;
+}
+
+.charts-controls {
+  text-align: right;
+  padding-bottom: 0.5em;
+}
+
+.charts-controls > a {
+  position: relative;
+  margin-right: 1em;
+  cursor: pointer;
+}
+
+.charts-controls > a::after {
+  position: absolute;
+  content: "";
+  inset: 0;
+  width: 100%;
+}
+
+.charts-controls > a:hover::after,
+.charts-controls-selected::after {
+  border-bottom: 1px solid;
 }
