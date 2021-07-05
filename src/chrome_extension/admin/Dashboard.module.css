@@ -24,14 +24,6 @@
   justify-content: center;
 }
 
-.header {
-  padding: 2em;
-}
-
-.header-glyph {
-  margin: 0.5em;
-}
-
 .charts {
   margin: auto;
   width: 80%;
@@ -48,14 +40,23 @@
   cursor: pointer;
 }
 
-.charts-controls > a::after {
+.charts-links::after {
   position: absolute;
   content: "";
   inset: 0;
   width: 100%;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 200ms ease-in;
+  border-bottom: 1px solid;
 }
 
-.charts-controls > a:hover::after,
 .charts-controls-selected::after {
-  border-bottom: 1px solid;
+  transition: none;
+  transform: none;
+}
+
+.charts-links:hover::after {
+  transform-origin: left;
+  transform: scaleX(1);
 }

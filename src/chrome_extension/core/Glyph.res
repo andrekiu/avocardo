@@ -1,4 +1,4 @@
-type variant = Fire | Monkey | Skip | Avocado
+type variant = Fire | Monkey | Skip | Avocado | VictoryHand
 
 let getContent = v =>
   switch v {
@@ -6,6 +6,7 @@ let getContent = v =>
   | Monkey => React.string(Js.String.fromCodePoint(0x1F648))
   | Skip => React.string(Js.String.fromCodePoint(0x23ED))
   | Avocado => React.string(Js.String.fromCodePoint(0x1F951))
+  | VictoryHand => React.string(Js.String.fromCodePoint(0x270C))
   }
 
 @react.component

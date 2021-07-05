@@ -8,13 +8,13 @@ var Caml_option = require("rescript/lib/js/caml_option.js");
 var Cx$Avocardo = require("../core/Cx.bs.js");
 var RescriptRelay = require("rescript-relay/src/RescriptRelay.bs.js");
 var RelayRuntime = require("relay-runtime");
-var Glyph$Avocardo = require("../core/Glyph.bs.js");
 var Hooks = require("react-relay/hooks");
 var DashboardModuleCss = require("./Dashboard.module.css");
 var RescriptRelay_Internal = require("rescript-relay/src/RescriptRelay_Internal.bs.js");
 var AnswersOverTime$Avocardo = require("./AnswersOverTime.bs.js");
 var FeedbackOverTime$Avocardo = require("./FeedbackOverTime.bs.js");
 var SessionsOverTime$Avocardo = require("./SessionsOverTime.bs.js");
+var AdminRouteSelector$Avocardo = require("./AdminRouteSelector.bs.js");
 var DashboardQuery_graphql$Avocardo = require("../../__generated__/DashboardQuery_graphql.bs.js");
 
 var styles = DashboardModuleCss;
@@ -123,14 +123,20 @@ function Dashboard$Controls(Props) {
   return React.createElement("div", {
               className: styles["charts-controls"]
             }, React.createElement("a", {
-                  className: timeRange === "LIFETIME" ? styles["charts-controls-selected"] : Cx$Avocardo.noop,
+                  className: Cx$Avocardo.join([
+                        timeRange === "LIFETIME" ? styles["charts-controls-selected"] : Cx$Avocardo.noop,
+                        styles["charts-links"]
+                      ]),
                   onClick: (function (param) {
                       return Curry._1(setTimeRange, (function (param) {
                                     return "LIFETIME";
                                   }));
                     })
                 }, "Lifetime"), React.createElement("a", {
-                  className: timeRange === "LAST_30_DAYS" ? styles["charts-controls-selected"] : Cx$Avocardo.noop,
+                  className: Cx$Avocardo.join([
+                        timeRange === "LAST_30_DAYS" ? styles["charts-controls-selected"] : Cx$Avocardo.noop,
+                        styles["charts-links"]
+                      ]),
                   onClick: (function (param) {
                       return Curry._1(setTimeRange, (function (param) {
                                     return "LAST_30_DAYS";
@@ -154,13 +160,9 @@ function Dashboard(Props) {
   var getAdminProfile = match$1.getAdminProfile;
   return React.createElement("div", {
               className: styles.root
-            }, React.createElement("div", {
-                  className: styles.header
-                }, React.createElement("span", {
-                      className: styles["header-glyph"]
-                    }, React.createElement(Glyph$Avocardo.make, {
-                          variant: /* Avocado */3
-                        })), "Avocardo Admin / Dashboard"), React.createElement("section", {
+            }, React.createElement(AdminRouteSelector$Avocardo.make, {
+                  route: "dashboard"
+                }), React.createElement("section", {
                   className: styles.charts
                 }, React.createElement(Dashboard$Controls, {
                       timeRange: timeRange,

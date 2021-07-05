@@ -2,12 +2,11 @@
 external styles: {
   "root": string,
   "card": string,
-  "header": string,
-  "header-glyph": string,
   "card-title": string,
   "card-body": string,
   "charts": string,
   "charts-controls": string,
+  "charts-links": string,
   "charts-controls-selected": string,
 } = "./Dashboard.module.css"
 
@@ -38,12 +37,18 @@ module Controls = {
   let make = (~timeRange, ~setTimeRange) => {
     <div className={styles["charts-controls"]}>
       <a
-        className={timeRange == #LIFETIME ? styles["charts-controls-selected"] : Cx.noop}
+        className={Cx.join([
+          timeRange == #LIFETIME ? styles["charts-controls-selected"] : Cx.noop,
+          styles["charts-links"],
+        ])}
         onClick={_ => setTimeRange(_ => #LIFETIME)}>
         {React.string("Lifetime")}
       </a>
       <a
-        className={timeRange == #LAST_30_DAYS ? styles["charts-controls-selected"] : Cx.noop}
+        className={Cx.join([
+          timeRange == #LAST_30_DAYS ? styles["charts-controls-selected"] : Cx.noop,
+          styles["charts-links"],
+        ])}
         onClick={_ => setTimeRange(_ => #LAST_30_DAYS)}>
         {React.string("Last 30d")}
       </a>
@@ -56,10 +61,7 @@ let make = () => {
   let (timeRange, setTimeRange) = React.useState(() => #LAST_30_DAYS)
   let {getAdminProfile} = Query.use(~variables={{range: timeRange}}, ())
   <div className={styles["root"]}>
-    <div className={styles["header"]}>
-      <span className={styles["header-glyph"]}> <Glyph variant={Glyph.Avocado} /> </span>
-      {React.string("Avocardo Admin / Dashboard")}
-    </div>
+    <AdminRouteSelector route="dashboard" />
     <section className={styles["charts"]}>
       <Controls timeRange setTimeRange />
       <Card title="Sessions">

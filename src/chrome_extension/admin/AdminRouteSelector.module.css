@@ -1,0 +1,17 @@
+.header {
+  margin: 2em;
+  display: flex;
+  justify-content: space-between;
+}
+
+.header-glyph {
+  margin: 0.5em;
+}
+
+.header-select {
+  font-family: monospace;
+}
+
+.header-logout {
+  cursor: pointer;
+}

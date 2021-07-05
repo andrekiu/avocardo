@@ -15,6 +15,8 @@ function getContent(v) {
         return String.fromCodePoint(9197);
     case /* Avocado */3 :
         return String.fromCodePoint(129361);
+    case /* VictoryHand */4 :
+        return String.fromCodePoint(9996);
     
   }
 }
